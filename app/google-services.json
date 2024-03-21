@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "410851760544",
+    "project_id": "bellus-app-48854",
+    "storage_bucket": "bellus-app-48854.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410851760544:android:c485c5c0935b0d87482cc5",
+        "android_client_info": {
+          "package_name": "br.sapiens.bellus_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410851760544-nrqp5q7tam4js5q2spotgcpraov3huap.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR0wSGpua09BQ-JF3Fb6Uz2Wl5ifYqliw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410851760544-nrqp5q7tam4js5q2spotgcpraov3huap.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt")
     alias(libs.plugins.hiltAndroid)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -47,6 +49,13 @@ android {
 
 dependencies {
     implementation(libs.firebase.auth.ktx)
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+
+// Add the dependency for the Firebase SDK for Google Analytics
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity:17.0.1")
+
     implementation(libs.kotlin.stdlib)
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
@@ -97,11 +106,11 @@ dependencies {
 }
 
 kapt {
-//    correctErrorTypes = true
-//    javacOptions {
-//        // Increase the max count of errors from annotation processors.
-//        // Default is 100.
-//        option("-Xmaxerrs", 500)
-//    }
-//    useBuildCache = false
+    correctErrorTypes = true
+    javacOptions {
+        // Increase the max count of errors from annotation processors.
+        // Default is 100.
+        option("-Xmaxerrs", 500)
+    }
+    useBuildCache = false
 }
