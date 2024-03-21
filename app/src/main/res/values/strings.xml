@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">bellus_app</string>
+    <string name="app_name">Bellus</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

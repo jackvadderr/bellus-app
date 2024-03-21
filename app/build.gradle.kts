@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    kotlin("kapt")
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -44,6 +46,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.kotlin.stdlib)
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -88,5 +92,16 @@ dependencies {
 
     implementation("com.google.android.material:material:1.4.0")
 
-    implementation(libs.kotlin.stdlib)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+}
+
+kapt {
+//    correctErrorTypes = true
+//    javacOptions {
+//        // Increase the max count of errors from annotation processors.
+//        // Default is 100.
+//        option("-Xmaxerrs", 500)
+//    }
+//    useBuildCache = false
 }
