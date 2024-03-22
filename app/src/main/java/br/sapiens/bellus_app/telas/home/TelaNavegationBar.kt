@@ -11,24 +11,33 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.navegation.RotasDestinos
+import br.sapiens.bellus_app.viewmodels.TelaNavegationBarViewModel
+
 
 @Composable
-fun TelaNavegationBar(navController: NavHostController) {
+fun TelaNavegationBar(navControllerProvider: NavControllerProvider) {
     val navController = rememberNavController()
+    navControllerProvider.navController = navController
+
+    val viewModel: TelaNavegationBarViewModel = viewModel()
+
+    val selectedItem = viewModel.selectedItem.observeAsState()
 
     MaterialTheme {
         Scaffold(
             bottomBar = {
-                BottomNavigation(navController)
+                BottomNavigation(navController, selectedItem.value)
             },
         ) { paddingValues ->
             NavHost(navController, startDestination = RotasDestinos.HOME_ROUTE) {
@@ -51,8 +60,6 @@ fun TelaNavegationBar(navController: NavHostController) {
 fun TelaPerfil() {
     Text("TELA PERFIL")
 }
-
-
 
 sealed class BottomNavItem(
     var title: String,
@@ -84,7 +91,7 @@ sealed class BottomNavItem(
 
 
 @Composable
-fun BottomNavigation(navController: NavHostController) {
+fun BottomNavigation(navController: NavHostController, selectedItem: BottomNavItem?) {
 
     val items = listOf(
         BottomNavItem.Home,
@@ -96,7 +103,9 @@ fun BottomNavigation(navController: NavHostController) {
         items.forEach { item ->
             AddItem(
                 screen = item,
-                navController = navController
+                navController = navController,
+                isSelected = item == selectedItem,
+                viewModel = viewModel()
             )
         }
     }
@@ -105,40 +114,34 @@ fun BottomNavigation(navController: NavHostController) {
 @Composable
 fun RowScope.AddItem(
     screen: BottomNavItem,
-    navController: NavHostController
+    navController: NavHostController,
+    isSelected: Boolean,
+    viewModel: TelaNavegationBarViewModel
 ) {
     NavigationBarItem(
-        // Text that shows bellow the icon
         label = {
             Text(text = screen.title)
         },
-
-        // The icon resource
         icon = {
             Icon(
                 painterResource(id = screen.icon),
                 contentDescription = screen.title
             )
         },
-
-        // Display if the icon it is select or not
-        selected = true,
-
-        // Always show the label bellow the icon or not
+        selected = isSelected,
         alwaysShowLabel = true,
-
-        // Click listener for the icon
-        onClick = { navController.navigate(screen.route) },
-
-        // Control all the colors of the icon
+        onClick = {
+            navController.navigate(screen.route)
+            viewModel.selectItem(screen)
+        },
         colors = NavigationBarItemDefaults.colors()
     )
 }
-
 
 @Preview(name = "TelaHome")
 @Composable
 private fun PreviewTelaHome() {
     val navController = rememberNavController()
-    TelaNavegationBar(navController)
+    val navControllerProvider = NavControllerProvider().apply { this.navController = navController }
+    TelaNavegationBar(navControllerProvider)
 }
