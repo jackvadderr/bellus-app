@@ -55,8 +55,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-appcheck-playintegrity:17.0.1")
+    implementation("com.firebaseui:firebase-ui-auth:8.0.0")
 
     implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.navigation.compose)
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)

@@ -7,8 +7,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
 import br.sapiens.bellus_app.BellusApp
-import br.sapiens.bellus_app.telas.splash.SplashScreen
+import br.sapiens.bellus_app.navegation.NavGraph
 import br.sapiens.bellus_app.viewmodels.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,20 +28,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isSplashShow by splashViewModel.isSplashShow.collectAsState()
             if(isSplashShow) {
-                SplashScreen()
+                NavGraph(startDestination = "splash")
             } else {
-                MainScreen()
+                NavGraph(startDestination = "home")
             }
         }
     }
 }
 
-@Composable
-fun MainScreen() {
-    Greeting("World!!!!!")
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello, $name!")
-}

@@ -12,10 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import br.sapiens.bellus_app.R
 
 @Composable
-fun SplashScreen() {
+fun TelaSplash(navController: NavHostController) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color(android.graphics.Color.parseColor("#ffffff"))),
