@@ -22,9 +22,9 @@ import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.navegation.RotasDestinos
 
 @Composable
-fun TelaNavegationBar(
-    navController: NavHostController
-) {
+fun TelaNavegationBar(navController: NavHostController) {
+    val navController = rememberNavController()
+
     MaterialTheme {
         Scaffold(
             bottomBar = {
