@@ -8,6 +8,8 @@ import br.sapiens.bellus_app.telas.home.NavControllerProvider
 import br.sapiens.bellus_app.telas.home.TelaNavegationBar
 import br.sapiens.bellus_app.telas.login.TelaLogin
 import br.sapiens.bellus_app.telas.splash.TelaSplash
+import br.sapiens.bellus_app.viewmodels.SplashViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun NavGraph(startDestination: String = RotasDestinos.SPLASH_ROUTE, navControllerProvider: NavControllerProvider) {
@@ -19,7 +21,8 @@ fun NavGraph(startDestination: String = RotasDestinos.SPLASH_ROUTE, navControlle
         startDestination = startDestination
     ){
         composable(RotasDestinos.SPLASH_ROUTE) {
-            TelaSplash(navController)
+            val viewModel: SplashViewModel = hiltViewModel()
+            TelaSplash(navController, viewModel)
         }
         composable(RotasDestinos.HOME_ROUTE) {
             TelaNavegationBar(navControllerProvider)

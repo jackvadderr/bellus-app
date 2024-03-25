@@ -103,6 +103,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava2")
 
     implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
