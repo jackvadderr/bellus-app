@@ -3,7 +3,7 @@ package br.sapiens.bellus_app.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.sapiens.bellus_app.telas.home.BottomNavItem
+import br.sapiens.bellus_app.telas.barra_navegation.BottomNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

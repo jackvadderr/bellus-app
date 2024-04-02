@@ -1,43 +1,41 @@
 package br.sapiens.bellus_app.telas.login
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.viewmodels.LoginViewModel
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material.Icon
+import androidx.compose.ui.res.painterResource
 
 @Composable
-fun TelaLogin(navController: NavHostController) {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val response = IdpResponse.fromResultIntent(result.data)
-            if (response?.error == null) {
-                // Autenticação bem-sucedida, navegue para a tela inicial
-                // Removido navigateToHome()
-            } else {
-                // Trate o erro de autenticação
-            }
-        }
-    }
+fun TelaLogin(
+    viewModel: LoginViewModel,
+    navigateToRegister: () -> Unit,
+    navigateToHome: () -> Unit,
+) {
+Text(text = "TELA DE LOGIN AMIGÃO")
+}
 
-    Button(onClick = {
-        // Inicie o processo de autenticação do FirebaseUI Auth
-        val providers = listOf(
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            // Adicione outros provedores conforme necessário
-        )
-        val intent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-        launcher.launch(intent)
-    }) {
-        Text("Sign in with FirebaseUI Auth")
-    }
+
+@Preview(showBackground = true)
+@Composable
+fun TelaLoginPreview() {
+
 }

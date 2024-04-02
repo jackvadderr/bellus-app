@@ -27,7 +27,7 @@ import kotlinx.coroutines.delay
 
 val setup = ConfiguracaoAnimacao()
 @Composable
-fun SplashArtAnimada(navController: NavHostController) {
+fun SplashArtAnimada(onAnimationComplete: () -> Unit) {
     val transicao = rememberInfiniteTransition(label = "")
     val isAnimacaoRodando = remember { mutableStateOf(true) }
     val indiceTexto = animarIndiceTexto(transicao, setup.texto, setup.atraso)
@@ -35,7 +35,7 @@ fun SplashArtAnimada(navController: NavHostController) {
     val opacidade = animarOpacidade(transicao, setup.atraso)
 
     RenderizarTextoAnimado(isAnimacaoRodando, setup.texto, indiceTexto, cor, opacidade, setup.fonteArimo)
-    FinalizarAnimacao(isAnimacaoRodando, indiceTexto, setup.texto, navController)
+    FinalizarAnimacao(isAnimacaoRodando, indiceTexto, setup.texto, onAnimationComplete)
 }
 
 @Composable
@@ -108,11 +108,11 @@ fun RenderizarTextoAnimado(
 fun FinalizarAnimacao(isAnimacaoRodando: MutableState<Boolean>,
                       indiceTexto: Int,
                       texto: String,
-                      navController: NavHostController) {
+                      onAnimationComplete: () -> Unit) {
     LaunchedEffect(indiceTexto) {
         if (indiceTexto >= texto.length - 1) {
             isAnimacaoRodando.value = false
-            navController.navigate("home")
+            onAnimationComplete()
         }
     }
 }
