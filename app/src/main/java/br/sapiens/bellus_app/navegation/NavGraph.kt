@@ -72,24 +72,24 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 )
             }
             // Tela Home
-            composable(RotasDestinos.Home.rota) {
-                    TelaMarketplace(
-                        hiltViewModel(),
-                        navigateToSearch = {
-                            navController.navigate(
-                                route = RotasDestinos.Home.rota,
-                            )
-                        },
-                        navigateToProfile = {
-                            navController.navigate(
-                                route = RotasDestinos.Perfil.rota
-                            )
-                        },
-                    )
-                }
-            }
+//            composable(RotasDestinos.Home.rota) {
+//                TelaMarketplace(
+//                    hiltViewModel(),
+//                    navigateToSearch = {
+//                        navController.navigate(
+//                            route = RotasDestinos.Home.rota,
+//                        )
+//                    },
+//                    navigateToProfile = {
+//                        navController.navigate(
+//                            route = RotasDestinos.Perfil.rota
+//                        )
+//                    },
+//                )
+//            }
         }
     }
+}
 
 @Preview(showBackground = true)
 @Composable

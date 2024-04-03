@@ -24,14 +24,14 @@ fun TelaSplash(
     val isSplashShow by viewModel.isSplashShow.collectAsState()
 
     if (!isSplashShow) {
-        navigateToHome()
+        navigateToLogin()
     } else {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(Color(android.graphics.Color.parseColor("#1B2634"))),
             contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                SplashArtAnimada(onAnimationComplete = navigateToHome)
+                SplashArtAnimada(onAnimationComplete = navigateToLogin)
             }
         }
     }

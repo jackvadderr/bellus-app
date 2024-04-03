@@ -59,6 +59,7 @@ dependencies {
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material3.android)
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -66,7 +67,7 @@ dependencies {
 
     // Choose one of the following:
     // Material Design 3
-    implementation("androidx.compose.material3:material3")
+//    implementation("androidx.compose.material3:material3")
     // or Material Design 2
     implementation("androidx.compose.material:material")
     // or skip Material Design and build directly on top of foundational components
@@ -91,7 +92,7 @@ dependencies {
     // Optional - Add full set of material icons
     implementation("androidx.compose.material:material-icons-extended")
     // Optional - Add window size utils
-    implementation("androidx.compose.material3:material3-window-size-class")
+//    implementation("androidx.compose.material3:material3-window-size-class")
 
     // Optional - Integration with activities
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -104,6 +105,8 @@ dependencies {
 
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
