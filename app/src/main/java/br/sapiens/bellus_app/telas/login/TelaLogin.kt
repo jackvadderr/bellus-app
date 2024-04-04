@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.telas.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,13 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -24,12 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.ui.component.CustomButton
 import br.sapiens.bellus_app.ui.component.SenhaTextField
 import br.sapiens.bellus_app.ui.component.UsuarioTextField
@@ -69,13 +69,18 @@ fun TelaLogin(
                 .background(Color(0xFF1D2B3D))
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "Bellus",
-                style = TextStyle(fontWeight = FontWeight.Bold),
-                fontSize = 40.sp,
-                color = Color(0xFFFFFFFF)
+//            Text(
+//                text = "Bellus",
+//                style = TextStyle(fontWeight = FontWeight.Bold),
+//                fontSize = 40.sp,
+//                color = Color(0xFFFFFFFF)
+//            )
+            Image(
+                painter = painterResource(id = R.mipmap.bellus_imagem),
+                contentDescription = "Bellus Login",
+                modifier = Modifier.size(200.dp)
             )
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(0.dp))
 
             Column(
                 modifier = Modifier

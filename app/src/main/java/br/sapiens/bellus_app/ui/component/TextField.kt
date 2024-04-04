@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -57,15 +59,17 @@ fun CustomTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+//                .align(alignment = Alignment.Center)
+                .wrapContentHeight(align = Alignment.CenterVertically),
             textStyle = TextStyle(
                 color = Color(0xFF896D3C),
-                fontSize = 16.sp
+                fontSize = 16.sp,
             ),
             singleLine = true,
             visualTransformation = if(isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         )
-        if(isPassword) {
+        if(isPassword && value.isNotEmpty()) {
             IconButton(
                 onClick = { passwordVisible = !passwordVisible },
                 modifier = Modifier.align(Alignment.CenterEnd)

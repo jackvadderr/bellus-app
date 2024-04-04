@@ -26,7 +26,7 @@ fun CustomButton(
             onClick()
         },
         modifier = Modifier
-            .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
+            .clip(RoundedCornerShape(4.dp, 4.dp, 4.dp, 4.dp))
             .fillMaxWidth(1f)
             .height(40.dp)
         ,
