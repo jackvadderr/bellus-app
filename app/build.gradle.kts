@@ -55,11 +55,13 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-appcheck-playintegrity:17.0.1")
+    implementation("com.google.firebase:firebase-appcheck")
     implementation("com.firebaseui:firebase-ui-auth:8.0.0")
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.android)
+    implementation(libs.firebase.crashlytics.buildtools)
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -106,6 +108,8 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 
 
     implementation(libs.hilt.android)
