@@ -1,51 +1,68 @@
 package br.sapiens.bellus_app.viewmodels
 
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import br.sapiens.bellus_app.R
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.BeginSignInResult
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.auth.AuthState
+import androidx.lifecycle.viewModelScope
+import br.sapiens.bellus_app.base.BaseViewModel
+import br.sapiens.bellus_app.base.IViewEvent
+import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.utils.State
+import com.google.firebase.auth.AuthCredential
+import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
+import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
-    private val _authState = MutableLiveData<AuthState>()
-    val authState: LiveData<AuthState> = _authState
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCase,
+) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
-    fun signInWithGoogle(context: android.content.Context) {
-        val oneTapClient = Identity.getSignInClient(context)
-        val signInRequest = BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId((R.string.default_web_client_id).toString())
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            )
-            .build()
-
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener { result ->
-                // Handle sign-in success
-                _authState.value = AuthState.Success(result)
-                Log.d("LoginViewModel", "signInWithGoogle: success")
+    fun loginWithCredential(authCredential: AuthCredential) {
+        setState { state.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
+                is State.Success -> {
+                    triggerEvent(ViewEvent.SetState(EstadoAutenticacao.AUTENTICADO))
+                }
+                is State.Error -> {
+                    triggerEvent(ViewEvent.SetState(EstadoAutenticacao.NAO_AUTENTICADO))
+                }
             }
-            .addOnFailureListener { exception ->
-                // Handle sign-in failure
-                _authState.value = AuthState.Error(exception)
-                Log.d("LoginViewModel", "signInWithGoogle: failure")
-            }
+        }
     }
 
-    sealed class AuthState {
-        data class Success(val result: BeginSignInResult): AuthState()
-        data class Error(val exception: Exception): AuthState()
+    override fun createInitialState(): ViewState = ViewState()
+
+    override fun triggerEvent(event: ViewEvent) {
+        viewModelScope.launch {
+            when (event) {
+                is ViewEvent.SetState -> {
+                    setState {
+                        state.copy(
+                            isLoading = false,
+                            loginState = event.state
+                        )
+                    }
+                }
+                is ViewEvent.SetLoading -> {
+                    setState {
+                        state.copy(
+                            isLoading = event.state
+                        )
+                    }
+                }
+            }
+        }
     }
+
+    sealed class ViewEvent : IViewEvent {
+        class SetLoading(val state: Boolean) : ViewEvent()
+        class SetState(val state: EstadoAutenticacao) : ViewEvent()
+    }
+
+    data class ViewState(
+        val isLoading: Boolean = false,
+        val loginState: EstadoAutenticacao? = null,
+    ) : IViewState
 }
-
-
-
-

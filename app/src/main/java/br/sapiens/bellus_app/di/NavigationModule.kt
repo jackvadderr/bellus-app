@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.modulos
+package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.telas.home.NavControllerProvider
 import dagger.Module

@@ -19,28 +19,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.ui.component.CustomButton
 import br.sapiens.bellus_app.ui.component.SenhaTextField
 import br.sapiens.bellus_app.ui.component.UsuarioTextField
+import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import br.sapiens.bellus_app.viewmodels.LoginViewModel
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.EmailAuthProvider
+
 
 @Composable
 fun TelaLogin(
@@ -48,29 +44,7 @@ fun TelaLogin(
     navigateToRegister: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
-
-    val authState by viewModel.authState.observeAsState()
-
-    val auth = Firebase.auth
-
-    val context = LocalContext.current
-    var oneTapClient = Identity.getSignInClient(context)
-
-    var signInRequest = BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                // Your server's client ID, not your Android client ID.
-                .setServerClientId((R.string.default_web_client_id).toString())
-                // Only show accounts previously used to sign in.
-                .setFilterByAuthorizedAccounts(false)
-                .build()
-        )
-        .build()
-
-
-    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
-
+    val state by viewModel.uiState.collectAsState()
 
     val email = remember {
         mutableStateOf("")
@@ -131,7 +105,8 @@ fun TelaLogin(
                 Spacer(modifier = Modifier.padding(10.dp))
                 // Botão de login
                 CustomButton(onClick = {
-                    viewModel.signInWithGoogle(context)
+                    val authCredential = EmailAuthProvider.getCredential(email.value, password.value)
+                    viewModel.loginWithCredential(authCredential)
                 }, texto = "Entrar com Google")
 
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -142,6 +117,7 @@ fun TelaLogin(
                     },
                     texto = "Cadastrar"
                 )
+                Spacer(modifier = Modifier.padding(10.dp))
                 // Divisor personalizado
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -173,9 +149,12 @@ fun TelaLogin(
                     onClick = {
                         navigateToHome()
                     },
-                    texto = "Outro Botão"
+                    texto = "Entrar com Gogles"
                 )
             }
         }
+    }
+    if (state.loginState == EstadoAutenticacao.AUTENTICADO) {
+        navigateToHome()
     }
 }

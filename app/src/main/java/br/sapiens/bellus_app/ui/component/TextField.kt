@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -28,17 +27,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CustomTextField(
+private fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier,
     isPassword: Boolean = false,
-    placeholder: String = "" // TODO: inserir o placeholder
+    placeholder: String // TODO: inserir o placeholder
 ) {
     var passwordVisible by remember { mutableStateOf(false)}
     Box(
@@ -68,6 +66,16 @@ fun CustomTextField(
             ),
             singleLine = true,
             visualTransformation = if(isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            decorationBox = { innerTextField ->
+                if (value.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        color = Color.Gray,
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    )
+                }
+                innerTextField()
+            }
         )
         if(isPassword && value.isNotEmpty()) {
             IconButton(
@@ -87,12 +95,14 @@ fun CustomTextField(
 fun UsuarioTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: String = "Usuário"
 ) {
     CustomTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier
+        modifier = modifier,
+        placeholder = placeholder
     )
 }
 
@@ -100,12 +110,27 @@ fun UsuarioTextField(
 fun SenhaTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: String = "Senha"
 ) {
     CustomTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        placeholder = placeholder,
         isPassword = true)
 }
 
+@Composable
+fun GeralTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String
+) {
+    CustomTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier,
+        placeholder = placeholder
+    )
+}
