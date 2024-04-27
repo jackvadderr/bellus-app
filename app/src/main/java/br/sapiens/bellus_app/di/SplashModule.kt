@@ -1,6 +1,6 @@
 package br.sapiens.bellus_app.di
 
-import br.sapiens.bellus_app.viewmodels.SplashViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.SplashViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
