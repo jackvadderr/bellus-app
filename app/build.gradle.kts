@@ -4,7 +4,6 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.hiltAndroid)
     id("com.google.gms.google-services")
-
 }
 
 android {
@@ -63,6 +62,9 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.camera.core)
+    implementation(libs.googleid)
+    testImplementation("org.testng:testng:6.9.6")
+    testImplementation("org.testng:testng:6.9.6")
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -110,8 +112,10 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
-
+//    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:19.2.0")
+    implementation("androidx.credentials:credentials:1.3.0-alpha03")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha03")
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

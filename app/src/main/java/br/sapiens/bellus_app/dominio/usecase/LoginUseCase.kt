@@ -13,11 +13,12 @@ class LoginUseCase(
 
     override suspend fun invoke(input: Input?): State<FirebaseUser> {
         return try {
-            when (val response = loginRepository.loginWithCredential(input!!.authCredential)) {
-                is State.Success<*> -> State.Success(response.data as FirebaseUser)
-                is State.Error -> response
-                else -> State.Error(Exception("Error"))
-            }
+            input?.authCredential?.let { credential ->
+                when (val response = loginRepository.loginWithCredential(credential)) {
+                    is State.Success<*> -> State.Success(response.data as FirebaseUser)
+                    is State.Error -> response
+                }
+            } ?: State.Error(Exception("Input or AuthCredential is null"))
         } catch (e: Exception) {
             State.Error(e)
         }
