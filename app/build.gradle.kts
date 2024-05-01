@@ -114,8 +114,13 @@ dependencies {
 
 //    implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.gms:play-services-auth:19.2.0")
-    implementation("androidx.credentials:credentials:1.3.0-alpha03")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha03")
+//    implementation("androidx.credentials:credentials:1.3.0-alpha03")
+    // https://mvnrepository.com/artifact/androidx.credentials/credentials
+    implementation("androidx.credentials:credentials:1.2.2")
+
+//    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha03")
+    // https://mvnrepository.com/artifact/androidx.credentials/credentials-play-services-auth
+    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

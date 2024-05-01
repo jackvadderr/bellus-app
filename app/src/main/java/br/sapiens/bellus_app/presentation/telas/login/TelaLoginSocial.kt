@@ -1,6 +1,5 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
-
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.CustomButton
 import br.sapiens.bellus_app.presentation.viewmodels.LoginSocialViewModel
+import br.sapiens.bellus_app.utils.getAndroidSDKVersion
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import kotlinx.coroutines.launch
 
@@ -76,12 +76,14 @@ fun TelaSocialLogin(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.padding(5.dp))
-                CustomButton(onClick = {
-                    coroutineScope.launch {
-                        viewModel.googleSign(context = context)
-                    }
-                }, texto = "Entrar com Google")
-                Spacer(modifier = Modifier.padding(10.dp))
+                if(getAndroidSDKVersion() >= 15) {
+                    CustomButton(onClick = {
+                        coroutineScope.launch {
+                            viewModel.googleSign(context)
+                        }
+                    }, texto = "Entrar com Google")
+                    Spacer(modifier = Modifier.padding(10.dp))
+                }
                 CustomButton(onClick = {
                     navigateToLoginCredencial()
                 }, texto = "Entrar com credenciais")
