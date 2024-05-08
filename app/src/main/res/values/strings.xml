@@ -9,8 +9,8 @@
     # APIs KEYS #
     #############
     -->
-    <string name="firebase_web_key">AIzaSyCI37nDbM7B8ZId_Tcpn1v0xB4_2UfH5KQ</string>
+    <string name="firebase_web_key"></string>
 
-    <string name="google_oauth_web_client_id">410851760544-h412q2lalerj624cl9d0q5rt87uf7ebh.apps.googleusercontent.com</string>
-    <string name="google_android_client_id">410851760544-4g9d0fvufm5bui6093h0vu63fqruhpe5.apps.googleusercontent.com</string>
+    <string name="google_oauth_web_client_id"></string>
+    <string name="google_android_client_id"></string>
 </resources>
