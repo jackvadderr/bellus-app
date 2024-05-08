@@ -110,50 +110,15 @@ fun TelaLoginCredenciais(
                     } else {
                         // TODO: Não faz nada
                     }
-                }, texto = "Entrar com Google")
-
+                }, texto = "Entrar")
                 Spacer(modifier = Modifier.padding(10.dp))
                 // Botão de cadastro
                 CustomButton(
                     onClick = {
-                        // TODO:
+                        navigateToRegister()
                     },
-                    texto = "Cadastrar"
+                    texto = "Criar conta nova"
                 )
-                Spacer(modifier = Modifier.padding(10.dp))
-//                // Divisor personalizado
-//                Row(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Spacer(
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .height(1.dp)
-//                            .background(Color.Gray)
-//                    )
-//                    Text(
-//                        text = "Ou",
-//                        color = Color.Gray,
-//                        modifier = Modifier.padding(horizontal = 16.dp)
-//                    )
-//
-//                    Spacer(
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .height(1.dp)
-//                            .background(Color.Gray)
-//                    )
-//                }
-//                Spacer(modifier = Modifier.padding(10.dp))
-//                // Botão de cadastro
-//                CustomButton(
-//                    onClick = {
-//                        // TODO:
-//                    },
-//                    texto = "Entrar com Google"
-//                )
             }
         }
     }

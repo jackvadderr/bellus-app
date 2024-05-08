@@ -1,6 +1,8 @@
 package br.sapiens.bellus_app.presentation.navegation
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,30 +15,44 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
+import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
 import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
+import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val rotaAtual = navBackStackEntry?.destination?.route
     val telaNavegationviewModel: TelaNavegationBarViewModel = viewModel()
     val selectedItem = telaNavegationviewModel.selectedItem.observeAsState()
 
+    val deveExibirBarraNavegacao: (String?) -> Boolean = {
+        rota ->
+        rota != RotasDestinos.Splash.rota &&
+        rota != RotasDestinos.LoginSocial.rota &&
+        rota != RotasDestinos.LoginCredencial.rota &&
+        rota != RotasDestinos.Cadastro.rota
+    }
+
     Scaffold(
+        topBar = {
+            if (deveExibirBarraNavegacao(rotaAtual)) {
+                CustomTopBar()
+            }
+        },
         bottomBar = {
-            if (currentRoute != RotasDestinos.Splash.rota &&
-                currentRoute != RotasDestinos.Login.rota &&
-                currentRoute != RotasDestinos.LoginCredencial.rota
-                ) {
+            if (deveExibirBarraNavegacao(rotaAtual)) {
                 BottomNavigation(navController, selectedItem.value)
             }
         }
-    ) { _ ->
+    )
+    { _ ->
         NavHost(
             navController = navController,
             startDestination = startDestination,
@@ -45,7 +61,6 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
              *  SPLASH ART AMIGO
              * ######################
              */
-            // Tela Splash Art
             composable(RotasDestinos.Splash.rota) {
                 TelaSplash(
                     hiltViewModel(),
@@ -56,16 +71,16 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     },
                     navigateToLogin = {
                         navController.navigate(
-                            route = RotasDestinos.Login.rota,
+                            route = RotasDestinos.LoginSocial.rota,
                         ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true} }
                     }
                 )
             }
             /* ######################
-             *  AREA DE LOGIN AMIGO
+             *  AREA GERAL DE LOGIN AMIGO
              * ######################
              */
-            composable(RotasDestinos.Login.rota) {
+            composable(RotasDestinos.LoginSocial.rota) {
                 TelaSocialLogin(
                     hiltViewModel(),
                     navigateToLoginCredencial = {
@@ -76,7 +91,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToHome = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.Login.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true} }
                     }
                 )
             }
@@ -85,13 +100,23 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     hiltViewModel(),
                     navigateToRegister = {
                         navController.navigate(
-                            route = RotasDestinos.Register.rota,
+                            route = RotasDestinos.Cadastro.rota,
                         ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true} }
                     },
                     navigateToHome = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
                         ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true} }
+                    },
+                )
+            }
+            composable(RotasDestinos.Cadastro.rota) {
+                TelaCadastro(
+                    hiltViewModel(),
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.LoginSocial.rota
+                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true} }
                     }
                 )
             }

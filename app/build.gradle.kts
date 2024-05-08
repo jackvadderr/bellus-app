@@ -122,6 +122,8 @@ dependencies {
     // https://mvnrepository.com/artifact/androidx.credentials/credentials-play-services-auth
     implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
 
+    implementation("jakarta.validation:jakarta.validation-api:3.1.0-M2")
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 }
