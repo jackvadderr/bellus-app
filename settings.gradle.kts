@@ -10,7 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-    }
+//        jcenter()
+        maven { url = uri("https://jitpack.io") }    }
 }
 
 rootProject.name = "bellus_app"

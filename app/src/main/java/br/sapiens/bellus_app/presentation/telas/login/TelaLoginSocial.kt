@@ -1,5 +1,10 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
+
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Context
+import android.content.IntentSender.SendIntentException
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -28,11 +33,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.CustomButton
 import br.sapiens.bellus_app.presentation.viewmodels.LoginSocialViewModel
 import br.sapiens.bellus_app.utils.getAndroidSDKVersion
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.coroutines.launch
 
 
@@ -45,7 +56,7 @@ fun TelaSocialLogin(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    val context = LocalContext.current
+    val context: Context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier
@@ -77,22 +88,27 @@ fun TelaSocialLogin(
             ) {
                 Spacer(modifier = Modifier.padding(5.dp))
                 if(getAndroidSDKVersion() >= 15) {
+                    /*
+                     * BOTÃO DO GOOGLE
+                     */
                     CustomButton(onClick = {
                         coroutineScope.launch {
-                            viewModel.googleSign(context)
+//                            viewModel.googleSign(context)
                         }
                     }, texto = "Entrar com Google")
                     Spacer(modifier = Modifier.padding(10.dp))
                 }
-                CustomButton(onClick = {
-                    navigateToLoginCredencial()
-                }, texto = "Entrar com credenciais")
+                    /*
+                     * BOTÃO LOGIN COM EMAIL E SENHA
+                     */
+                    CustomButton(onClick = {
+                        navigateToLoginCredencial()
+                    }, texto = "Entrar com credenciais")
                 }
         }
     }
-    when (state.loginState) {
-        EstadoAutenticacao.AUTENTICADO -> navigateToHome()
-        EstadoAutenticacao.NAO_AUTENTICADO -> Log.d("TelaSocialLogin","NÃO AUTORIZADO AMIGÃO")
-        null -> {}
+    if(state.loginState == EstadoAutenticacao.AUTENTICADO) {
+        navigateToHome()
     }
 }
+

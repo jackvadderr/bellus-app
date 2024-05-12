@@ -24,3 +24,4 @@
 -keep class androidx.credentials.playservices.** {
   *;
 }
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }

@@ -4,6 +4,8 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.hiltAndroid)
     id("com.google.gms.google-services")
+    id("com.google.protobuf") version "0.9.4"
+//    kotlin("plugin.serialization") version "1.9.24"
 }
 
 android {
@@ -35,6 +37,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+
+        freeCompilerArgs += "-Xextended-compiler-checks"
     }
 
     buildFeatures {
@@ -112,8 +116,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 
-//    implementation("com.google.android.gms:play-services-location:21.2.0")
-    implementation("com.google.android.gms:play-services-auth:19.2.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 //    implementation("androidx.credentials:credentials:1.3.0-alpha03")
     // https://mvnrepository.com/artifact/androidx.credentials/credentials
     implementation("androidx.credentials:credentials:1.2.2")
@@ -122,7 +126,21 @@ dependencies {
     // https://mvnrepository.com/artifact/androidx.credentials/credentials-play-services-auth
     implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
 
-    implementation("jakarta.validation:jakarta.validation-api:3.1.0-M2")
+//    implementation("jakarta.validation:jakarta.validation-api:3.1.0-M2")
+
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+//    implementation("com.github.Cidaas:cidaas-android-sdk:3.0.8")
+
+    /*
+     * DATA STORE
+     */
+    implementation("androidx.datastore:datastore:1.1.1")
+
+    // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
+    implementation("com.google.protobuf:protobuf-javalite:4.26.1")
+
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -137,3 +155,28 @@ kapt {
     }
     useBuildCache = false
 }
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.26.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins.create("java") {
+                option("lite")
+            }
+        }
+    }
+}
+
+//configurations {
+//    all {
+//        exclude(group = "com.google.protobuf", module = "protobuf-java")
+//    }
+//}
+
+//configurations {
+//    all {
+//        exclude(group = "com.google.protobuf", module = "androidx.datastore")
+//    }
+//}

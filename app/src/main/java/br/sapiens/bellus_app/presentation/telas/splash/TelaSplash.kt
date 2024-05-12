@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import br.sapiens.bellus_app.presentation.viewmodels.SplashViewModel
+import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 
 
 @Composable
@@ -23,8 +25,17 @@ fun TelaSplash(
 ) {
     val isSplashShow by viewModel.isSplashShow.collectAsState()
 
+    val state by viewModel.uiState.collectAsState()
+
+    val authState = state.authState
+
     if (!isSplashShow) {
         navigateToLogin()
+        if (authState == EstadoAutenticacao.AUTENTICADO) {
+            navigateToHome()
+        } else if (authState == EstadoAutenticacao.NAO_AUTENTICADO) {
+            navigateToLogin()
+        }
     } else {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -35,15 +46,16 @@ fun TelaSplash(
             }
         }
     }
+
+
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewTelaSplash() {
-    val viewModel = SplashViewModel()
-    TelaSplash(
-        viewModel = viewModel,
-        navigateToLogin = {},
-        navigateToHome = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewTelaSplash() {
+//    TelaSplash(
+//        viewModel = hiltViewModel(),
+//        navigateToLogin = {},
+//        navigateToHome = {}
+//    )
+//}

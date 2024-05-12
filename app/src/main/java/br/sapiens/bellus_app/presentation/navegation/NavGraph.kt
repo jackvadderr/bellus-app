@@ -22,7 +22,6 @@ import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
