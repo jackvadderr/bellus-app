@@ -7,6 +7,9 @@ import br.sapiens.bellus_app.BellusApp
 import br.sapiens.bellus_app.presentation.navegation.NavGraph
 import br.sapiens.bellus_app.presentation.telas.home.NavControllerProvider
 import br.sapiens.bellus_app.presentation.viewmodels.SplashViewModel
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -24,6 +27,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
+        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance()
+        )
         setContent {
             NavGraph()
         }
