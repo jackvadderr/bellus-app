@@ -1,31 +1,46 @@
 package br.sapiens.bellus_app.presentation.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 
 data class NewItem(
     val name: String,
     val location: String,
-    val imageRes: Int
+    val imageRes: Int,
+    val rating: Any = 4.5
 )
 
 @Composable
@@ -49,26 +64,45 @@ fun NewInBellusSection() {
 
 @Composable
 fun NewInBellusItem(item: NewItem) {
-    val itemWidth = 80.dp
-    val itemHeight = 100.dp
-    val imageSize = 60.dp
-    val textSize = MaterialTheme.typography.body2
     Card(
         modifier = Modifier
-            .width(itemWidth)
-            .height(itemHeight)
-            .clickable { /* Ação ao clicar */ }
+            .width(250.dp)
+            .height(180.dp)
+            .clickable { /* Ação ao clicar */ },
+        elevation = 4.dp,
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Column {
+        Box {
             Image(
                 painter = painterResource(id = item.imageRes),
                 contentDescription = item.name,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(imageSize)
-                    .clip(RoundedCornerShape(8.dp))
+                    .fillMaxWidth()
+                    .height(120.dp)
             )
-            Text(text = item.name, style = textSize)
-            Text(text = item.location, style = textSize)
+            Column(modifier = Modifier.padding(8.dp)) {
+                Spacer(modifier = Modifier.height(120.dp))
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = item.location, style = MaterialTheme.typography.body2)
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .background(Color.White.copy(alpha = 0.7f), shape = CircleShape)
+                    .padding(4.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
+                    Text(text = item.rating.toString(), fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
 }
+

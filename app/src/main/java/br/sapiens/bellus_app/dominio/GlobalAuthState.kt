@@ -41,6 +41,7 @@ object GlobalAuthState {
                     is AuthEvent.UserAuthenticated -> updateStateToAuthenticated()
                     is AuthEvent.UserNotAuthenticated -> updateStateToUnauthenticated()
                     is AuthEvent.AuthenticationError -> handleAuthenticationError(event.exception)
+                    else -> {}
                 }
             }
         }

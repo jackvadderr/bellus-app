@@ -1,10 +1,13 @@
 package br.sapiens.bellus_app.presentation.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,18 +15,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
 data class Offer(
     val title: String,
@@ -32,45 +43,45 @@ data class Offer(
 )
 
 @Composable
-fun OfferImage(imageResource: Int, width: Dp, height: Dp) {
-    Image(
-        painter = painterResource(id = imageResource),
-        contentDescription = null,
-        modifier = Modifier
-            .width(width)
-            .height(height)
-            .clip(RoundedCornerShape(8.dp))
-    )
-}
-
-@Composable
-fun OfferCard(offer: Offer, imageWidth: Dp, imageHeight: Dp) {
+fun OfferCard(item: Offer) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { /* Ação de clique */ }
+            .width(250.dp)
+            .height(180.dp)
+            .clickable { /* Ação ao clicar */ },
+        elevation = 4.dp,
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally, // Centraliza o conteúdo horizontalmente
-            modifier = Modifier.padding(8.dp) // Adiciona padding interno ao cartão
-        ) {
-            OfferImage(
-                imageResource = offer.imageResource,
-                width = imageWidth,
-                height = imageHeight
+        Box {
+            Image(
+                painter = painterResource(id = item.imageResource),
+                contentDescription = item.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp)) // Espaçamento entre a imagem e o texto
-            Text(
-                text = offer.title,
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = offer.address,
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            Column(modifier = Modifier.padding(8.dp)) {
+                Spacer(modifier = Modifier.height(120.dp))
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = item.address, style = MaterialTheme.typography.body2)
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .background(Color.White.copy(alpha = 0.7f), shape = CircleShape)
+                    .padding(4.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
+                    Text(text = "4.5", fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
 }
@@ -78,33 +89,24 @@ fun OfferCard(offer: Offer, imageWidth: Dp, imageHeight: Dp) {
 @Composable
 fun SpecialOffersSection(
     offers: List<Offer> = sampleOffers,
-    imageWidth: Dp = defaultImageWidth,
-    imageHeight: Dp = defaultImageHeight
 ) {
-    Column(modifier = Modifier.padding(sectionPadding)) {
-        Text(text = "Ofertas especiais", style = MaterialTheme.typography.h6)
+    val newItems = listOf(
+        NewItem("Cortes & Estilos", "Av. Sete de Setembro, 1234, Porto Velho", R.mipmap.barbearia_1),
+        NewItem("Cortes Clássicos", "Rua início de favela, Porto Velho", R.mipmap.barbearia_1)
+    )
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Ofertas Especiais", style = MaterialTheme.typography.h6)
         LazyRow(
-            contentPadding = PaddingValues(vertical = rowVerticalPadding),
-            horizontalArrangement = Arrangement.spacedBy(itemSpacing)
+            contentPadding = PaddingValues(vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(offers) { offer ->
-                OfferCard(
-                    offer = offer,
-                    imageWidth = imageWidth,
-                    imageHeight = imageHeight
-                )
+            items(newItems) { item ->
+                NewInBellusItem(item)
             }
         }
     }
 }
 
-
-private val defaultImageWidth = 120.dp
-private val defaultImageHeight = 80.dp
-private val cornerRadius = 8.dp
-private val sectionPadding = 16.dp
-private val rowVerticalPadding = 8.dp
-private val itemSpacing = 16.dp
 
 // Dados de exemplo
 val sampleOffers = listOf(
