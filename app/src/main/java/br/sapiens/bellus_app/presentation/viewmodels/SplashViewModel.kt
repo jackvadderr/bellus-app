@@ -1,11 +1,17 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.dominio.GlobalAuthState
 import br.sapiens.bellus_app.dominio.sdk.AuthService
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,16 +39,13 @@ class SplashViewModel @Inject constructor(
     private fun checkUser() {
         viewModelScope.launch {
             delay(2000)
-            authService.refreshUserToken(
-                onSuccess = {
-                val authState = if (authService.isUserLogin())
-                    EstadoAutenticacao.AUTENTICADO
-                else EstadoAutenticacao.NAO_AUTENTICADO
-
-                triggerEvent(ViewEvent.SetAuthState(authState))
-            }, onFailure = {
+            val userId = GlobalAuthState.getCurrentUserId()
+            if (userId != null) {
+//                Log.d("SplashViewModel", "User ID: $userId")
+                triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.AUTENTICADO))
+            } else {
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))
-            })
+            }
         }
     }
 

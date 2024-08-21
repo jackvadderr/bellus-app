@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.utils.State
-import com.google.firebase.auth.AuthCredential
 import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
+import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
+import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+//    private val authService: AuthService,
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
     fun loginWithCredential(authCredential: AuthCredential) {
@@ -54,6 +55,10 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun checkUser() {
+
     }
 
     sealed class ViewEvent : IViewEvent {
