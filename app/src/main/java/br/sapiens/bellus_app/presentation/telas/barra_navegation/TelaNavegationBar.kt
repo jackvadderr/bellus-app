@@ -4,7 +4,7 @@ package br.sapiens.bellus_app.presentation.telas.barra_navegation
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -54,9 +54,6 @@ fun RowScope.AddItem(
     viewModel: TelaNavegationBarViewModel
 ) {
     NavigationBarItem(
-//        label = {
-//            Text(text = screen.title)
-//        },
         icon = {
             Icon(
                 painterResource(id = screen.icon),
@@ -75,8 +72,8 @@ fun RowScope.AddItem(
         },
         colors = NavigationBarItemDefaults.colors(
             indicatorColor = Color.Transparent,
-            selectedIconColor = Color.Transparent,
-            unselectedIconColor = Color.Transparent
+            selectedIconColor = Color.White,
+            unselectedIconColor = Color.Gray,
         )
     )
 }

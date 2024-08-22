@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
+import CustomButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.data.repository.model.GeneroEnum
-import br.sapiens.bellus_app.presentation.ui.component.CustomButton
 import br.sapiens.bellus_app.presentation.ui.component.GeralTextField
 import br.sapiens.bellus_app.presentation.ui.component.SenhaTextField
 import br.sapiens.bellus_app.presentation.viewmodels.CadastroViewModel

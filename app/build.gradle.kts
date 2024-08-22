@@ -64,10 +64,11 @@ dependencies {
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material3.android)
+//    implementation(libs.androidx.material3.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.camera.core)
     implementation(libs.googleid)
+//    implementation(libs.androidx.tv.material)
     testImplementation("org.testng:testng:6.9.6")
     testImplementation("org.testng:testng:6.9.6")
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
@@ -77,9 +78,9 @@ dependencies {
 
     // Choose one of the following:
     // Material Design 3
-//    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3")
     // or Material Design 2
-    implementation("androidx.compose.material:material")
+//    implementation("androidx.compose.material:material")
     // or skip Material Design and build directly on top of foundational components
     implementation("androidx.compose.foundation:foundation")
     // or only import the main APIs for the underlying toolkit systems,

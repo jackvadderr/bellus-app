@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
+import CustomButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
-import br.sapiens.bellus_app.presentation.ui.component.CustomButton
 import br.sapiens.bellus_app.presentation.ui.component.SenhaTextField
 import br.sapiens.bellus_app.presentation.ui.component.UsuarioTextField
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao

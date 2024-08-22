@@ -1,13 +1,7 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
-
-import android.app.Activity
-import android.content.ContentValues
+import CustomButton
 import android.content.Context
-import android.content.IntentSender.SendIntentException
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,21 +27,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import br.sapiens.bellus_app.R
-import br.sapiens.bellus_app.presentation.ui.component.CustomButton
 import br.sapiens.bellus_app.presentation.viewmodels.LoginSocialViewModel
 import br.sapiens.bellus_app.utils.getAndroidSDKVersion
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.BeginSignInResult
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.coroutines.launch
 
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun TelaSocialLogin(
     viewModel: LoginSocialViewModel,

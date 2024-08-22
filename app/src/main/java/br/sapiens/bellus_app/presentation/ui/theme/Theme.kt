@@ -1,20 +1,21 @@
 package br.sapiens.bellus_app.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = BlueNaoSei,
-    primaryVariant = Gold,
+    primaryContainer = Gold,
     secondary = Teal200
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = WhiteFosfo,
-    primaryVariant = WhiteNaoSei,
+    primaryContainer = WhiteNaoSei,
     secondary = Teal200
 
     /* Other default colors to override
@@ -39,7 +40,7 @@ fun FirebaseProjectTheme(
     }
 
     MaterialTheme(
-        colors = colors,
+        colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content

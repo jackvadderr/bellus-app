@@ -2,14 +2,16 @@ package br.sapiens.bellus_app.presentation.ui.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
-@SuppressLint("UnusedmaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedmaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TelaMarketplace(
 ) {
@@ -30,6 +32,7 @@ fun TelaMarketplace(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(
     modifier: Modifier = Modifier
@@ -67,7 +70,8 @@ fun CustomTopBar(
                 )
             }
         },
-        backgroundColor = BlueNaoSei
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BlueNaoSei)
     )
 }
 

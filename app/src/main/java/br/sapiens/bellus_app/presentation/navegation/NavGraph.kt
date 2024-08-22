@@ -1,9 +1,7 @@
 package br.sapiens.bellus_app.presentation.navegation
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,8 +20,7 @@ import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
     val navController = rememberNavController()
