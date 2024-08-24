@@ -42,7 +42,10 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
     }
 
     val rotasSemPadding = listOf(
-        RotasDestinos.Splash.rota
+        RotasDestinos.Splash.rota,
+        RotasDestinos.LoginCredencial.rota,
+        RotasDestinos.LoginSocial.rota,
+        RotasDestinos.Cadastro.rota,
     )
 
     val modifier = if (rotaAtual in rotasSemPadding) {

@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.protobuf") version "0.9.4"
 //    kotlin("plugin.serialization") version "1.9.24"
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
