@@ -54,7 +54,7 @@ android {
 dependencies {
     implementation(libs.firebase.auth.ktx)
 //    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
 
 // Add the dependency for the Firebase SDK for Google Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
