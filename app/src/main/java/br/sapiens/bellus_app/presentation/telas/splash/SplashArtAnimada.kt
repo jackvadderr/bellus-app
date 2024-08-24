@@ -25,7 +25,7 @@ import br.sapiens.bellus_app.utils.splash_animacao.ConfiguracaoAnimacao
 
 val setup = ConfiguracaoAnimacao()
 @Composable
-fun SplashArtAnimada(onAnimationComplete: () -> Unit) {
+fun SplashArtAnimada() {
     val transicao = rememberInfiniteTransition(label = "")
     val isAnimacaoRodando = remember { mutableStateOf(true) }
     val indiceTexto = animarIndiceTexto(transicao, setup.texto, setup.atraso)
@@ -33,7 +33,7 @@ fun SplashArtAnimada(onAnimationComplete: () -> Unit) {
     val opacidade = animarOpacidade(transicao, setup.atraso)
 
     RenderizarTextoAnimado(isAnimacaoRodando, setup.texto, indiceTexto, cor, opacidade, setup.fonteArimo)
-    FinalizarAnimacao(isAnimacaoRodando, indiceTexto, setup.texto, onAnimationComplete)
+    FinalizarAnimacao(isAnimacaoRodando, indiceTexto, setup.texto)
 }
 
 @Composable
@@ -108,12 +108,10 @@ fun RenderizarTextoAnimado(
 @Composable
 fun FinalizarAnimacao(isAnimacaoRodando: MutableState<Boolean>,
                       indiceTexto: Int,
-                      texto: String,
-                      onAnimationComplete: () -> Unit) {
+                      texto: String) {
     LaunchedEffect(indiceTexto) {
         if (indiceTexto >= texto.length - 1) {
             isAnimacaoRodando.value = false
-            onAnimationComplete()
         }
     }
 }

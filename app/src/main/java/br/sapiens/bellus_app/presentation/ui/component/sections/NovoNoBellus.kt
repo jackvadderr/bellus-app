@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.presentation.ui.component
+package br.sapiens.bellus_app.presentation.ui.component.sections
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,24 +27,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
-import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
-data class Offer(
-    val title: String,
-    val address: String,
-    val imageResource: Int
+data class NewItemModel(
+    val name: String,
+    val location: String,
+    val imageRes: Int,
+    val rating: Any = 4.5
 )
 
 @Composable
-fun OfferCard(item: Offer) {
+fun NewInBellusSection() {
+    val newItems = listOf(
+        NewItemModel("Cortes & Estilos", "Av. Sete de Setembro, 1234, Porto Velho", R.mipmap.barbearia_1),
+        NewItemModel("Cortes Clássicos", "Rua início de favela, Porto Velho", R.mipmap.barbearia_1)
+    )
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Novo no Bellus", style = MaterialTheme.typography.bodySmall)
+        LazyRow(
+            contentPadding = PaddingValues(vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(newItems) { item ->
+                NewInBellusCard(item)
+            }
+        }
+    }
+}
+
+@Composable
+fun NewInBellusCard(item: NewItemModel) {
     Card(
         modifier = Modifier
             .width(250.dp)
@@ -55,8 +72,8 @@ fun OfferCard(item: Offer) {
     ) {
         Box {
             Image(
-                painter = painterResource(id = item.imageResource),
-                contentDescription = item.title,
+                painter = painterResource(id = item.imageRes),
+                contentDescription = item.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,11 +82,11 @@ fun OfferCard(item: Offer) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Spacer(modifier = Modifier.height(120.dp))
                 Text(
-                    text = item.title,
+                    text = item.name,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = item.address, style = MaterialTheme.typography.titleSmall)
+                Text(text = item.location, style = MaterialTheme.typography.bodySmall)
             }
             Box(
                 modifier = Modifier
@@ -80,37 +97,10 @@ fun OfferCard(item: Offer) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
-                    Text(text = "4.5", fontWeight = FontWeight.Bold)
+                    Text(text = item.rating.toString(), fontWeight = FontWeight.Bold)
                 }
             }
         }
     }
 }
 
-@Composable
-fun SpecialOffersSection(
-    offers: List<Offer> = sampleOffers,
-) {
-    val newItems = listOf(
-        NewItem("Cortes & Estilos", "Av. Sete de Setembro, 1234, Porto Velho", R.mipmap.barbearia_1),
-        NewItem("Cortes Clássicos", "Rua início de favela, Porto Velho", R.mipmap.barbearia_1)
-    )
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Ofertas Especiais", style = MaterialTheme.typography.titleSmall)
-        LazyRow(
-            contentPadding = PaddingValues(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(newItems) { item ->
-                NewInBellusItem(item)
-            }
-        }
-    }
-}
-
-
-// Dados de exemplo
-val sampleOffers = listOf(
-    Offer("A Navalha Dourada", "Rua João Pedro da Rocha, 1545, Porto Velho", R.mipmap.barbearia_1),
-    Offer("Barbearia", "Rua Industrial, Porto Velho", R.mipmap.barbearia_1)
-)

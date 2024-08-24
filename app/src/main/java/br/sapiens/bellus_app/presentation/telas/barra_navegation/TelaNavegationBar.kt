@@ -95,7 +95,7 @@ sealed class BottomNavItem(
             "Pesquisar",
             R.drawable.ic_search_black_18dp,
 //            RotasDestinos.Pesquisar.rota
-            RotasDestinos.Home.rota
+            RotasDestinos.Pesquisar.rota
         )
 
     data object Perfil :
@@ -103,6 +103,6 @@ sealed class BottomNavItem(
             "Perfil",
             R.drawable.ic_home_black_24dp,
 //            RotasDestinos.Perfil.rota
-            RotasDestinos.Home.rota
+            RotasDestinos.Pesquisar.rota
         )
 }

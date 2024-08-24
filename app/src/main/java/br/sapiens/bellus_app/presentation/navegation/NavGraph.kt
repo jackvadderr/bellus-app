@@ -1,10 +1,13 @@
 package br.sapiens.bellus_app.presentation.navegation
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -13,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
+import br.sapiens.bellus_app.presentation.telas.home.TelaPesquisa
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
@@ -37,6 +41,16 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         rota != RotasDestinos.Cadastro.rota
     }
 
+    val rotasSemPadding = listOf(
+        RotasDestinos.Splash.rota
+    )
+
+    val modifier = if (rotaAtual in rotasSemPadding) {
+        Modifier
+    } else {
+        Modifier.padding(top = 60.dp, bottom = 65.dp)
+    }
+
     Scaffold(
         topBar = {
             if (deveExibirBarraNavegacao(rotaAtual)) {
@@ -53,6 +67,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         NavHost(
             navController = navController,
             startDestination = startDestination,
+            modifier = modifier
         ) {
             /* ######################
              *  SPLASH ART AMIGO
@@ -124,6 +139,26 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             // Tela Home
             composable(RotasDestinos.Home.rota) {
                 TelaMarketplace(
+                    hiltViewModel(),
+                    navigateToSearch = {
+                        navController.navigate(
+                            route = RotasDestinos.Home.rota,
+                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+                    },
+                    navigateToProfile = {
+                        navController.navigate(
+                            route = RotasDestinos.Perfil.rota
+                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+                    },
+                )
+            }
+            /* ######################
+             *   TELA DE PESQUISAS
+             * ######################
+             */
+            // Tela Pesquisa
+            composable(RotasDestinos.Pesquisar.rota) {
+                TelaPesquisa(
                     hiltViewModel(),
                     navigateToSearch = {
                         navController.navigate(

@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.telas.splash
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,11 @@ fun TelaSplash(
     val authState = state.authState
 
     if (!isSplashShow) {
-        navigateToLogin()
         if (authState == EstadoAutenticacao.AUTENTICADO) {
+            Log.d("TelaSplash", "Autenticado")
             navigateToHome()
         } else if (authState == EstadoAutenticacao.NAO_AUTENTICADO) {
+            Log.d("TelaSplash", "NÃO Autenticado")
             navigateToLogin()
         }
     } else {
@@ -42,7 +44,7 @@ fun TelaSplash(
             .background(Color(android.graphics.Color.parseColor("#1B2634"))),
             contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                SplashArtAnimada(onAnimationComplete = navigateToLogin)
+                SplashArtAnimada()
             }
         }
     }

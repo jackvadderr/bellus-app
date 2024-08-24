@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.presentation.ui.component
+package br.sapiens.bellus_app.presentation.ui.component.sections
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
-data class Category(
+data class CategoryModel(
     val name: String,
     val imageRes: Int
 )
@@ -40,11 +40,11 @@ data class Category(
 @Composable
 fun CategorySection() {
     val categories = listOf(
-        Category("Saúde e bem-estar", R.mipmap.bem_estar),
-        Category("Barbearias", R.mipmap.barbearia),
-        Category("Beleza", R.mipmap.beleza),
-        Category("Estetica", R.mipmap.estetica),
-        Category("Maquiagem", R.mipmap.maquiagem)
+        CategoryModel("Saúde e bem-estar", R.mipmap.bem_estar),
+        CategoryModel("Barbearias", R.mipmap.barbearia),
+        CategoryModel("Beleza", R.mipmap.beleza),
+        CategoryModel("Estetica", R.mipmap.estetica),
+        CategoryModel("Maquiagem", R.mipmap.maquiagem)
     )
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -56,7 +56,7 @@ fun CategorySection() {
             Box(
                 modifier = Modifier.width(150.dp).height(120.dp).padding(0.dp)
             ) {
-                CategoryItem(category)
+                CategoryCard(category)
             }
 
         }
@@ -64,7 +64,7 @@ fun CategorySection() {
 }
 
 @Composable
-fun CategoryItem(category: Category) {
+fun CategoryCard(category: CategoryModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

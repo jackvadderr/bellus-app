@@ -14,9 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.component.CategorySection
-import br.sapiens.bellus_app.presentation.ui.component.NewInBellusSection
-import br.sapiens.bellus_app.presentation.ui.component.SpecialOffersSection
+import br.sapiens.bellus_app.presentation.ui.component.sections.CategorySection
+import br.sapiens.bellus_app.presentation.ui.component.sections.NewInBellusSection
+import br.sapiens.bellus_app.presentation.ui.component.sections.SpecialOffersSection
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 
@@ -33,7 +33,7 @@ fun TelaMarketplace(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(bottom = 30.dp, top = 60.dp)
+//            .padding(bottom = 30.dp, top = 60.dp)
     ) {
         Text(
             text = "Olá, Usuário",
