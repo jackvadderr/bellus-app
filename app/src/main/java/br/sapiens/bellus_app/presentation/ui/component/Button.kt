@@ -1,3 +1,4 @@
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
+import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
 
 @Composable
 fun CustomButton(
@@ -24,11 +27,11 @@ fun CustomButton(
             .height(40.dp),
         shape = RoundedCornerShape(4.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MarronNaoSei,
+            contentColor = MarronNaoSei
         )
     ) {
-        Text(texto)
+        Text(texto, color = Color.White)
     }
 }
 

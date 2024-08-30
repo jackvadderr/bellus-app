@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.data.repository.implemetation
 
+import android.util.Log
 import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.model.Cadastro
@@ -37,6 +38,7 @@ class CadastroRepositoryImpl @Inject constructor(
         senha: String?
     ): State<Cadastro> {
         return try {
+            Log.d("CadastroRepositoryImpl", "Chamando cadastroDataSource.register")
             when (val response = cadastroDataSource.register(
                 name = name,
                 phone = phone,
@@ -44,10 +46,17 @@ class CadastroRepositoryImpl @Inject constructor(
                 email = email,
                 senha = senha,
             )) {
-                is State.Success -> State.Success(response.data.mapModel())
-                is State.Error -> response
+                is State.Success -> {
+                    Log.d("CadastroRepositoryImpl", "Cadastro realizado com sucesso")
+                    State.Success(response.data.mapModel())
+                }
+                is State.Error -> {
+                    Log.e("CadastroRepositoryImpl", "Erro ao realizar cadastro", response.exception)
+                    response
+                }
             }
         } catch (e: Exception) {
+            Log.e("CadastroRepositoryImpl", "Exceção ao realizar cadastro", e)
             State.Error(e)
         }
     }

@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -20,6 +21,7 @@ class CadastroViewModel @Inject constructor(
 
     private fun cadastrar() {
         viewModelScope.launch {
+            Log.d("CadastroViewModel", "Chamando cadastroUseCase.execute")
             when (val response = cadastroUseCase.execute(
                 CadastroUseCase.Input(
                     uuid = state.uuid,
@@ -31,10 +33,10 @@ class CadastroViewModel @Inject constructor(
                 )
             )) {
                 is State.Success -> {
-                    response.data
+                    Log.d("CadastroViewModel", "Cadastro realizado com sucesso: ${response.data}")
                 }
                 is State.Error -> {
-                    response.exception
+                    Log.e("CadastroViewModel", "Erro ao realizar cadastro", response.exception)
                 }
             }
         }

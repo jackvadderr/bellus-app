@@ -45,8 +45,10 @@ class CadastroDataSourceImpl @Inject constructor(
              * Aqui nós vamos cadastrar no Firebase Auth
              * utilizando apenas o email e senha
              */
+            Log.d("CadastroDataSourceImpl","Iniciando registro de usuário")
             val result = firebaseAuth.createUserWithEmailAndPassword(email?: "", senha?: "").await()
             val usuarioCriadoUUID = result.user?.uid
+            Log.d("CadastroDataSourceImpl", "UUID do usuário criado: $usuarioCriadoUUID")
             if(result != null) {
                 Log.d("RegisterDataSourceImpl", "Usuário registrado com sucesso")
             }

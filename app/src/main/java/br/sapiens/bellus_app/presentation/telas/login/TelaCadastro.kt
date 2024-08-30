@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
 import CustomButton
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -151,11 +152,12 @@ fun TelaCadastro(
                  */
                 CustomButton(
                     onClick = {
+                        Log.d("TelaCadastro", "Botão de cadastro clicado")
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetName(nome.value))
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetTelefone(telefone.value))
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetEmail(email.value))
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetGenero(genero.value))
-                        if(senha.value == confirmarSenha.value) {
+                        if (senha.value == confirmarSenha.value) {
                             viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetSenha(senha.value))
                         }
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.Event)

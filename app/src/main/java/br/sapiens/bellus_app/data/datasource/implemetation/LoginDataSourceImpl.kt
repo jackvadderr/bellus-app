@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.data.datasource.implemetation
 
+import android.util.Log
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -30,7 +31,13 @@ class LoginDataSourceImpl @Inject constructor() : LoginDataSource {
         return try {
             // Executa a operação de login com a credencial de autenticação fornecida.
             val firebaseAuthInstance = FirebaseAuth.getInstance()
-            firebaseAuthInstance.signInWithCredential(authCredential).await()
+            val authResult = firebaseAuthInstance.signInWithCredential(authCredential).await()
+            val firebaseUser = authResult.user
+
+            firebaseUser?.getIdToken(false)?.await()?.token?.let { token ->
+                Log.d("LoginDataSourceImpl", "Firebase JWT Token: $token")
+            }
+
             State.Success(firebaseAuthInstance.currentUser!!)
         } catch (exception: Exception) {
             State.Error(exception)

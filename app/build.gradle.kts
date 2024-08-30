@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.camera.core)
     implementation(libs.googleid)
+    implementation(libs.androidx.animation.graphics.android)
 //    implementation(libs.androidx.tv.material)
     testImplementation("org.testng:testng:6.9.6")
     testImplementation("org.testng:testng:6.9.6")
@@ -147,6 +148,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
 }
 
 kapt {
