@@ -7,6 +7,7 @@ plugins {
     id("com.google.protobuf") version "0.9.4"
 //    kotlin("plugin.serialization") version "1.9.24"
     alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization").version("1.9.21")
 }
 
 android {
@@ -148,6 +149,29 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    /*
+     * KTOR CLIENT
+     */
+    val ktorVersion = "2.3.12"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("io.ktor:ktor-client-auth:$ktorVersion")
+
+    // MOCKITO
+
+//    testImplementation("org.mockito:mockito-core:5.13.0")
+//    testImplementation("org.mockito:mockito-inline:5.13.0")
+//    // https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin
+//    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+//
+//    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.0")
+
 
 }
 

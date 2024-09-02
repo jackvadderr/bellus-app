@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -23,10 +24,13 @@ import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 @Composable
 fun TelaMarketplace(
     viewModel: MarketplaceViewModel,
-    navigateToSearch: () -> Unit,
-    navigateToProfile: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    val viewState = viewModel.state
+
+    LaunchedEffect(Unit) {
+        viewModel.triggerEvent(MarketplaceViewModel.ViewEvent.LoadUser)
+    }
 
     Column(
         modifier = Modifier

@@ -12,12 +12,14 @@ import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.implemetation.GetUserRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.LoginRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.CadastroRepositoryImpl
+import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import io.ktor.client.HttpClient
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -49,9 +51,9 @@ class RepositoryModule {
 
     @Provides
     fun provideGetUserDataSource(
-        firebaseFirestore: FirebaseFirestore,
+        httpClient: HttpClient
     ): GetUserDataSource =
-        GetUserDataSourceImpl(firebaseFirestore)
+        GetUserDataSourceImpl(httpClient)
 
     @Provides
     fun provideGetUserRepository(

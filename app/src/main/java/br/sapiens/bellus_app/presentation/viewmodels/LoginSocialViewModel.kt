@@ -1,6 +1,5 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent

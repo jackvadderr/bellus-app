@@ -143,16 +143,16 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             composable(RotasDestinos.Home.rota) {
                 TelaMarketplace(
                     hiltViewModel(),
-                    navigateToSearch = {
-                        navController.navigate(
-                            route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
-                    },
-                    navigateToProfile = {
-                        navController.navigate(
-                            route = RotasDestinos.Perfil.rota
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
-                    },
+//                    navigateToSearch = {
+//                        navController.navigate(
+//                            route = RotasDestinos.Home.rota,
+//                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+//                    },
+//                    navigateToProfile = {
+//                        navController.navigate(
+//                            route = RotasDestinos.Perfil.rota
+//                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+//                    },
                 )
             }
             /* ######################

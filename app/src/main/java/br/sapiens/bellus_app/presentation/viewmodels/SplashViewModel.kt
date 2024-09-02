@@ -1,17 +1,12 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.dominio.GlobalAuthState
 import br.sapiens.bellus_app.dominio.sdk.AuthService
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

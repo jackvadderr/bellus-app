@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
+
 object GlobalAuthState {
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }

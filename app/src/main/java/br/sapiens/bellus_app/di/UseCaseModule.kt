@@ -25,8 +25,7 @@ class UseCaseModule {
     @ViewModelScoped
     @Provides
     fun provideGetUserUseCase(
-        authService: AuthService,
         getUserRepository: GetUserRepository,
-    ) = GetUserUseCase(authService, getUserRepository)
+    ) = GetUserUseCase(getUserRepository)
 
 }

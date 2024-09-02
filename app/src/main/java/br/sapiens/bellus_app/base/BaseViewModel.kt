@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.base
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

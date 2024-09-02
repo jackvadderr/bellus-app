@@ -4,18 +4,17 @@ import br.sapiens.bellus_app.base.UseCase
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.model.User
 import br.sapiens.bellus_app.dominio.GlobalAuthState
-import br.sapiens.bellus_app.dominio.sdk.AuthService
+import br.sapiens.bellus_app.dominio.model.AuthState
 import br.sapiens.bellus_app.utils.CommonException
 import br.sapiens.bellus_app.utils.State
-
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class GetUserUseCase @Inject constructor(
-    private val authService: AuthService,
     private val getUserRepository: GetUserRepository,
 ) : UseCase<Nothing, User>() {
 
-    override suspend fun invoke(input: Nothing?): State<User> {
+    public override suspend fun invoke(input: Nothing?): State<User> {
         return try {
             GlobalAuthState.getCurrentUserId()?.let {
                 when (val response = getUserRepository.getUserById(it)) {
