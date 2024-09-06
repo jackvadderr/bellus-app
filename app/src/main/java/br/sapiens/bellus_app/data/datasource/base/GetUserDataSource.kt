@@ -2,6 +2,8 @@ package br.sapiens.bellus_app.data.datasource.base
 
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.data.datasource.entity.UserDTO
+import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ClientUser
 
 /**
  * Esta é uma interface funcional que contém uma única função suspensa para buscar um usuário pelo seu ID.
@@ -17,5 +19,5 @@ fun interface GetUserDataSource {
      * @param userId O ID do usuário a ser buscado.
      * @return Um objeto State contendo o objeto UserDTO.
      */
-    suspend fun getUserById(userId: String): State<UserDTO>
+    suspend fun getUserById(): State<UserDTO>
 }

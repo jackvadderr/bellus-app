@@ -1,5 +1,7 @@
 package br.sapiens.bellus_app.di
 
+import android.app.Application
+import android.content.Context
 import br.sapiens.bellus_app.BellusApp
 import dagger.Module
 import dagger.Provides
@@ -15,5 +17,12 @@ class AppModule {
     @Singleton
     fun provideBellusApp(): BellusApp {
         return BellusApp()
+    }
+
+
+//    @Singleton
+    @Provides
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
     }
 }

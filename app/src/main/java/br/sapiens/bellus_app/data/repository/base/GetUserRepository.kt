@@ -1,7 +1,10 @@
 package br.sapiens.bellus_app.data.repository.base
 
+import br.sapiens.bellus_app.data.datasource.entity.UserDTO
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.data.repository.model.User
+import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ClientUser
 
 /**
  * Esta é uma interface funcional que representa um repositório para obter um usuário.
@@ -10,10 +13,5 @@ import br.sapiens.bellus_app.data.repository.model.User
  */
 fun interface GetUserRepository {
 
-    /**
-     * Esta é uma função suspensa que obtém um usuário pelo seu ID.
-     * @param userId O ID do usuário a ser recuperado.
-     * @return Um objeto State que pode conter o objeto User ou uma exceção.
-     */
-    suspend fun getUserById(userId: String): State<User>
+    suspend fun getUserById(): State<UserDTO>
 }

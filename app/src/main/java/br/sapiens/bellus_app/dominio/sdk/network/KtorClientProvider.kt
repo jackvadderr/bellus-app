@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.dominio.sdk.network
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -8,13 +9,25 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 
 import kotlinx.serialization.json.Json
+import org.slf4j.LoggerFactory
+import javax.inject.Singleton
 
-object KtorClientProvider {
-    private const val BASE_URL = "http://0.0.0.0:8080/api/v1/"
-    private var token: String? = null
+@Singleton
+class KtorClientProvider {
+    private val logger = LoggerFactory.getLogger(KtorClientProvider::class.java)
+    private val baseUrl = "http://192.168.0.22:8080/api/v1"
+    private var bearerTokenPrimary: String? = null
+    private var bearerTokenSecondary: String? = null
+
+    // Lista de URLs que não devem incluir o token Bearer
+    private val noAuthUrls = listOf(
+        "$baseUrl/session/create-session"
+    )
 
     val client: HttpClient = HttpClient(OkHttp) {
         install(ContentNegotiation) {
@@ -30,25 +43,46 @@ object KtorClientProvider {
         install(Auth) {
             bearer {
                 loadTokens {
-                    // Load tokens from a local storage and return them as the 'BearerTokens' instance
-                    BearerTokens(token?:"", "")
+                    // TODO: Load tokens from a local storage and return them as the 'BearerTokens' instance
+                    logger.info("Loading bearer tokens")
+                    BearerTokens(bearerTokenPrimary?:"", bearerTokenSecondary?:"")
                 }
+                sendWithoutRequest { request ->
+                    // Verifica se a URL da requisição está na lista de URLs que não devem incluir o token
+                    !noAuthUrls.contains(request.url.toString())
+                }
+            }
+        }
+        defaultRequest {
+            headers {
+                append("Content-Type", "application/json")
             }
         }
 
     }
 
-    fun getBaseUrl(): String = BASE_URL
+    fun getBaseUrl(): String {
+        logger.info("Getting base URL: $baseUrl")
+        return baseUrl
+    }
 
-    fun setToken(newToken: String) {
-        token = newToken
+    fun setBearerTokenPrimary(newToken: String) {
+        logger.info("Setting primary bearer token")
+        bearerTokenPrimary = newToken
+    }
+
+    fun setBearerTokenSecondary(newToken: String) {
+        logger.info("Setting secondary bearer token")
+        bearerTokenSecondary = newToken
     }
 }
 
 fun String.appendPath(path: String): String {
-    return if (this.endsWith("/")) {
+    val fullPath = if (this.endsWith("/")) {
         this + path.removePrefix("/")
     } else {
         "$this/$path"
     }
+    Log.d("KtorClientProvider", "Full URL: $fullPath")
+    return fullPath
 }

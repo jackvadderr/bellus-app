@@ -1,6 +1,5 @@
 package br.sapiens.bellus_app.di
 
-import br.sapiens.bellus_app.dominio.sdk.AuthService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -23,9 +22,9 @@ class FirebaseModule {
         return FirebaseAuth.getInstance()
     }
 
-    @Provides
-    @Singleton
-    fun provideAuthService(firebaseAuth: FirebaseAuth): AuthService {
-        return AuthService(firebaseAuth)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideAuthService(firebaseAuth: FirebaseAuth): AuthService {
+//        return AuthService(firebaseAuth)
+//    }
 }

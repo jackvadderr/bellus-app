@@ -1,5 +1,7 @@
 package br.sapiens.bellus_app.data.datasource.base
 
+import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
+import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.utils.State
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
@@ -19,5 +21,5 @@ fun interface LoginDataSource {
      * @param authCredential A credencial usada para login.
      * @return Um objeto State contendo o objeto FirebaseUser.
      */
-    suspend fun loginWithCredential(authCredential: AuthCredential): State<FirebaseUser>
+    suspend fun loginWithCredential(authCredential: AuthCredential): State<AuthDTO>
 }

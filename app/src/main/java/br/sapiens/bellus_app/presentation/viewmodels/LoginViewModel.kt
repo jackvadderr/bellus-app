@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
+import br.sapiens.bellus_app.dominio.model.AuthEvent
+import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.redux.AuthStore
 import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
@@ -16,17 +20,21 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val storeConfig: AuthStore
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
     fun loginWithCredential(authCredential: AuthCredential) {
         setState { state.copy(isLoading = true) }
         viewModelScope.launch {
-            when (loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
+            when (val result: State<AuthDTO> = loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
                 is State.Success -> {
-                    triggerEvent(ViewEvent.SetState(EstadoAutenticacao.AUTENTICADO))
+                    val authUser = AuthUser(result.data.id?: "",)
+                    storeConfig.dispatch(AuthEvent.UserAuthenticated(authUser, result.data.tokenBearer?: ""))
+                    setState { state.copy(isLoading =false, loginState = EstadoAutenticacao.AUTENTICADO) }
                 }
                 is State.Error -> {
-                    triggerEvent(ViewEvent.SetState(EstadoAutenticacao.NAO_AUTENTICADO))
+                    storeConfig.store.dispatch(AuthEvent.AuthenticationError(result.exception))
+                    setState { state.copy(isLoading = false, loginState = EstadoAutenticacao.NAO_AUTENTICADO) }
                 }
             }
         }
@@ -54,10 +62,6 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun checkUser() {
-
     }
 
     sealed class ViewEvent : IViewEvent {

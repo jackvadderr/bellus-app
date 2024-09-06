@@ -8,16 +8,16 @@ import br.sapiens.bellus_app.data.datasource.entity.UserDTO
  *
  * @return Modelo de User com as mesmas propriedades que o UserDTO.
  */
-fun UserDTO.mapModel(): User {
-    return User(
-        username = username,
-        name = name,
-        phone = phone,
-        mail = email,
-        address = address,
-        gender = gender
-    )
-}
+//fun UserDTO.mapModel(): User {
+//    return User(
+//        username = username,
+//        name = name,
+//        phone = phone,
+//        mail = email,
+//        address = address,
+//        gender = gender
+//    )
+//}
 
 fun CadastroDTO.mapModel(): Cadastro {
     return Cadastro(

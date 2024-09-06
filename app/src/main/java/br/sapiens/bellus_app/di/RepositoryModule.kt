@@ -12,6 +12,7 @@ import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.implemetation.GetUserRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.LoginRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.CadastroRepositoryImpl
+import br.sapiens.bellus_app.dominio.redux.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,8 +28,9 @@ class RepositoryModule {
 
     @Provides
     fun provideLoginDataSource(
+        authStore: AuthStore
     ): LoginDataSource =
-        LoginDataSourceImpl()
+        LoginDataSourceImpl(authStore)
 
     @Provides
     fun provideLoginRepository(
@@ -51,9 +53,9 @@ class RepositoryModule {
 
     @Provides
     fun provideGetUserDataSource(
-        httpClient: HttpClient
+        provider: KtorClientProvider
     ): GetUserDataSource =
-        GetUserDataSourceImpl(httpClient)
+        GetUserDataSourceImpl(provider)
 
     @Provides
     fun provideGetUserRepository(

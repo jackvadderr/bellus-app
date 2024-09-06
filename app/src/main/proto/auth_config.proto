@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "br.sapiens.bellus_app";
+option java_multiple_files = true;
+
+message AuthConfig {
+  bool is_authenticated = 1;
+  string user_id = 2;
+  string token_bearer = 3;
+}
+

@@ -5,8 +5,23 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
+import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
+import br.sapiens.bellus_app.data.datasource.entity.UserDTO
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSession
+import br.sapiens.bellus_app.dominio.model.AuthEvent
+import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.redux.AuthStore
+import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
+import br.sapiens.bellus_app.dominio.sdk.network.appendPath
 import br.sapiens.bellus_app.utils.State
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.headers
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -15,31 +30,56 @@ import javax.inject.Inject
  * Esta classe fornece a funcionalidade para fazer login de um usuário com uma credencial de autenticação fornecida.
  * Utiliza a Autenticação Firebase para o processo de login.
  */
-class LoginDataSourceImpl @Inject constructor() : LoginDataSource {
+class LoginDataSourceImpl @Inject constructor(
+    private val authStore: AuthStore,
+    private val provider: KtorClientProvider = KtorClientProvider(),
+) : LoginDataSource {
 
-    /**
-     * Faz login de um usuário com a credencial de autenticação fornecida.
-     *
-     * Esta função utiliza a Autenticação Firebase para fazer login do usuário. Retorna um objeto State
-     * que pode ser um estado de Sucesso com o FirebaseUser logado, ou um estado de Erro com
-     * a exceção que ocorreu durante o processo de login.
-     *
-     * @param authCredential A credencial de autenticação para fazer login do usuário.
-     * @return Um objeto State representando o resultado do processo de login.
-     */
-    override suspend fun loginWithCredential(authCredential: AuthCredential): State<FirebaseUser> {
+    override suspend fun loginWithCredential(authCredential: AuthCredential): State<AuthDTO> {
+        Log.d("LoginDataSourceImpl", "Starting loginWithCredential")
         return try {
-            // Executa a operação de login com a credencial de autenticação fornecida.
+            var sessionToken: String? = null;
+
             val firebaseAuthInstance = FirebaseAuth.getInstance()
+            Log.d("LoginDataSourceImpl", "FirebaseAuth instance obtained")
             val authResult = firebaseAuthInstance.signInWithCredential(authCredential).await()
+            Log.d("LoginDataSourceImpl", "Auth result obtained")
+
             val firebaseUser = authResult.user
+            val firebaseTokenJWT = firebaseUser?.getIdToken(false)?.await()?.token
+            Log.d("LoginDataSourceImpl", "Firebase JWT Token: $firebaseTokenJWT")
 
-            firebaseUser?.getIdToken(false)?.await()?.token?.let { token ->
-                Log.d("LoginDataSourceImpl", "Firebase JWT Token: $token")
+            firebaseTokenJWT?.let { token ->
+                val client = provider.client
+                Log.d("LoginDataSourceImpl", "Ktor client obtained")
+                val urlFinal = provider.getBaseUrl().appendPath("session/create-session")
+                Log.d("LoginDataSourceImpl", "Provider FINAL URL: $urlFinal")
+                val response: HttpResponse = client.post(urlFinal) {
+                    setBody(Json.encodeToString(mapOf("firebase_token" to token)))
+                }
+                Log.d("LoginDataSourceImpl", "Response from session endpoint: ${response.status}")
+                val responseSession: ResponseSession = Json.decodeFromString(response.bodyAsText())
+                Log.d("LoginDataSourceImpl", "Response session token: ${responseSession.session_token}")
+                provider.setBearerTokenPrimary(responseSession.session_token)
+                sessionToken = responseSession.session_token
+                authStore.store.dispatch(
+                    AuthEvent.UserAuthenticated(
+                        AuthUser(
+                            firebaseUser.uid,
+                        ),
+                        responseSession.session_token
+                    )
+                )
             }
-
-            State.Success(firebaseAuthInstance.currentUser!!)
+            val userDTO = AuthDTO(
+                firebaseUser?.uid,
+                sessionToken
+            )
+            Log.d("LoginDataSourceImpl", "User authenticated successfully")
+//            State.Success(firebaseAuthInstance.currentUser!!)
+            State.Success(userDTO)
         } catch (exception: Exception) {
+            authStore.store.dispatch(AuthEvent.AuthenticationError(exception))
             State.Error(exception)
         }
     }

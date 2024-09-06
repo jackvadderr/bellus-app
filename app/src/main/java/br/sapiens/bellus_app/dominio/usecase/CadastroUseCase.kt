@@ -6,9 +6,7 @@ import br.sapiens.bellus_app.base.UseCase
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.model.Cadastro
 import br.sapiens.bellus_app.data.repository.model.GeneroEnum
-import br.sapiens.bellus_app.dominio.GlobalAuthState
 import br.sapiens.bellus_app.utils.State
-import br.sapiens.bellus_app.utils.UserNotFoundException
 import javax.inject.Inject
 
 

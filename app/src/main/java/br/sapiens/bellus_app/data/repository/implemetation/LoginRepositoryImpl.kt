@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.data.repository.implemetation
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
+import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.utils.State
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class LoginRepositoryImpl @Inject constructor(
      * @param authCredential As credenciais de autenticação do usuário.
      * @return Um objeto State que pode conter o objeto FirebaseUser ou uma exceção.
      */
-    override suspend fun loginWithCredential(authCredential: AuthCredential): State<FirebaseUser> {
+    override suspend fun loginWithCredential(authCredential: AuthCredential): State<AuthDTO> {
         return try {
             // Tenta autenticar o usuário com as credenciais fornecidas chamando loginWithCredential do LoginDataSource.
             // Se a autenticação for bem-sucedida, retorna um State.Success com o objeto FirebaseUser.

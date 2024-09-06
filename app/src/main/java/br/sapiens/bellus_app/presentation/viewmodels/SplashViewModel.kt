@@ -1,11 +1,11 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.dominio.GlobalAuthState
-import br.sapiens.bellus_app.dominio.sdk.AuthService
+import br.sapiens.bellus_app.dominio.redux.AuthStore
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authService: AuthService,
+    private val storeConfig: AuthStore
 ) : BaseViewModel<SplashViewModel.ViewState, SplashViewModel.ViewEvent>() {
     private var splashShowFlow = MutableStateFlow(true)
     var isSplashShow = splashShowFlow.asStateFlow()
@@ -34,9 +34,9 @@ class SplashViewModel @Inject constructor(
     private fun checkUser() {
         viewModelScope.launch {
             delay(2000)
-            val userId = GlobalAuthState.getCurrentUserId()
+            val userId = storeConfig.store.stateFlow.value.authState.getUserId()
             if (userId != null) {
-//                Log.d("SplashViewModel", "User ID: $userId")
+                Log.d("SplashViewModel", "User ID: $userId")
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.AUTENTICADO))
             } else {
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))

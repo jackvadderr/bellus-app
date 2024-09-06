@@ -3,7 +3,7 @@ package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
-import br.sapiens.bellus_app.dominio.sdk.AuthService
+import br.sapiens.bellus_app.dominio.redux.AuthStore
 import br.sapiens.bellus_app.dominio.usecase.GetUserUseCase
 import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
 import dagger.Module
