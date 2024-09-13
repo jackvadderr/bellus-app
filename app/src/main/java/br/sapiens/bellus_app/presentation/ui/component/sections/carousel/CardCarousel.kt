@@ -1,57 +1,28 @@
-package br.sapiens.bellus_app.presentation.ui.component.sections
+package br.sapiens.bellus_app.presentation.ui.component.sections.carousel
 
-import LoadImage
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.presentation.ui.component.LoadImage
 import br.sapiens.bellus_app.presentation.ui.model.CategoryModel
-import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
 @Composable
-fun CategorySection(categories: List<CategoryModel>) {
-
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .background(BlueNaoSei)
-    ) {
-        items(categories) { category ->
-            Box(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(120.dp)
-                    .padding(0.dp)
-            ) {
-                CategoryCard(category)
-            }
-
-        }
-    }
-}
-
-@Composable
-fun CategoryCard(category: CategoryModel) {
+fun CarouselCard(category: CategoryModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -62,7 +33,11 @@ fun CategoryCard(category: CategoryModel) {
         LoadImage(
             url = category.imageResource,
             contentDescription = category.name,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(90.dp)
+                .clip(RoundedCornerShape(8.dp))
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
@@ -70,14 +45,8 @@ fun CategoryCard(category: CategoryModel) {
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            maxLines = 1,
+            color = Color.White
         )
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewCategorySection() {
-//    CategorySection(categories)
-//}

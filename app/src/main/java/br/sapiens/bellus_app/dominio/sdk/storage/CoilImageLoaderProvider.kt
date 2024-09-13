@@ -12,7 +12,9 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.jetbrains.annotations.VisibleForTesting
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CoilImageLoaderProvider @Inject constructor(context: Context) {
 
     companion object {

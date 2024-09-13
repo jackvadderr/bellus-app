@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.telas.home
 
+import SectionSpecialOffers
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.component.sections.CategorySection
-import br.sapiens.bellus_app.presentation.ui.component.sections.NewInBellusSection
-import br.sapiens.bellus_app.presentation.ui.component.sections.SpecialOffersSection
+import br.sapiens.bellus_app.presentation.ui.component.sections.carousel.SectionCarousel
+import br.sapiens.bellus_app.presentation.ui.component.sections.newEstablishments.SectionEstablishments
 import br.sapiens.bellus_app.presentation.ui.model.CategoryModel
 import br.sapiens.bellus_app.presentation.ui.model.NewItemModel
 import br.sapiens.bellus_app.presentation.ui.model.Offer
@@ -43,7 +43,6 @@ fun TelaMarketplace(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .background(Color.White)
-//            .padding(bottom = 30.dp, top = 60.dp)
     ) {
         Text(
             text = "Olá, Usuário",
@@ -68,9 +67,9 @@ fun TelaMarketplace(
                 val myOffers: List<Offer> =
                     (viewState as MarketplaceViewModel.ViewState.UserLoaded).offers
 
-                CategorySection(categories)
-                SpecialOffersSection(myOffers)
-                NewInBellusSection(myItems)
+                SectionCarousel(categories)
+                SectionSpecialOffers(myOffers)
+                SectionEstablishments(myItems)
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

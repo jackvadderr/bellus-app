@@ -1,3 +1,5 @@
+package br.sapiens.bellus_app.presentation.ui.component
+
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
