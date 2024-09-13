@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.camera.core)
     implementation(libs.googleid)
     implementation(libs.androidx.animation.graphics.android)
+//    implementation(libs.volley)
 //    implementation(libs.androidx.tv.material)
     testImplementation("org.testng:testng:6.9.6")
     testImplementation("org.testng:testng:6.9.6")
@@ -172,6 +173,13 @@ dependencies {
 //
 //    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+
+    implementation("com.google.firebase:firebase-storage")
+
+    // COIL LIBRARY
+    implementation("io.coil-kt:coil:2.7.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }
 
 kapt {

@@ -15,10 +15,11 @@ import io.ktor.serialization.kotlinx.json.json
 
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class KtorClientProvider {
+class KtorClientProvider @Inject constructor() {
     private val logger = LoggerFactory.getLogger(KtorClientProvider::class.java)
     private val baseUrl = "http://192.168.0.22:8080/api/v1"
     private var bearerTokenPrimary: String? = null
@@ -28,6 +29,10 @@ class KtorClientProvider {
     private val noAuthUrls = listOf(
         "$baseUrl/session/create-session"
     )
+
+    init {
+        logger.info("Initializing KtorClientProvider")
+    }
 
     val client: HttpClient = HttpClient(OkHttp) {
         install(ContentNegotiation) {
@@ -43,12 +48,10 @@ class KtorClientProvider {
         install(Auth) {
             bearer {
                 loadTokens {
-                    // TODO: Load tokens from a local storage and return them as the 'BearerTokens' instance
                     logger.info("Loading bearer tokens")
                     BearerTokens(bearerTokenPrimary?:"", bearerTokenSecondary?:"")
                 }
                 sendWithoutRequest { request ->
-                    // Verifica se a URL da requisição está na lista de URLs que não devem incluir o token
                     !noAuthUrls.contains(request.url.toString())
                 }
             }
@@ -74,6 +77,11 @@ class KtorClientProvider {
     fun setBearerTokenSecondary(newToken: String) {
         logger.info("Setting secondary bearer token")
         bearerTokenSecondary = newToken
+    }
+
+    fun isTokenAvailable(): Boolean {
+        Log.d("KtorClientProvider", "Bearer token primary: $bearerTokenPrimary")
+        return !bearerTokenPrimary.isNullOrEmpty()
     }
 }
 

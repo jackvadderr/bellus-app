@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.CustomSearchBar
-import br.sapiens.bellus_app.presentation.ui.component.sections.CategoriesList
 import br.sapiens.bellus_app.presentation.viewmodels.PesquisaViewModel
 
 @Composable
@@ -18,7 +17,7 @@ fun TelaPesquisa(
 ) {
     Column(modifier = Modifier.padding(top = 0.dp)) {
         CustomSearchBar()
-        CategoriesList()
+//        CategoriesList()
     }
 }
 

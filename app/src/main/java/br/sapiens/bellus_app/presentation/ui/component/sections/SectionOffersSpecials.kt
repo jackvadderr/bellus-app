@@ -1,6 +1,6 @@
 package br.sapiens.bellus_app.presentation.ui.component.sections
 
-import androidx.compose.foundation.Image
+import LoadImage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,19 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.R
-
-data class Offer(
-    val title: String,
-    val address: String,
-    val imageResource: Int
-)
+import br.sapiens.bellus_app.dominio.sdk.storage.CoilImageLoaderProvider
+import br.sapiens.bellus_app.presentation.ui.model.Offer
 
 @Composable
 fun OfferCard(item: Offer) {
+    val imageLoader = CoilImageLoaderProvider.get().imageLoader
     Card(
         modifier = Modifier
             .width(250.dp)
@@ -51,8 +46,8 @@ fun OfferCard(item: Offer) {
         shape = RoundedCornerShape(8.dp)
     ) {
         Box {
-            Image(
-                painter = painterResource(id = item.imageResource),
+            LoadImage(
+                url = item.imageResource,
                 contentDescription = item.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -86,28 +81,18 @@ fun OfferCard(item: Offer) {
 
 @Composable
 fun SpecialOffersSection(
-    offers: List<Offer> = sampleOffers,
+    offers: List<Offer>,
 ) {
-    val newItems = listOf(
-        NewItemModel("Cortes & Estilos", "Av. Sete de Setembro, 1234, Porto Velho", R.mipmap.barbearia_1),
-        NewItemModel("Cortes Clássicos", "Rua início de favela, Porto Velho", R.mipmap.barbearia_1)
-    )
+
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Ofertas Especiais", style = MaterialTheme.typography.titleSmall)
         LazyRow(
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(newItems) { item ->
-                NewInBellusCard(item)
+            items(offers) { item ->
+                OfferCard(item)
             }
         }
     }
 }
-
-
-// Dados de exemplo
-val sampleOffers = listOf(
-    Offer("A Navalha Dourada", "Rua João Pedro da Rocha, 1545, Porto Velho", R.mipmap.barbearia_1),
-    Offer("Barbearia", "Rua Industrial, Porto Velho", R.mipmap.barbearia_1)
-)

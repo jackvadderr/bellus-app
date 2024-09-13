@@ -16,7 +16,6 @@ fun interface GetUserDataSource {
      * Retorna um objeto State que contém o objeto UserDTO.
      * O objeto State representa o estado da operação de busca de dados.
      *
-     * @param userId O ID do usuário a ser buscado.
      * @return Um objeto State contendo o objeto UserDTO.
      */
     suspend fun getUserById(): State<UserDTO>
