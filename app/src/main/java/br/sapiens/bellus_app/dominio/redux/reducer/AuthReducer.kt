@@ -5,7 +5,7 @@ import br.sapiens.bellus_app.dominio.model.AuthState
 import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.FirebaseUserProvider
-import br.sapiens.bellus_app.dominio.redux.IStore
+import br.sapiens.bellus_app.dominio.redux.stores.IStore
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -30,6 +30,7 @@ class AuthReducer @Inject constructor(
                         AuthState.Unauthenticated
                     }
                 }
+
                 is AuthEvent.UserNotAuthenticated -> AuthState.Unauthenticated
                 is AuthEvent.AuthenticationError -> AuthState.Error(event.exception)
                 else -> currentState.authState

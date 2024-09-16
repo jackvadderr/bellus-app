@@ -5,9 +5,8 @@ import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.model.Cadastro
 import br.sapiens.bellus_app.data.repository.model.GeneroEnum
-import br.sapiens.bellus_app.data.repository.model.mapModel
 import br.sapiens.bellus_app.utils.State
-
+import br.sapiens.bellus_app.utils.mapModel
 import javax.inject.Inject
 
 /**
@@ -50,6 +49,7 @@ class CadastroRepositoryImpl @Inject constructor(
                     Log.d("CadastroRepositoryImpl", "Cadastro realizado com sucesso")
                     State.Success(response.data.mapModel())
                 }
+
                 is State.Error -> {
                     Log.e("CadastroRepositoryImpl", "Erro ao realizar cadastro", response.exception)
                     response

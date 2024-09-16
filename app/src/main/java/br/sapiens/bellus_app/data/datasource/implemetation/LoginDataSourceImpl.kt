@@ -1,24 +1,21 @@
 package br.sapiens.bellus_app.data.datasource.implemetation
 
 import android.util.Log
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
-import br.sapiens.bellus_app.data.datasource.entity.UserDTO
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSession
 import br.sapiens.bellus_app.dominio.model.AuthEvent
 import br.sapiens.bellus_app.dominio.model.AuthUser
-import br.sapiens.bellus_app.dominio.redux.AuthStore
+import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSession
 import br.sapiens.bellus_app.utils.State
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.headers
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -59,7 +56,10 @@ class LoginDataSourceImpl @Inject constructor(
                 }
                 Log.d("LoginDataSourceImpl", "Response from session endpoint: ${response.status}")
                 val responseSession: ResponseSession = Json.decodeFromString(response.bodyAsText())
-                Log.d("LoginDataSourceImpl", "Response session token: ${responseSession.session_token}")
+                Log.d(
+                    "LoginDataSourceImpl",
+                    "Response session token: ${responseSession.session_token}"
+                )
                 provider.setBearerTokenPrimary(responseSession.session_token)
                 sessionToken = responseSession.session_token
                 authStore.store.dispatch(

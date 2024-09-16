@@ -21,15 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.sections.carousel.SectionCarousel
 import br.sapiens.bellus_app.presentation.ui.component.sections.newEstablishments.SectionEstablishments
-import br.sapiens.bellus_app.presentation.ui.model.CategoryModel
-import br.sapiens.bellus_app.presentation.ui.model.NewItemModel
-import br.sapiens.bellus_app.presentation.ui.model.Offer
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 
 @Composable
 fun TelaMarketplace(
     viewModel: MarketplaceViewModel,
+    navigateToDetails: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val viewState by viewModel.uiState.collectAsState()
@@ -45,6 +44,7 @@ fun TelaMarketplace(
             .background(Color.White)
     ) {
         Text(
+            // TODO: Utilizar DataStore para salvar informações do usuário para não mandar requisição toda vez que entrar na tela
             text = "Olá, Usuário",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White,
@@ -60,16 +60,18 @@ fun TelaMarketplace(
 
             is MarketplaceViewModel.ViewState.UserLoaded -> {
                 Log.d("TelaMarketplace", "ViewState is UserLoaded")
-                val categories: List<CategoryModel> =
-                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).categories
-                val myItems: List<NewItemModel> =
-                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).newItems
-                val myOffers: List<Offer> =
-                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).offers
+                val items: List<EstablishmentDetails> =
+                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).establishmentDetails
 
-                SectionCarousel(categories)
-                SectionSpecialOffers(myOffers)
-                SectionEstablishments(myItems)
+                // TODO: O carrossel deveria mostar categorias, não estabelecimentos
+                // TODO: Criar endpoint de categorias
+                SectionCarousel(items)
+                SectionSpecialOffers(items)
+                SectionEstablishments(
+                    navigateToDetails,
+                    items,
+                    marketplaceStore = viewModel.mkt
+                )
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

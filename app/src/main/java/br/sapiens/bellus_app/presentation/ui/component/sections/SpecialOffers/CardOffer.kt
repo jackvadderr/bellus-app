@@ -24,13 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.dominio.sdk.storage.CoilImageLoaderProvider
 import br.sapiens.bellus_app.presentation.ui.component.LoadImage
-import br.sapiens.bellus_app.presentation.ui.model.Offer
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
 
 @Composable
-fun CardOffer(item: Offer) {
-    val imageLoader = CoilImageLoaderProvider.get().imageLoader
+fun CardOffer(item: EstablishmentDetails) {
     Card(
         modifier = Modifier
             .width(250.dp)
@@ -42,7 +40,7 @@ fun CardOffer(item: Offer) {
         Box {
             LoadImage(
                 url = item.imageResource,
-                contentDescription = item.title,
+                contentDescription = item.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -51,7 +49,7 @@ fun CardOffer(item: Offer) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Spacer(modifier = Modifier.height(120.dp))
                 Text(
-                    text = item.title,
+                    text = item.name,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -69,7 +67,7 @@ fun CardOffer(item: Offer) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
-                    Text(text = "4.5", fontWeight = FontWeight.Bold)
+                    Text(text = item.rating.toString(), fontWeight = FontWeight.Bold)
                 }
             }
         }

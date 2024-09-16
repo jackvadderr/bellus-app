@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
 import br.sapiens.bellus_app.presentation.telas.home.TelaPesquisa
+import br.sapiens.bellus_app.presentation.telas.home.TelaServiceSelection
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
@@ -33,12 +34,11 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
     val telaNavegationviewModel: TelaNavegationBarViewModel = viewModel()
     val selectedItem = telaNavegationviewModel.selectedItem.observeAsState()
 
-    val deveExibirBarraNavegacao: (String?) -> Boolean = {
-        rota ->
+    val deveExibirBarraNavegacao: (String?) -> Boolean = { rota ->
         rota != RotasDestinos.Splash.rota &&
-        rota != RotasDestinos.LoginSocial.rota &&
-        rota != RotasDestinos.LoginCredencial.rota &&
-        rota != RotasDestinos.Cadastro.rota
+                rota != RotasDestinos.LoginSocial.rota &&
+                rota != RotasDestinos.LoginCredencial.rota &&
+                rota != RotasDestinos.Cadastro.rota
     }
 
     val rotasSemPadding = listOf(
@@ -82,12 +82,12 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToHome = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
                     },
                     navigateToLogin = {
                         navController.navigate(
                             route = RotasDestinos.LoginSocial.rota,
-                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
                     }
                 )
             }
@@ -101,12 +101,12 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToLoginCredencial = {
                         navController.navigate(
                             route = RotasDestinos.LoginCredencial.rota,
-                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true } }
                     },
                     navigateToHome = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true } }
                     }
                 )
             }
@@ -116,12 +116,12 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToRegister = {
                         navController.navigate(
                             route = RotasDestinos.Cadastro.rota,
-                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true } }
                     },
                     navigateToHome = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true } }
                     },
                 )
             }
@@ -131,7 +131,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToBack = {
                         navController.navigate(
                             route = RotasDestinos.LoginSocial.rota
-                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.LoginSocial.rota) { inclusive = true } }
                     }
                 )
             }
@@ -143,15 +143,21 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             composable(RotasDestinos.Home.rota) {
                 TelaMarketplace(
                     hiltViewModel(),
-//                    navigateToSearch = {
-//                        navController.navigate(
-//                            route = RotasDestinos.Home.rota,
-//                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
-//                    },
-//                    navigateToProfile = {
-//                        navController.navigate(
-//                            route = RotasDestinos.Perfil.rota
-//                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+                    navigateToDetails = {
+                        navController.navigate(RotasDestinos.Detalhes.rota)
+                    },
+                )
+            }
+            /* ################################
+            *   TELA DE DETALHES DOS ESTABELECIMENTOS
+            * #################################
+            */
+            // Tela Home
+            composable(RotasDestinos.Detalhes.rota) {
+                TelaServiceSelection(
+                    hiltViewModel(),
+//                    navigateToDetails = {
+//                        navController.navigate(RotasDestinos.Detalhes.rota)
 //                    },
                 )
             }
@@ -166,12 +172,12 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     navigateToSearch = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true } }
                     },
                     navigateToProfile = {
                         navController.navigate(
                             route = RotasDestinos.Perfil.rota
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true} }
+                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true } }
                     },
                 )
             }

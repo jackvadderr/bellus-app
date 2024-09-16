@@ -9,7 +9,6 @@ import javax.inject.Inject
 class GetAllEstablishmentsUseCase @Inject constructor(
     private val getAllEstablishmentsRepository: GetAllEstablishmentsRepository
 ) : UseCase<Nothing, List<EstabelecimentoDTO>>() {
-
     public override suspend fun invoke(input: Nothing?): State<List<EstabelecimentoDTO>> {
         return try {
             when (val response = getAllEstablishmentsRepository.getAllEstablishments()) {

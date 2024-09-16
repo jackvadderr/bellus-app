@@ -11,19 +11,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.model.NewItemModel
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
 
 
 @Composable
-fun SectionEstablishments(newItems: List<NewItemModel>) {
+fun SectionEstablishments(
+    navigateToDetails: () -> Unit,
+    establishments: List<EstablishmentDetails>,
+    marketplaceStore: MarketplaceStore
+) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Novo no Bellus", style = MaterialTheme.typography.bodySmall)
+
         LazyRow(
             contentPadding = PaddingValues(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(newItems) { item ->
-                CardEstablishments(item)
+            items(establishments) { item ->
+                CardEstablishments(navigateToDetails, item, marketplaceStore)
             }
         }
     }

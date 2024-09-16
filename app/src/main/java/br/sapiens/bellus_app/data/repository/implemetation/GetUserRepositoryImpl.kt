@@ -3,10 +3,6 @@ package br.sapiens.bellus_app.data.repository.implemetation
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.entity.UserDTO
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
-import br.sapiens.bellus_app.data.repository.model.User
-import br.sapiens.bellus_app.data.repository.model.mapModel
-import br.sapiens.bellus_app.dominio.model.AuthUser
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ClientUser
 import br.sapiens.bellus_app.utils.State
 import javax.inject.Inject
 
@@ -21,6 +17,7 @@ class GetUserRepositoryImpl @Inject constructor(
                     val user = response.data
                     State.Success(user)
                 }
+
                 is State.Error -> response
             }
         } catch (e: Exception) {

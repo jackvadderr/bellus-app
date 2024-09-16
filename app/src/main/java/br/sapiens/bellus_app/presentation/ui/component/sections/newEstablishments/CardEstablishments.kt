@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,16 +29,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.presentation.ui.component.LoadImage
-import br.sapiens.bellus_app.presentation.ui.model.NewItemModel
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import kotlinx.coroutines.launch
 
 @Composable
-fun CardEstablishments(item: NewItemModel) {
+fun CardEstablishments(
+    navigateToDetails: () -> Unit,
+    item: EstablishmentDetails,
+    marketplaceStore: MarketplaceStore
+) {
+    val coroutineScope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .width(250.dp)
             .height(180.dp)
-            .clickable { /* Ação ao clicar */ },
+            .clickable {
+                // TODO(gambriarras): Vamos enviar para o redux o current id do item XD
+                coroutineScope.launch {
+                    marketplaceStore.setEstablishmentItemId(item.id)
+                }
+                navigateToDetails()
+            },
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -58,7 +72,7 @@ fun CardEstablishments(item: NewItemModel) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = item.location,
+                    text = item.address,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,
@@ -74,7 +88,7 @@ fun CardEstablishments(item: NewItemModel) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
-                    Text(text = "4.5", fontWeight = FontWeight.Bold)
+                    Text(text = item.rating.toString(), fontWeight = FontWeight.Bold)
                 }
             }
         }

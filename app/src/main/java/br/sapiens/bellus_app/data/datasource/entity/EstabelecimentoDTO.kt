@@ -1,7 +1,7 @@
 package br.sapiens.bellus_app.data.datasource.entity
 
-import kotlinx.serialization.Serializable
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class EstabelecimentoDTO(
@@ -11,6 +11,7 @@ data class EstabelecimentoDTO(
     val updated_at: LocalDateTime,
     val nome: String,
     val cnpj: String,
+    val rating: Float,
     val endereco: String,
     val telefone: String,
     val horario_funcionamento: String,

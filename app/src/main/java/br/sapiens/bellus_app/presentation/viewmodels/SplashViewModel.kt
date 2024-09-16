@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.dominio.redux.AuthStore
+import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -28,6 +28,7 @@ class SplashViewModel @Inject constructor(
         }
         checkUser()
     }
+
     override fun createInitialState(): ViewState = ViewState()
 
 
