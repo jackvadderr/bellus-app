@@ -17,12 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.model.Review
+import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 
 @Composable
-fun ReviewsTab() {
+fun ReviewsTab(itemsReviewsDetails: List<ReviewsDetails>) {
     Column(modifier = Modifier.padding(16.dp)) {
-        // Overall rating
         Text(
             text = "Avaliações",
             style = MaterialTheme.typography.titleLarge,
@@ -44,14 +43,7 @@ fun ReviewsTab() {
             Text(text = "(100)", style = MaterialTheme.typography.bodyMedium)
         }
 
-        // List of reviews
-        val reviews = listOf(
-            Review("Wesley Santos", "Sáb, 30 de mar. de 2024 às 23:10", 5, "Perfeito!"),
-            Review("Silva Neto", "Sáb, 25 de mar. de 2024 às 15:10", 4, "Gostei muito."),
-            Review("Roberto Souza", "Seg., 18 de mar. de 2024 às 15:10", 5, "Perfeito!"),
-        )
-
-        reviews.forEach { review ->
+        itemsReviewsDetails.forEach { review ->
             ReviewItem(review = review)
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
         }

@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 
 @Composable
-fun SectionCarousel(categories: List<EstablishmentDetails>) {
+fun SectionCarousel(categories: List<AvailableEstablishment>) {
     Box(
         modifier = Modifier
             .fillMaxWidth() // Garante que o fundo azul ocupe toda a largura

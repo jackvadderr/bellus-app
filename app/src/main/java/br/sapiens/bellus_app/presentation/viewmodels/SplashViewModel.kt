@@ -39,6 +39,8 @@ class SplashViewModel @Inject constructor(
             if (userId != null) {
                 Log.d("SplashViewModel", "User ID: $userId")
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.AUTENTICADO))
+                // TODO: Caso usuario esteja autenticado, tbm vamos guardar inforamções no Redux
+                // TODO: Também vamos guardar no datastore
             } else {
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))
             }

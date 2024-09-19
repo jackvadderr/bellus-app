@@ -9,11 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 
 @Composable
 fun SectionSpecialOffers(
-    offers: List<EstablishmentDetails>,
+    offers: List<AvailableEstablishment>,
 ) {
 
     Column(modifier = Modifier.padding(16.dp)) {

@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 
 
 @Composable
 fun SectionEstablishments(
     navigateToDetails: () -> Unit,
-    establishments: List<EstablishmentDetails>,
+    establishments: List<AvailableEstablishment>,
     marketplaceStore: MarketplaceStore
 ) {
     Column(modifier = Modifier.padding(16.dp)) {

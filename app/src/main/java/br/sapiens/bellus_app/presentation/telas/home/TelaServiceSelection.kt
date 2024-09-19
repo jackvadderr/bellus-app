@@ -53,8 +53,8 @@ fun TelaServiceSelection(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.mipmap.barbearia),
-            contentDescription = "Barber Shop Image",
+            painter = painterResource(id = R.mipmap.barbearia), // TODO: Trocar imagem para db
+            contentDescription = "Barber Shop Image", // TODO: DATABASE
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp),
@@ -67,7 +67,7 @@ fun TelaServiceSelection(
                 .align(Alignment.TopStart)
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack, // TODO: Adicionar ação
                 contentDescription = "Back",
                 tint = Color.White
             )
@@ -112,9 +112,12 @@ fun TelaServiceSelection(
                     val itemsServiceDetails: List<ServiceDetails> =
                         (viewState as ServiceSelectionViewModel.ViewState.UserLoaded).serviceDetails
 
+                    val itemsReviewsDetails =
+                        (viewState as ServiceSelectionViewModel.ViewState.UserLoaded).reviewsDetails
+
                     when (selectedTabIndex) {
                         0 -> ServiceList(itemsServiceDetails)
-                        1 -> ReviewsTab()
+                        1 -> ReviewsTab(itemsReviewsDetails)
                         2 -> PortfolioTab()
                         3 -> AboutTab()
                     }

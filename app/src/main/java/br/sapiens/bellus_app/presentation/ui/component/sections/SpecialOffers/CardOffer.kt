@@ -25,10 +25,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.LoadImage
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 
 @Composable
-fun CardOffer(item: EstablishmentDetails) {
+fun CardOffer(item: AvailableEstablishment) {
     Card(
         modifier = Modifier
             .width(250.dp)

@@ -31,13 +31,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.presentation.ui.component.LoadImage
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import kotlinx.coroutines.launch
 
 @Composable
 fun CardEstablishments(
     navigateToDetails: () -> Unit,
-    item: EstablishmentDetails,
+    item: AvailableEstablishment,
     marketplaceStore: MarketplaceStore
 ) {
     val coroutineScope = rememberCoroutineScope()

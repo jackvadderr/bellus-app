@@ -19,10 +19,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.LoadImage
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 
 @Composable
-fun CarouselCard(category: EstablishmentDetails) {
+fun CarouselCard(category: AvailableEstablishment) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

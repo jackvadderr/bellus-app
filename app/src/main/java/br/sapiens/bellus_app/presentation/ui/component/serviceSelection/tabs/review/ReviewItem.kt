@@ -18,10 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.model.Review
+import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 
 @Composable
-fun ReviewItem(review: Review) {
+fun ReviewItem(review: ReviewsDetails) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Icon(
             imageVector = Icons.Default.AccountCircle,
@@ -31,8 +31,12 @@ fun ReviewItem(review: Review) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Text(text = review.username, style = MaterialTheme.typography.bodyLarge)
-            Text(text = review.date, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text(text = review.nome, style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = "Lembrar Colocar Data Aqui Amigo",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 repeat(review.rating) {
                     Icon(

@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.sections.carousel.SectionCarousel
 import br.sapiens.bellus_app.presentation.ui.component.sections.newEstablishments.SectionEstablishments
-import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetails
+import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.theme.BlueNaoSei
 import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 
@@ -60,8 +60,8 @@ fun TelaMarketplace(
 
             is MarketplaceViewModel.ViewState.UserLoaded -> {
                 Log.d("TelaMarketplace", "ViewState is UserLoaded")
-                val items: List<EstablishmentDetails> =
-                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).establishmentDetails
+                val items: List<AvailableEstablishment> =
+                    (viewState as MarketplaceViewModel.ViewState.UserLoaded).availableEstablishments
 
                 // TODO: O carrossel deveria mostar categorias, não estabelecimentos
                 // TODO: Criar endpoint de categorias
