@@ -19,10 +19,11 @@ import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 fun SectionEstablishments(
     navigateToDetails: () -> Unit,
     establishments: List<AvailableEstablishment>,
-    marketplaceStore: MarketplaceStore
+    marketplaceStore: MarketplaceStore,
+    titulo: String,
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Novo no Bellus", style = MaterialTheme.typography.bodySmall)
+        Text(text = titulo, style = MaterialTheme.typography.bodySmall)
 
         LazyRow(
             contentPadding = PaddingValues(vertical = 8.dp),

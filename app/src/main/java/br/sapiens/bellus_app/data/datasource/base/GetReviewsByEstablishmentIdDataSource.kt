@@ -4,5 +4,5 @@ import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
 import br.sapiens.bellus_app.utils.State
 
 fun interface GetReviewsByEstablishmentIdDataSource {
-    suspend fun getSummaries(id: String): State<List<ReviewsDTO>>
+    suspend fun getReviewsById(id: String): State<List<ReviewsDTO>>
 }

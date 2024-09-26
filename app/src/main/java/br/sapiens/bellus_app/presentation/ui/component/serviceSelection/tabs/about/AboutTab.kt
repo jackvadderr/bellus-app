@@ -19,17 +19,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.data.datasource.entity.HorarioFuncionamento
 
 @Composable
-fun AboutTab() {
+fun AboutTab(
+    description: String,
+    contatos: List<String>,
+    horario_funcionamento: HorarioFuncionamento
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
+        // TODO: Aqui vamos pegar as cordenadas do estabelecimento e usar api do google maps
         Image(
             painter = painterResource(id = R.mipmap.imagem_mapa),
-            contentDescription = "Location Map",
+            contentDescription = "Localização do estabelecimento",
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -50,7 +56,7 @@ fun AboutTab() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "A Navalha Dourada é uma barbearia que combina o charme clássico com serviços de ponta...",
+            text = description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -61,11 +67,11 @@ fun AboutTab() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ContactSection()
+        ContactSection(contatos)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        WorkingHoursSection()
+        WorkingHoursSection(horario_funcionamento)
 
         Spacer(modifier = Modifier.height(16.dp))
     }

@@ -31,7 +31,7 @@ fun ServiceItem(
         Column {
             Text(text = item.name, style = MaterialTheme.typography.titleSmall)
             Text(
-                text = "${item.duration.value} ${item.duration.type}",
+                text = "${item.duration.value} ${item.duration.type}", // TODO: Apenas transformar a hora
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(text = "a partir de R$ ${item.preco}", style = MaterialTheme.typography.bodyMedium)

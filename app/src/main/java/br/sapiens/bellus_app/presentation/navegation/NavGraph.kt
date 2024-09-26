@@ -17,10 +17,11 @@ import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
 import br.sapiens.bellus_app.presentation.telas.home.TelaPesquisa
-import br.sapiens.bellus_app.presentation.telas.home.TelaServiceSelection
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
+import br.sapiens.bellus_app.presentation.telas.profile.Profile
+import br.sapiens.bellus_app.presentation.telas.service_selection.TelaServiceSelection
 import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
@@ -38,7 +39,17 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         rota != RotasDestinos.Splash.rota &&
                 rota != RotasDestinos.LoginSocial.rota &&
                 rota != RotasDestinos.LoginCredencial.rota &&
-                rota != RotasDestinos.Cadastro.rota
+                rota != RotasDestinos.Cadastro.rota &&
+                rota != RotasDestinos.Detalhes.rota
+    }
+
+    val naoDeveExibitTopBar: (String?) -> Boolean = { rota ->
+        rota != RotasDestinos.Splash.rota &&
+                rota != RotasDestinos.LoginSocial.rota &&
+                rota != RotasDestinos.LoginCredencial.rota &&
+                rota != RotasDestinos.Cadastro.rota &&
+                rota != RotasDestinos.Detalhes.rota
+//                rota != RotasDestinos.Perfil.rota
     }
 
     val rotasSemPadding = listOf(
@@ -46,6 +57,8 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         RotasDestinos.LoginCredencial.rota,
         RotasDestinos.LoginSocial.rota,
         RotasDestinos.Cadastro.rota,
+        RotasDestinos.Detalhes.rota,
+        RotasDestinos.Perfil.rota
     )
 
     val modifier = if (rotaAtual in rotasSemPadding) {
@@ -56,7 +69,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
 
     Scaffold(
         topBar = {
-            if (deveExibirBarraNavegacao(rotaAtual)) {
+            if (naoDeveExibitTopBar(rotaAtual)) {
                 CustomTopBar()
             }
         },
@@ -156,9 +169,11 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             composable(RotasDestinos.Detalhes.rota) {
                 TelaServiceSelection(
                     hiltViewModel(),
-//                    navigateToDetails = {
-//                        navController.navigate(RotasDestinos.Detalhes.rota)
-//                    },
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.Home.rota
+                        )
+                    },
                 )
             }
             /* ######################
@@ -179,6 +194,11 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                             route = RotasDestinos.Perfil.rota
                         ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true } }
                     },
+                )
+            }
+            composable(RotasDestinos.Perfil.rota) {
+                Profile(
+                    viewModel = hiltViewModel(),
                 )
             }
         }

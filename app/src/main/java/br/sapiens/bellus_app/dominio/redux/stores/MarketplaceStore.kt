@@ -5,6 +5,7 @@ import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.reducer.MarketplaceReducer
 import br.sapiens.bellus_app.dominio.redux.updater.MarketplaceStateUpdater
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 class MarketplaceStore @Inject constructor(
     private val marketplaceReducer: MarketplaceReducer,
     private val marketplaceStateUpdater: MarketplaceStateUpdater,
-    private val coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope
 ) {
     val store: Store<ApplicationState> = Store(ApplicationState())
 
@@ -36,8 +37,12 @@ class MarketplaceStore @Inject constructor(
         store.updateState(newMarketplaceState)
     }
 
-    fun getEstablishmentDetails(): List<AvailableEstablishment> {
+    fun getEstablishmentsDetails(): List<AvailableEstablishment> {
         return store.stateFlow.value.marketplaceState.establishmentSummaries
+    }
+
+    fun getCurrentEstablishment(): EstablishmentDetail? {
+        return store.stateFlow.value.marketplaceState.currentEstablishment
     }
 
     fun getServiceDetails(): List<ServiceDetails> {

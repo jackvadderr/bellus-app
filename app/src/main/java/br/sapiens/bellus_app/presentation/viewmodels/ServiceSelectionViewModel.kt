@@ -7,13 +7,14 @@ import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
+import br.sapiens.bellus_app.data.datasource.entity.ReviewsSummary
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.dominio.model.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetReviewsByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetServicesByEstablishmentUseCase
-import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
@@ -31,6 +32,7 @@ class ServiceSelectionViewModel @Inject constructor(
     private val serviceUseCase: GetServicesByEstablishmentUseCase,
     private val establishmentUseCase: GetEstablishmentByIdUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
+    private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase
 ) : BaseViewModel<ServiceSelectionViewModel.ViewState, ServiceSelectionViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
@@ -44,32 +46,61 @@ class ServiceSelectionViewModel @Inject constructor(
     private fun loadUser() {
         viewModelScope.launch {
             Log.d("ServiceSelectionVM", "Iniciando loadUser")
-            val establishmentDetails: List<AvailableEstablishment> =
-                marketplaceStore.getEstablishmentDetails()
+            val currentEstablishment: EstablishmentDetail? =
+                marketplaceStore.getCurrentEstablishment()
+            Log.d("ServiceSelectionVM", currentEstablishment.toString())
             val serviceDetails: List<ServiceDetails> = marketplaceStore.getServiceDetails()
             val reviewsDetails: List<ReviewsDetails> = marketplaceStore.getReviews()
 
-            Log.d("ServiceSelectionVM", "EstablishmentDetails: $establishmentDetails")
+            Log.d("ServiceSelectionVM", "EstablishmentDetails: $currentEstablishment")
             Log.d("ServiceSelectionVM", "ServiceDetails: $serviceDetails")
 
-            if (establishmentDetails.isNotEmpty() && serviceDetails.isNotEmpty() && reviewsDetails.isNotEmpty()) {
+            if (currentEstablishment != null && serviceDetails.isNotEmpty() && reviewsDetails.isNotEmpty()) {
+                // O primeiro estado deles sempre vai ser null
                 setState {
-                    ViewState.UserLoaded(establishmentDetails, serviceDetails, reviewsDetails)
+                    ViewState.UserLoaded(
+                        currentEstablishment,
+                        serviceDetails,
+                        reviewsDetails
+                    )
                 }
             } else {
-                // Aqui começa a lista dos estabelecimentos
+                // Aqui começa o estabelecimento
+                Log.d("ServiceSelectionVM", "Else")
                 val establishmentId: String = marketplaceStore.getEstablishmentItemId().toString()
                 Log.d("ServiceSelectionVM", "EstablishmentId: $establishmentId")
-                val establishmentState: State<EstabelecimentoDTO> =
+                val currentEstablishmentState: State<EstabelecimentoDTO> =
                     establishmentUseCase.execute(establishmentId)
 
-                Log.d("ServiceSelectionVM", "EstablishingState: $establishmentState")
+                Log.d("ServiceSelectionVM", "EstablishingState: $currentEstablishmentState")
 
-                val establishmentDetail: EstablishmentDetail = when (establishmentState) {
-                    is State.Success -> establishmentState.data.toEstablishmentDetail()
-                    is State.Error -> TODO("Error a vista! ServiceSelectionVM")
-                }
+                val currentEstablishmentDetails: EstablishmentDetail =
+                    when (currentEstablishmentState) {
+                        is State.Success -> {
+                            var totalReviews = 0
+                            var average_rating = 0.0F
+                            when (val totalReviewsState: State<ReviewsSummary> =
+                                reviewsSummaryUseCase.invoke(currentEstablishmentState.data.id)) {
+                                is State.Success -> {
+                                    totalReviews = totalReviewsState.data.total_reviews
+                                    average_rating = totalReviewsState.data.average_rating
+                                }
 
+                                is State.Error -> TODO("Pao de batata")
+                            }
+                            currentEstablishmentState.data.toEstablishmentDetail(
+                                totalReviews,
+                                average_rating
+                            )
+                        }
+
+                        is State.Error -> TODO("Error a vista! ServiceSelectionVM")
+                    }
+                marketplaceStore.dispatch(
+                    MarketplaceEvent.SuccessGetEstablishmentCurrent(
+                        currentEstablishmentDetails
+                    )
+                )
                 // Aqui começa a lista dos serviços
                 val servicesState: State<List<ServiceDTO>> =
                     serviceUseCase.execute(
@@ -86,6 +117,11 @@ class ServiceSelectionViewModel @Inject constructor(
                 val newServiceDetails: List<ServiceDetails> = services.map { it.toServiceDetails() }
                 Log.d("ServiceSelectionVM", "NewServiceDetails: $newServiceDetails")
 
+                marketplaceStore.dispatch(
+                    MarketplaceEvent.SuccessServiceDetails(
+                        newServiceDetails
+                    )
+                )
                 // Aqui começa a lista das avaliações
                 // TODO: ESTAMOS SOBRECARREGANDO ESSA VIEWMODEL MAS FDS
                 val reviewsList: State<List<ReviewsDTO>> = reviewsUseCase.execute(establishmentId)
@@ -94,34 +130,21 @@ class ServiceSelectionViewModel @Inject constructor(
                         is State.Success -> reviewsList.data.map { it.toReviewsDetails() }
                         is State.Error -> TODO("AAAAAAAAAAAAAAAAAAA")
                     }
-
-                marketplaceStore.dispatch(
-                    MarketplaceEvent.SuccessGetEstablishmentCurrent(
-                        establishmentDetail
-                    )
-                )
-                marketplaceStore.dispatch(
-                    MarketplaceEvent.SuccessServiceDetails(
-                        newServiceDetails
-                    )
-                )
-
                 marketplaceStore.dispatch(
                     MarketplaceEvent.SuccessGetReviews(
                         reviewsState
                     )
                 )
+//                val newEstablishmentDetails = marketplaceStore.getCurrentEstablishment()
+//                val updatedServiceDetails = marketplaceStore.getServiceDetails()
+//                Log.d("ServiceSelectionVM", "NewEstablishmentDetails: $currentEstablishment")
+//                Log.d("ServiceSelectionVM", "UpdatedServiceDetails: $serviceDetails")
 
-                // CASO dÊ ELSE significa establishmentDetails e serviceDetails são vazios
-                val newEstablishmentDetails = marketplaceStore.getEstablishmentDetails()
-                val updatedServiceDetails = marketplaceStore.getServiceDetails()
-                Log.d("ServiceSelectionVM", "NewEstablishmentDetails: $establishmentDetails")
-                Log.d("ServiceSelectionVM", "UpdatedServiceDetails: $serviceDetails")
-
+                Log.d("ServiceSelectionVM", "Deu bom!")
                 setState {
                     ViewState.UserLoaded(
-                        newEstablishmentDetails,
-                        updatedServiceDetails,
+                        currentEstablishmentDetails,
+                        newServiceDetails,
                         reviewsState
                     )
                 }
@@ -142,7 +165,7 @@ class ServiceSelectionViewModel @Inject constructor(
     sealed class ViewState : IViewState {
         data object Loading : ViewState()
         data class UserLoaded(
-            val establishmentDetails: List<AvailableEstablishment>,
+            val establishmentDetails: EstablishmentDetail,
             val serviceDetails: List<ServiceDetails>,
             val reviewsDetails: List<ReviewsDetails>
         ) : ViewState()

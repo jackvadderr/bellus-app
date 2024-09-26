@@ -4,6 +4,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentsSummaryDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsByEstablishmentIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
@@ -11,6 +12,7 @@ import br.sapiens.bellus_app.data.datasource.implemetation.GetAllEstablishmentsD
 import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentSummariesDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetReviewsByEstablishmentIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.GetReviewsSummaryByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetServicesByEstablishmentDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetUserDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.LoginDataSourceImpl
@@ -57,14 +59,20 @@ class DataSourceModule {
         GetEstablishmentByIdDataSourceImpl(provider)
 
     @Provides
-    fun provideGetEstablishmentSummary(
+    fun provideGetEstablishmentSummaryDataSource(
         provider: KtorClientProvider
     ): GetEstablishmentsSummaryDataSource =
         GetEstablishmentSummariesDataSourceImpl(provider)
 
     @Provides
-    fun provideGetReviewsByEstablishmentId(
+    fun provideGetReviewsByEstablishmentIdDataSource(
         provider: KtorClientProvider
     ): GetReviewsByEstablishmentIdDataSource =
         GetReviewsByEstablishmentIdDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetReviewsSummaryByEstablishmentIdDataSource(
+        provider: KtorClientProvider
+    ): GetReviewsSummaryByEstablishmentIdDataSource =
+        GetReviewsSummaryByEstablishmentIdDataSourceImpl(provider)
 }

@@ -15,7 +15,7 @@ class GetReviewsByEstablishmentIdDataSourceImpl @Inject constructor(
     private val provider: KtorClientProvider
 ) : GetReviewsByEstablishmentIdDataSource {
 
-    override suspend fun getSummaries(establishmentId: String): State<List<ReviewsDTO>> {
+    override suspend fun getReviewsById(establishmentId: String): State<List<ReviewsDTO>> {
         return if (provider.isTokenAvailable()) {
             try {
                 Log.d("GetReviewsByEstablishmentIdDataSourceImpl", "Token disponível")

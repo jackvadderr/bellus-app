@@ -8,15 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.R
 
 @Composable
-fun PortfolioTab() {
-    val images = listOf(
-        R.mipmap.barbearia,
-        R.mipmap.barbearia,
-        R.mipmap.barbearia,
-    )
+fun PortfolioTab(images: List<String>) {
 
     Column(
         modifier = Modifier

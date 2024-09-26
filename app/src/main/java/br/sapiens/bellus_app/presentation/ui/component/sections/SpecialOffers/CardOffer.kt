@@ -54,7 +54,7 @@ fun CardOffer(item: AvailableEstablishment) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = item.address,
+                    text = "${item.address.rua} ${item.address.numero} ${item.address.cep} ${item.address.cidade} ${item.address.estado}",
                     style = MaterialTheme.typography.titleSmall
                 )
             }

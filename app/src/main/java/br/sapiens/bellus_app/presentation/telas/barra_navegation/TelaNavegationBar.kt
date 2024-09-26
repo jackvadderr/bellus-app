@@ -59,9 +59,9 @@ fun RowScope.AddItem(
                 painterResource(id = screen.icon),
                 contentDescription = screen.title,
                 modifier = Modifier
-                            .scale(if (isSelected) 1.5f else 1f)
-                            .animateContentSize()
-                            .align(Alignment.CenterVertically)
+                    .scale(if (isSelected) 1.5f else 1f)
+                    .animateContentSize()
+                    .align(Alignment.CenterVertically)
             )
         },
         selected = isSelected,
@@ -94,15 +94,13 @@ sealed class BottomNavItem(
         BottomNavItem(
             "Pesquisar",
             R.drawable.ic_search_black_18dp,
-//            RotasDestinos.Pesquisar.rota
             RotasDestinos.Pesquisar.rota
         )
 
     data object Perfil :
         BottomNavItem(
             "Perfil",
-            R.drawable.ic_home_black_24dp,
-//            RotasDestinos.Perfil.rota
-            RotasDestinos.Pesquisar.rota
+            R.drawable.ic_baseline_person_24,
+            RotasDestinos.Perfil.rota
         )
 }

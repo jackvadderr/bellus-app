@@ -12,7 +12,7 @@ data class EstabelecimentoDTO(
     val nome: String,
     val cnpj: String,
     val rating: Float,
-    val endereco: String,
+    val endereco: EnderecoPartialModel,
     val telefone: List<String>,
     val horario_funcionamento: HorarioFuncionamento,
     val imagem: List<String>,

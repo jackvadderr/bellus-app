@@ -18,9 +18,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var app: BellusApp
 
-//    @Inject
-//    lateinit var splashViewModel: SplashViewModel
-
     @Inject
     lateinit var navControllerProvider: NavControllerProvider
 

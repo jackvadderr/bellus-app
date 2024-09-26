@@ -46,7 +46,6 @@ fun CardEstablishments(
             .width(250.dp)
             .height(180.dp)
             .clickable {
-                // TODO(gambriarras): Vamos enviar para o redux o current id do item XD
                 coroutineScope.launch {
                     marketplaceStore.setEstablishmentItemId(item.id)
                 }
@@ -72,7 +71,7 @@ fun CardEstablishments(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = item.address,
+                    text = "${item.address.rua} ${item.address.numero} ${item.address.cep} ${item.address.cidade} ${item.address.estado}",
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,

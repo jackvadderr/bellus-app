@@ -5,6 +5,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentsSummaryDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsByEstablishmentIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
@@ -14,6 +15,7 @@ import br.sapiens.bellus_app.data.repository.base.GetAllEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentsSummaryRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsByEstalishmentIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
@@ -22,6 +24,7 @@ import br.sapiens.bellus_app.data.repository.implemetation.GetAllEstablishmentsR
 import br.sapiens.bellus_app.data.repository.implemetation.GetEstablishmentByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetEstablishmentsSummariesRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetReviewsByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.GetReviewsSummaryByEstablishmentIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetServicesByEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetUserRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.LoginRepositoryImpl
@@ -81,14 +84,20 @@ class RepositoryModule {
         GetEstablishmentByIdRepositoryImpl(getEstablishmentByIdDataSource)
 
     @Provides
-    fun provideGetEstablishmentSummaries(
+    fun provideGetEstablishmentSummariesRepository(
         getEstablishmentSummarayDataSource: GetEstablishmentsSummaryDataSource
     ): GetEstablishmentsSummaryRepository =
         GetEstablishmentsSummariesRepositoryImpl(getEstablishmentSummarayDataSource)
 
     @Provides
-    fun provideGetReviewsByEstablishmentId(
+    fun provideGetReviewsByEstablishmentIdRepository(
         data: GetReviewsByEstablishmentIdDataSource
     ): GetReviewsByEstalishmentIdRepository =
         GetReviewsByEstablishmentIdRepositoryImpl(data)
+
+    @Provides
+    fun provideGetReviewsSummaryByEstablishmentIdRepository(
+        data: GetReviewsSummaryByEstablishmentIdDataSource
+    ): GetReviewsSummaryByEstalishmentIdRepository =
+        GetReviewsSummaryByEstablishmentIdRepositoryImpl(data)
 }

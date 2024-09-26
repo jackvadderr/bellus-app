@@ -12,7 +12,7 @@ class GetReviewsByEstablishmentIdRepositoryImpl @Inject constructor(
 
     override suspend fun getReviews(id: String): State<List<ReviewsDTO>> {
         return try {
-            when (val response = dataSource.getSummaries(id)) {
+            when (val response = dataSource.getReviewsById(id)) {
                 is State.Success -> {
                     val establishments = response.data
                     State.Success(establishments)

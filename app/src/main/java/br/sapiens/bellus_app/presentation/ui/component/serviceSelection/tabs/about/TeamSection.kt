@@ -28,9 +28,9 @@ fun TeamSection() {
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "Jorge Marcos")
-            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "Gabriel Peixoto")
-            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "Lucas Silva")
+            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "")
+            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "")
+            TeamMemberItem(imageRes = R.drawable.ic_baseline_person_24, name = "")
         }
     }
 }

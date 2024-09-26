@@ -35,7 +35,7 @@ class LoginDataSourceImpl @Inject constructor(
     override suspend fun loginWithCredential(authCredential: AuthCredential): State<AuthDTO> {
         Log.d("LoginDataSourceImpl", "Starting loginWithCredential")
         return try {
-            var sessionToken: String? = null;
+            var sessionToken: String? = null
 
             val firebaseAuthInstance = FirebaseAuth.getInstance()
             Log.d("LoginDataSourceImpl", "FirebaseAuth instance obtained")
