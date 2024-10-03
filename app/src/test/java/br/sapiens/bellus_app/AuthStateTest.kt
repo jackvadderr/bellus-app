@@ -1,6 +1,6 @@
 //package br.sapiens.bellus_app
 //
-//import br.sapiens.bellus_app.dominio.model.AuthState
+//import br.sapiens.bellus_app.dominio.model.state.AuthState
 //import junit.framework.Assert.assertEquals
 //import org.junit.Test
 //

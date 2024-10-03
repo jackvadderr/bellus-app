@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.viewmodels.SplashViewModel
@@ -55,10 +54,12 @@ fun TelaSplash(
             navigateToLogin()
         }
     } else {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color(android.graphics.Color.parseColor("#1B2634"))),
-            contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(android.graphics.Color.parseColor("#1B2634"))),
+            contentAlignment = Alignment.Center
+        ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 SplashArtAnimada()
             }
@@ -101,21 +102,3 @@ fun SplashArtAnimada() {
 
     Log.d("SplashArtAnimada", "Finalizando animação")
 }
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSplashArtAnimada() {
-    SplashArtAnimada()
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewTelaSplash() {
-//    TelaSplash(
-//        viewModel = hiltViewModel(),
-//        navigateToLogin = {},
-//        navigateToHome = {}
-//    )
-//}

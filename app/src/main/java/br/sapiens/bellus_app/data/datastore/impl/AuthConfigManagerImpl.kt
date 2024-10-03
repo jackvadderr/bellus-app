@@ -17,16 +17,30 @@ object AuthConfigManagerImpl : AuthConfigManager {
 
     override val Context.authConfig: Flow<AuthConfig> get() = userPreferencesStore.data
 
-    override suspend fun Context.updateAuthState(
+    override suspend fun Context.updateClientAuthState(
         isAuthenticated: Boolean,
         userId: String,
         tokenBearer: String
     ) {
         userPreferencesStore.updateData { currentConfig ->
             currentConfig.toBuilder()
-                .setIsAuthenticated(isAuthenticated)
-                .setUserId(userId)
-                .setTokenBearer(tokenBearer)
+                .setIsAuthenticatedClient(isAuthenticated)
+                .setUserIdClient(userId)
+                .setTokenBearerClient(tokenBearer)
+                .build()
+        }
+    }
+
+    suspend fun Context.updateProfessionalAuthState(
+        isAuthenticated: Boolean,
+        userId: String,
+        tokenBearer: String
+    ) {
+        userPreferencesStore.updateData { currentConfig ->
+            currentConfig.toBuilder()
+                .setUserIdProfessional(userId)
+                .setTokenBearerProfessional(tokenBearer)
+                .setIsAuthenticatedProfessional(isAuthenticated)
                 .build()
         }
     }

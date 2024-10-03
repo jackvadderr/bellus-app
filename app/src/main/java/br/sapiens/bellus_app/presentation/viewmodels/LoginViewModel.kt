@@ -6,9 +6,12 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
-import br.sapiens.bellus_app.dominio.model.AuthEvent
-import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.model.AuthUserClient
+import br.sapiens.bellus_app.dominio.model.event.AuthEvent
+import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
+import br.sapiens.bellus_app.dominio.model.state.ClientInfo
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
+import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
@@ -20,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val storeConfig: AuthStore
+    private val storeConfig: AuthStore,
+    private val storeUser: UserProfileStore
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
     fun loginWithCredential(authCredential: AuthCredential) {
@@ -29,13 +33,25 @@ class LoginViewModel @Inject constructor(
             when (val result: State<AuthDTO> =
                 loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
                 is State.Success -> {
-                    val authUser = AuthUser(result.data.id ?: "")
+                    val authUserClient = AuthUserClient(result.data.id ?: "")
                     storeConfig.dispatch(
-                        AuthEvent.UserAuthenticated(
-                            authUser,
+                        AuthEvent.UserAuthenticatedAsClient(
+                            authUserClient,
                             result.data.tokenBearer ?: ""
                         )
                     )
+                    if (result.data.id.isNullOrEmpty()) {
+                        val clientInfo = result.data.id?.let {
+                            ClientInfo(
+                                id = it,
+                            )
+                        }
+                        storeUser.dispatch(
+                            UserProfileEvent.SetClientProfile(
+                                clientInfo
+                            )
+                        )
+                    }
                     setState {
                         state.copy(
                             isLoading = false,

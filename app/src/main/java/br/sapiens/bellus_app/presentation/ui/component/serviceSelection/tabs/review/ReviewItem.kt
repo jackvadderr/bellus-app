@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ReviewItem(review: ReviewsDetails) {
@@ -33,7 +36,7 @@ fun ReviewItem(review: ReviewsDetails) {
         Column {
             Text(text = review.nome, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = "Lembrar Colocar Data Aqui Amigo",
+                text = formatDateTime(review.update_at), // TODO: Lembrar de formatar
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
@@ -51,4 +54,11 @@ fun ReviewItem(review: ReviewsDetails) {
             Text(text = review.comment, style = MaterialTheme.typography.bodyMedium)
         }
     }
+}
+
+fun formatDateTime(dateTimeString: String): String {
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    val dateTime = LocalDateTime.parse(dateTimeString)
+    val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    return dateTime.toJavaLocalDateTime().format(outputFormatter)
 }

@@ -1,6 +1,6 @@
 package br.sapiens.bellus_app.dominio.redux.stores
 
-import br.sapiens.bellus_app.dominio.model.MarketplaceEvent
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.reducer.MarketplaceReducer
 import br.sapiens.bellus_app.dominio.redux.updater.MarketplaceStateUpdater
@@ -37,7 +37,7 @@ class MarketplaceStore @Inject constructor(
         store.updateState(newMarketplaceState)
     }
 
-    fun getEstablishmentsDetails(): List<AvailableEstablishment> {
+    fun getEstablishmentsSummaries(): List<AvailableEstablishment> {
         return store.stateFlow.value.marketplaceState.establishmentSummaries
     }
 
@@ -47,6 +47,10 @@ class MarketplaceStore @Inject constructor(
 
     fun getServiceDetails(): List<ServiceDetails> {
         return store.stateFlow.value.marketplaceState.serviceDetails
+    }
+
+    fun getCurrentServiceDetails(): ServiceDetails? {
+        return store.stateFlow.value.marketplaceState.currentServiceDetails
     }
 
     fun getEstablishmentItemId(): String? {

@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
+import br.sapiens.bellus_app.dominio.model.state.ClientInfo
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
+import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -16,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val storeConfig: AuthStore
+    private val storeConfig: AuthStore,
+    private val storeUser: UserProfileStore,
 ) : BaseViewModel<SplashViewModel.ViewState, SplashViewModel.ViewEvent>() {
     private var splashShowFlow = MutableStateFlow(true)
     var isSplashShow = splashShowFlow.asStateFlow()
@@ -26,6 +30,7 @@ class SplashViewModel @Inject constructor(
             delay(2000L)
             splashShowFlow.value = false
         }
+        Log.d("SplashViewModel", "DEBUG 0")
         checkUser()
     }
 
@@ -36,11 +41,22 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             delay(2000)
             val userId = storeConfig.store.stateFlow.value.authState.getUserId()
+            Log.d("SplashViewModel", "DEBUG 1")
             if (userId != null) {
                 Log.d("SplashViewModel", "User ID: $userId")
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.AUTENTICADO))
-                // TODO: Caso usuario esteja autenticado, tbm vamos guardar inforamções no Redux
-                // TODO: Também vamos guardar no datastore
+                Log.d("SplashViewModel", "DEBUG 2")
+                if (!storeUser.hasUserClient()) {
+                    val clientInfo = ClientInfo(
+                        id = userId,
+                    )
+                    storeUser.dispatch(
+                        UserProfileEvent.SetClientProfile(
+                            clientInfo
+                        )
+                    )
+                    Log.d("SplashViewModel", "DEBUG 3")
+                }
             } else {
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))
             }

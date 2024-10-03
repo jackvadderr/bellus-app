@@ -27,7 +27,8 @@ fun BottomNavigation(navController: NavHostController, selectedItem: BottomNavIt
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Pesquisar,
-        BottomNavItem.Perfil
+        BottomNavItem.Agendamentos,
+        BottomNavItem.Perfil,
     )
 
     NavigationBar(
@@ -95,6 +96,13 @@ sealed class BottomNavItem(
             "Pesquisar",
             R.drawable.ic_search_black_18dp,
             RotasDestinos.Pesquisar.rota
+        )
+
+    data object Agendamentos :
+        BottomNavItem(
+            "Agendamentos,",
+            R.drawable.calendar,
+            RotasDestinos.GerenciarAgendamentos.rota
         )
 
     data object Perfil :

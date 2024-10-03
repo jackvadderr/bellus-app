@@ -1,22 +1,23 @@
-package br.sapiens.bellus_app.dominio.model
+package br.sapiens.bellus_app.dominio.model.state
 
+import br.sapiens.bellus_app.dominio.model.AppointmentDetail
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 
 data class MarketplaceState(
-    val establishmentSummaries: List<AvailableEstablishment> = emptyList(),
-    val serviceDetails: List<ServiceDetails> = emptyList(),
-
-
-    val currentEstablishmentItemId: String? = null,
-    val currentEstablishment: EstablishmentDetail? = null,
-
-    val reviewsCurrentEstablishment: List<ReviewsDetails>? = null,
-
     val currentEvent: MarketplaceEvent? = null,
 
+    val currentAppointment: AppointmentDetail? = null,
+    val currentEstablishmentItemId: String? = null,
+    val currentEstablishment: EstablishmentDetail? = null,
+    val reviewsCurrentEstablishment: List<ReviewsDetails>? = null,
+    val establishmentSummaries: List<AvailableEstablishment> = emptyList(),
+
+    val serviceDetails: List<ServiceDetails> = emptyList(),
+    val currentServiceDetails: ServiceDetails? = null,
 
     val isLoading: Boolean = false,
     val isServiceDetailsLoading: Boolean = false,

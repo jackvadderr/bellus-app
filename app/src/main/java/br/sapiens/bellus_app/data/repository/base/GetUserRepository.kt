@@ -2,9 +2,6 @@ package br.sapiens.bellus_app.data.repository.base
 
 import br.sapiens.bellus_app.data.datasource.entity.UserDTO
 import br.sapiens.bellus_app.utils.State
-import br.sapiens.bellus_app.data.repository.model.User
-import br.sapiens.bellus_app.dominio.model.AuthUser
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ClientUser
 
 /**
  * Esta é uma interface funcional que representa um repositório para obter um usuário.

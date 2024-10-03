@@ -6,7 +6,7 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoSummaryDTO
-import br.sapiens.bellus_app.dominio.model.MarketplaceEvent
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentsSummariesUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdUseCase

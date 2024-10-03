@@ -9,6 +9,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishme
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.implemetation.CadastroDataSourceImpl
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.base.GetAllEstablishmentsRepository
@@ -19,6 +20,7 @@ import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmen
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
+import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.data.repository.implemetation.CadastroRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetAllEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetEstablishmentByIdRepositoryImpl
@@ -28,6 +30,7 @@ import br.sapiens.bellus_app.data.repository.implemetation.GetReviewsSummaryByEs
 import br.sapiens.bellus_app.data.repository.implemetation.GetServicesByEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.GetUserRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.LoginRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.PostAppointmentRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -100,4 +103,10 @@ class RepositoryModule {
         data: GetReviewsSummaryByEstablishmentIdDataSource
     ): GetReviewsSummaryByEstalishmentIdRepository =
         GetReviewsSummaryByEstablishmentIdRepositoryImpl(data)
+
+    @Provides
+    fun providePostAppointmentRepository(
+        data: PostAppointmentDataSource
+    ): PostAppointmentRepository =
+        PostAppointmentRepositoryImpl(data)
 }

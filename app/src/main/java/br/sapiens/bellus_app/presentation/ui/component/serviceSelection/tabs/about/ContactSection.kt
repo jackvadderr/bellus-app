@@ -43,7 +43,7 @@ fun ContactSection(contatos: List<String>) {
                 )
 
                 Text(
-                    text = ctt,
+                    text = formatPhoneNumber(ctt),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -61,5 +61,18 @@ fun ContactSection(contatos: List<String>) {
             }
 
         }
+    }
+}
+
+fun formatPhoneNumber(phone: String): String {
+    val cleaned = phone.replace(Regex("[^\\d]"), "")
+
+    return if (cleaned.length == 10) {
+        "(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6, 10)}"
+    } else if (cleaned.length == 11) {
+        // Formato (XX) XXXXX-XXXX
+        "(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7, 11)}"
+    } else {
+        phone
     }
 }

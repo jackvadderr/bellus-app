@@ -8,6 +8,7 @@ import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmen
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
+import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentsSummariesUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetReviewsByEstablishmentIdUseCase
@@ -15,6 +16,7 @@ import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdU
 import br.sapiens.bellus_app.dominio.usecase.GetServicesByEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetUserUseCase
 import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
+import br.sapiens.bellus_app.dominio.usecase.PostAppointmentUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,4 +68,10 @@ class UseCaseModule {
     fun provideGetReviewsSummaryByEstablishmentIdUseCase(
         repository: GetReviewsSummaryByEstalishmentIdRepository
     ) = GetReviewsSummaryByEstablishmentIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun providePostAppointmentUseCase(
+        repository: PostAppointmentRepository
+    ) = PostAppointmentUseCase(repository)
 }

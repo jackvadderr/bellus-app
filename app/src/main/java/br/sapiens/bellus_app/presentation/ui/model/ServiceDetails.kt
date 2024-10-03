@@ -9,6 +9,12 @@ data class ServiceDetails(
     val preco: Float,
 )
 
+data class ServicePost(
+    val name: String,
+    val duration: Duration,
+    val preco: Float,
+)
+
 @Serializable
 data class Duration(
     val type: String,

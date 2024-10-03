@@ -1,13 +1,16 @@
 package br.sapiens.bellus_app.data.datastore.base
 
 import android.content.Context
-import br.sapiens.bellus_app.AppConfig
 import br.sapiens.bellus_app.AuthConfig
 import kotlinx.coroutines.flow.Flow
 
 interface AuthConfigManager {
     val Context.authConfig: Flow<AuthConfig>
-    suspend fun Context.updateAuthState(isAuthenticated: Boolean, userId: String, tokenBearer: String)
+    suspend fun Context.updateClientAuthState(
+        isAuthenticated: Boolean,
+        userId: String,
+        tokenBearer: String
+    )
 }
 
 //interface AppConfigManager {

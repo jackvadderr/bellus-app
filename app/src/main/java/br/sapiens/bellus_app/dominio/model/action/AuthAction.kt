@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.dominio.model
+package br.sapiens.bellus_app.dominio.model.action
 
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser

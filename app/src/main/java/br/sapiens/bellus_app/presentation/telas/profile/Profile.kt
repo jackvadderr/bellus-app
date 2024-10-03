@@ -5,15 +5,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.profile.MenuItem
-import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.ProfileViewModel
 
 
 @Composable
 fun Profile(
-    viewModel: MarketplaceViewModel,
+    viewModel: ProfileViewModel,
 ) {
     Column {
-//        ProfileHeader(name = "João Marcos")
+//        ProfileHeader(name = "João Marcos") TODO: Pegar do DataStore
 
         MenuItem(
             iconResId = R.drawable.bubble_chat,

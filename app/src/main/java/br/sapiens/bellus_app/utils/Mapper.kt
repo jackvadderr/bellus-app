@@ -74,5 +74,6 @@ fun ReviewsDTO.toReviewsDetails(): ReviewsDetails {
         nome = this.name,
         comment = this.comment,
         rating = this.rating,
+        update_at = this.updated_at
     )
 }

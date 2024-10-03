@@ -14,13 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.presentation.ui.model.Duration
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ServiceItem(
-    item: ServiceDetails
+    item: ServiceDetails,
+    navigate: () -> Unit,
+    store: MarketplaceStore,
+    coroutineScope: CoroutineScope
 ) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,13 +40,23 @@ fun ServiceItem(
         Column {
             Text(text = item.name, style = MaterialTheme.typography.titleSmall)
             Text(
-                text = "${item.duration.value} ${item.duration.type}", // TODO: Apenas transformar a hora
+                text = formatDuration(item.duration), // TODO: Apenas transformar a hora
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(text = "a partir de R$ ${item.preco}", style = MaterialTheme.typography.bodyMedium)
         }
         Button(
-            onClick = {},
+            onClick = {
+                coroutineScope.launch {
+                    store.dispatch(
+                        MarketplaceEvent.SucessGetCurrentService(
+                            item
+                        )
+                    )
+                }
+
+                navigate()
+            },
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MarronNaoSei,
                 contentColor = Color.White
@@ -45,5 +64,23 @@ fun ServiceItem(
         ) {
             Text(text = "Agendar")
         }
+    }
+}
+
+fun formatDuration(duration: Duration): String {
+    val totalMinutes = when (duration.type) {
+        "Hour" -> duration.value * 60
+        "Minute" -> duration.value
+        else -> 0f
+    }.toLong()
+
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+
+    return when {
+        hours > 0 && minutes > 0 -> "${hours}h ${minutes}m"
+        hours > 0 -> "${hours}h"
+        minutes > 0 -> "${minutes}m"
+        else -> "0m"
     }
 }

@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.dominio.model
+package br.sapiens.bellus_app.dominio.model.action
 
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail

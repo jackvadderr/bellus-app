@@ -3,8 +3,8 @@ package br.sapiens.bellus_app.data.datasource.implemetation
 import android.util.Log
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
-import br.sapiens.bellus_app.dominio.model.AuthEvent
-import br.sapiens.bellus_app.dominio.model.AuthUser
+import br.sapiens.bellus_app.dominio.model.AuthUserClient
+import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
@@ -63,8 +63,8 @@ class LoginDataSourceImpl @Inject constructor(
                 provider.setBearerTokenPrimary(responseSession.session_token)
                 sessionToken = responseSession.session_token
                 authStore.store.dispatch(
-                    AuthEvent.UserAuthenticated(
-                        AuthUser(
+                    AuthEvent.UserAuthenticatedAsClient(
+                        AuthUserClient(
                             firebaseUser.uid,
                         ),
                         responseSession.session_token

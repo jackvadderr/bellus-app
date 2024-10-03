@@ -15,13 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
+import br.sapiens.bellus_app.presentation.telas.create_appointment.TelaCreateAppointment
+import br.sapiens.bellus_app.presentation.telas.create_appointment.TelaSelectionProfissional
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
 import br.sapiens.bellus_app.presentation.telas.home.TelaPesquisa
+import br.sapiens.bellus_app.presentation.telas.list_appointment.TelaAppointmentManager
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
 import br.sapiens.bellus_app.presentation.telas.profile.Profile
-import br.sapiens.bellus_app.presentation.telas.service_selection.TelaServiceSelection
+import br.sapiens.bellus_app.presentation.telas.service_selection.TelaSelection
 import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
@@ -40,7 +43,10 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 rota != RotasDestinos.LoginSocial.rota &&
                 rota != RotasDestinos.LoginCredencial.rota &&
                 rota != RotasDestinos.Cadastro.rota &&
-                rota != RotasDestinos.Detalhes.rota
+                rota != RotasDestinos.Detalhes.rota &&
+                rota != RotasDestinos.EscolherProfissionalAgendamento.rota &&
+                rota != RotasDestinos.CriarAgendamento.rota
+
     }
 
     val naoDeveExibitTopBar: (String?) -> Boolean = { rota ->
@@ -48,8 +54,9 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 rota != RotasDestinos.LoginSocial.rota &&
                 rota != RotasDestinos.LoginCredencial.rota &&
                 rota != RotasDestinos.Cadastro.rota &&
-                rota != RotasDestinos.Detalhes.rota
-//                rota != RotasDestinos.Perfil.rota
+                rota != RotasDestinos.Detalhes.rota &&
+                rota != RotasDestinos.EscolherProfissionalAgendamento.rota &&
+                rota != RotasDestinos.CriarAgendamento.rota
     }
 
     val rotasSemPadding = listOf(
@@ -58,7 +65,9 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         RotasDestinos.LoginSocial.rota,
         RotasDestinos.Cadastro.rota,
         RotasDestinos.Detalhes.rota,
-        RotasDestinos.Perfil.rota
+        RotasDestinos.Perfil.rota,
+        RotasDestinos.EscolherProfissionalAgendamento.rota,
+        RotasDestinos.CriarAgendamento.rota
     )
 
     val modifier = if (rotaAtual in rotasSemPadding) {
@@ -167,13 +176,18 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             */
             // Tela Home
             composable(RotasDestinos.Detalhes.rota) {
-                TelaServiceSelection(
+                TelaSelection(
                     hiltViewModel(),
                     navigateToBack = {
                         navController.navigate(
                             route = RotasDestinos.Home.rota
                         )
                     },
+                    navigateToSelectionProfissional = {
+                        navController.navigate(
+                            route = RotasDestinos.EscolherProfissionalAgendamento.rota
+                        )
+                    }
                 )
             }
             /* ######################
@@ -196,10 +210,54 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     },
                 )
             }
+            /* ######################
+             *   TELA DE PERFIL
+             * ######################
+             */
             composable(RotasDestinos.Perfil.rota) {
                 Profile(
                     viewModel = hiltViewModel(),
                 )
+            }
+            /* ######################
+             *   TELA DE AGENDAMENTOS
+             * ######################
+             */
+            // Escolher profissional
+            composable(RotasDestinos.EscolherProfissionalAgendamento.rota) {
+                TelaSelectionProfissional(
+                    viewModel = hiltViewModel(),
+                    navigateToCreateAppointment = {
+                        navController.navigate(
+                            route = RotasDestinos.CriarAgendamento.rota,
+                        )
+                    },
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.Detalhes.rota
+                        )
+                    }
+                )
+            }
+            // Criar agendamento
+            composable(RotasDestinos.CriarAgendamento.rota) {
+                TelaCreateAppointment(
+                    viewModel = hiltViewModel(),
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.EscolherProfissionalAgendamento.rota
+                        )
+                    },
+                    navigateToManagerAppointments = {
+                        navController.navigate(
+                            route = RotasDestinos.GerenciarAgendamentos.rota,
+                        )
+                    },
+                )
+            }
+            // Listar agendamentos
+            composable(RotasDestinos.GerenciarAgendamentos.rota) {
+                TelaAppointmentManager(viewModel = hiltViewModel())
             }
         }
     }

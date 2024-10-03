@@ -1,5 +1,6 @@
-package br.sapiens.bellus_app.dominio.model
+package br.sapiens.bellus_app.dominio.model.event
 
+import br.sapiens.bellus_app.dominio.model.AppointmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
@@ -14,6 +15,10 @@ sealed class MarketplaceEvent {
         MarketplaceEvent()
 
     data class SuccessServiceDetails(val details: List<ServiceDetails>) : MarketplaceEvent()
+
+    data class SucessGetCurrentService(val details: ServiceDetails) : MarketplaceEvent()
+
+    data class CreateAppointment(val appointment: AppointmentDetail) : MarketplaceEvent()
 
     data class SuccessGetReviews(val details: List<ReviewsDetails>) : MarketplaceEvent()
 

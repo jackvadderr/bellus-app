@@ -10,6 +10,6 @@ class AuthConfigRepositoryImpl(private val context: Context) : AuthConfigReposit
     override val authConfig: Flow<AuthConfig> get() = AuthConfigManagerImpl.run { context.authConfig }
 
     override suspend fun updateAuthState(isAuthenticated: Boolean, userId: String, email: String) {
-        AuthConfigManagerImpl.run { context.updateAuthState(isAuthenticated, userId, email) }
+        AuthConfigManagerImpl.run { context.updateClientAuthState(isAuthenticated, userId, email) }
     }
 }

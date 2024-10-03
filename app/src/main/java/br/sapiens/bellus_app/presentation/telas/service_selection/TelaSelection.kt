@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.component.LoadImage
+import br.sapiens.bellus_app.presentation.ui.component.ImageSlider
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.about.AboutTab
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTab
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.review.ReviewsTab
@@ -41,11 +41,13 @@ import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
 import br.sapiens.bellus_app.presentation.viewmodels.ServiceSelectionViewModel
 
 @Composable
-fun TelaServiceSelection(
+fun TelaSelection(
     viewModel: ServiceSelectionViewModel,
+    navigateToSelectionProfissional: () -> Unit,
     navigateToBack: () -> Unit
 ) {
     val viewState by viewModel.uiState.collectAsState()
+
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -70,9 +72,9 @@ fun TelaServiceSelection(
                 (viewState as ServiceSelectionViewModel.ViewState.UserLoaded).reviewsDetails
 
             Box(modifier = Modifier.fillMaxSize()) {
-                LoadImage(
-                    url = currentEstablishmentDetails.imageResource.firstOrNull() ?: "",
-                    contentDescription = "Barber Shop Image", // TODO: Database
+                ImageSlider(
+                    urls = currentEstablishmentDetails.imageResource,
+                    contentDescription = "", // TODO: Database
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp),
@@ -85,7 +87,7 @@ fun TelaServiceSelection(
                         .align(Alignment.TopStart)
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, // TODO: Adicionar ação
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = Color.White
                     )
@@ -101,7 +103,8 @@ fun TelaServiceSelection(
 
                     ServiceInfoSection(
                         currentEstablishmentDetails.name,
-                        currentEstablishmentDetails.address
+                        currentEstablishmentDetails.address,
+                        currentEstablishmentDetails.horario_funcionamento
                     )
 
                     val tabTitles = listOf("Serviços", "Avaliações", "Portfólio", "Sobre")
@@ -120,7 +123,13 @@ fun TelaServiceSelection(
                     }
 
                     when (selectedTabIndex) {
-                        0 -> ServiceList(itemsServiceDetails)
+                        0 -> ServiceList(
+                            itemsServiceDetails,
+                            navigateToSelectionProfissional,
+                            store = viewModel.mkt,
+                            coroutineScope = viewModel.scope
+                        )
+
                         1 -> ReviewsTab(
                             itemsReviewsDetails = itemsReviewsDetails,
                             averagedReviewsDetails = currentEstablishmentDetails.rating,

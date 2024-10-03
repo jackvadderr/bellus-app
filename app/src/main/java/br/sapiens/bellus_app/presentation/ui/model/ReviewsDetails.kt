@@ -5,4 +5,5 @@ data class ReviewsDetails(
     val nome: String,
     val comment: String,
     val rating: Int,
+    val update_at: String,
 )

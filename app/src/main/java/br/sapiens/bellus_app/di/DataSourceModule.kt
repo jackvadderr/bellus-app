@@ -8,6 +8,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishme
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.implemetation.GetAllEstablishmentsDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentSummariesDataSourceImpl
@@ -16,6 +17,7 @@ import br.sapiens.bellus_app.data.datasource.implemetation.GetReviewsSummaryByEs
 import br.sapiens.bellus_app.data.datasource.implemetation.GetServicesByEstablishmentDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.GetUserDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.LoginDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.PostAppointmentDataSourceImpl
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import dagger.Module
@@ -75,4 +77,10 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): GetReviewsSummaryByEstablishmentIdDataSource =
         GetReviewsSummaryByEstablishmentIdDataSourceImpl(provider)
+
+    @Provides
+    fun providePostAppointmentDataSource(
+        provider: KtorClientProvider
+    ): PostAppointmentDataSource =
+        PostAppointmentDataSourceImpl(provider)
 }

@@ -9,7 +9,7 @@ import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
 import br.sapiens.bellus_app.data.datasource.entity.ReviewsSummary
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
-import br.sapiens.bellus_app.dominio.model.MarketplaceEvent
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.GetReviewsByEstablishmentIdUseCase
@@ -23,6 +23,7 @@ import br.sapiens.bellus_app.utils.toEstablishmentDetail
 import br.sapiens.bellus_app.utils.toReviewsDetails
 import br.sapiens.bellus_app.utils.toServiceDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,10 +33,12 @@ class ServiceSelectionViewModel @Inject constructor(
     private val serviceUseCase: GetServicesByEstablishmentUseCase,
     private val establishmentUseCase: GetEstablishmentByIdUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
-    private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase
+    private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
+    private val coroutineScope: CoroutineScope
 ) : BaseViewModel<ServiceSelectionViewModel.ViewState, ServiceSelectionViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
+    val scope = coroutineScope
 
     init {
         viewModelScope.launch {

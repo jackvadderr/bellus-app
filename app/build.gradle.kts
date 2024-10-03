@@ -180,6 +180,12 @@ dependencies {
     // COIL LIBRARY
     implementation("io.coil-kt:coil:2.7.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Accompanist
+//    implementation("com.google.accompanist:accompanist-pager:0.30.1")
+    // https://mvnrepository.com/artifact/androidx.compose.ui/ui-viewbinding
+    runtimeOnly("androidx.compose.ui:ui-viewbinding:1.7.2")
+
 }
 
 kapt {
