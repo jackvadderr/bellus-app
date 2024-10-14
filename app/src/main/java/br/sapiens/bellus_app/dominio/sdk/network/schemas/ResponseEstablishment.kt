@@ -12,7 +12,7 @@ data class ResponseEstablishment(
     val updated_at: LocalDateTime,
     val nome: String,
     val cnpj: String,
-    val rating: Float,
+    val average_rating: Float,
     val endereco: EnderecoPartialModel,
     val telefone: List<String>,
     val horario_funcionamento: HorarioFuncionamento,

@@ -8,10 +8,12 @@ sealed class RotasDestinos(val rota: String) {
     data object Home : RotasDestinos("home")
     data object Perfil : RotasDestinos("perfil")
     data object Pesquisar : RotasDestinos("pesquisar")
-    data object Detalhes :
+    data object DetalhesEstabelecimento :
         RotasDestinos("details")
 
     data object EscolherProfissionalAgendamento : RotasDestinos("agendamentos")
     data object CriarAgendamento : RotasDestinos("criar-agendamentos") // TODO: Mudar nome
     data object GerenciarAgendamentos : RotasDestinos("gerenciar-agendamentos")
+
+    data object CategoriaSelecionada : RotasDestinos("selecionar-categoria")
 }

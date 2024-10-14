@@ -9,11 +9,10 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.PostAppointmentDTO
-import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.RequestAppointmentSchema
-import br.sapiens.bellus_app.dominio.usecase.PostAppointmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.PostAppointmentUseCase
 import br.sapiens.bellus_app.presentation.ui.model.ServicePost
 import br.sapiens.bellus_app.utils.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
@@ -29,7 +29,6 @@ class CreateAppointmentViewModel @Inject constructor(
     private val postAppointmentUseCase: PostAppointmentUseCase,
     private val storeUser: UserProfileStore,
     private val storeMarketplace: MarketplaceStore,
-    private val storeAuth: AuthStore
 ) : BaseViewModel<CreateAppointmentViewModel.ViewState, CreateAppointmentViewModel.ViewEvent>() {
 
 
@@ -75,7 +74,7 @@ class CreateAppointmentViewModel @Inject constructor(
 
             if (!establishmentId.isNullOrEmpty() && !serviceId.isNullOrEmpty()) {
                 // Use a função combineDateTime para combinar a data e a hora
-                val formattedDateTime = combineDateTime(selectedDateMillis, selectedTime)
+                val formattedDateTime: String = combineDateTime(selectedDateMillis, selectedTime)
                 Log.d("CreateAppointmentViewModel", "FormattedDateTime: $formattedDateTime")
 
                 // Chamar o use case com o agendamento
@@ -85,8 +84,9 @@ class CreateAppointmentViewModel @Inject constructor(
                             user_id = it,
                             establishment_id = establishmentId,
                             service_id = serviceId,
-                            date = formattedDateTime,
-                            status_request = "Pendente"
+                            scheduled_date = formattedDateTime,
+                            status_request = "Pendente",
+                            completion_date = "",
                         )
                     }
                 )) {
@@ -120,11 +120,12 @@ class CreateAppointmentViewModel @Inject constructor(
 
     private fun combineDateTime(dateMillis: Long, time: String): String {
         Log.d("CreateAppointmentViewModel", "Combining date and time: $dateMillis, $time")
+
         // Converter a data em milissegundos para um Instant
         val instant = Instant.fromEpochMilliseconds(dateMillis)
 
-        // Converter o Instant para LocalDateTime no fuso horário do sistema
-        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+        // Converter o Instant para LocalDateTime no fuso horário UTC
+        val localDateTime = instant.toLocalDateTime(TimeZone.UTC)
 
         // Extrair as horas e minutos do time (esperando no formato "HH:mm")
         val timeParts = time.split(":")
@@ -140,11 +141,13 @@ class CreateAppointmentViewModel @Inject constructor(
             minute = minute
         )
 
-        // Formatar no padrão ISO 8601
-        val formattedDateTime = combinedDateTime.toString()
+        // Formatar no padrão ISO 8601 com o fuso horário UTC
+        val formattedDateTime = combinedDateTime.toInstant(TimeZone.UTC).toString()
+
         Log.d("CreateAppointmentViewModel", "Combined DateTime: $formattedDateTime")
         return formattedDateTime
     }
+
 
     sealed class ViewState : IViewState {
         data object Loading : ViewState()

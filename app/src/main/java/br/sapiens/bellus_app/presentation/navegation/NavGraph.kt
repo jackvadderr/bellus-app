@@ -14,17 +14,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.sapiens.bellus_app.presentation.telas.appointment.create_appointment.TelaCreateAppointment
+import br.sapiens.bellus_app.presentation.telas.appointment.create_appointment.TelaSelectionProfissional
+import br.sapiens.bellus_app.presentation.telas.appointment.list_appointment.TelaAppointmentManager
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
-import br.sapiens.bellus_app.presentation.telas.create_appointment.TelaCreateAppointment
-import br.sapiens.bellus_app.presentation.telas.create_appointment.TelaSelectionProfissional
 import br.sapiens.bellus_app.presentation.telas.home.TelaMarketplace
-import br.sapiens.bellus_app.presentation.telas.home.TelaPesquisa
-import br.sapiens.bellus_app.presentation.telas.list_appointment.TelaAppointmentManager
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
+import br.sapiens.bellus_app.presentation.telas.pesquisa.TelaPesquisa
+import br.sapiens.bellus_app.presentation.telas.pesquisa.TelaSelectedCategories
 import br.sapiens.bellus_app.presentation.telas.profile.Profile
-import br.sapiens.bellus_app.presentation.telas.service_selection.TelaSelection
+import br.sapiens.bellus_app.presentation.telas.service_selection.TelaSelectionService
 import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
@@ -43,7 +44,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 rota != RotasDestinos.LoginSocial.rota &&
                 rota != RotasDestinos.LoginCredencial.rota &&
                 rota != RotasDestinos.Cadastro.rota &&
-                rota != RotasDestinos.Detalhes.rota &&
+                rota != RotasDestinos.DetalhesEstabelecimento.rota &&
                 rota != RotasDestinos.EscolherProfissionalAgendamento.rota &&
                 rota != RotasDestinos.CriarAgendamento.rota
 
@@ -54,7 +55,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 rota != RotasDestinos.LoginSocial.rota &&
                 rota != RotasDestinos.LoginCredencial.rota &&
                 rota != RotasDestinos.Cadastro.rota &&
-                rota != RotasDestinos.Detalhes.rota &&
+                rota != RotasDestinos.DetalhesEstabelecimento.rota &&
                 rota != RotasDestinos.EscolherProfissionalAgendamento.rota &&
                 rota != RotasDestinos.CriarAgendamento.rota
     }
@@ -64,7 +65,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
         RotasDestinos.LoginCredencial.rota,
         RotasDestinos.LoginSocial.rota,
         RotasDestinos.Cadastro.rota,
-        RotasDestinos.Detalhes.rota,
+        RotasDestinos.DetalhesEstabelecimento.rota,
         RotasDestinos.Perfil.rota,
         RotasDestinos.EscolherProfissionalAgendamento.rota,
         RotasDestinos.CriarAgendamento.rota
@@ -166,7 +167,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                 TelaMarketplace(
                     hiltViewModel(),
                     navigateToDetails = {
-                        navController.navigate(RotasDestinos.Detalhes.rota)
+                        navController.navigate(RotasDestinos.DetalhesEstabelecimento.rota)
                     },
                 )
             }
@@ -175,8 +176,8 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             * #################################
             */
             // Tela Home
-            composable(RotasDestinos.Detalhes.rota) {
-                TelaSelection(
+            composable(RotasDestinos.DetalhesEstabelecimento.rota) {
+                TelaSelectionService(
                     hiltViewModel(),
                     navigateToBack = {
                         navController.navigate(
@@ -198,18 +199,39 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
             composable(RotasDestinos.Pesquisar.rota) {
                 TelaPesquisa(
                     hiltViewModel(),
-                    navigateToSearch = {
+                    navigateToCategories = {
                         navController.navigate(
-                            route = RotasDestinos.Home.rota,
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true } }
+                            route = RotasDestinos.CategoriaSelecionada.rota
+                        )
                     },
-                    navigateToProfile = {
+                    navigateToEstablishmentDetails = {
                         navController.navigate(
-                            route = RotasDestinos.Perfil.rota
-                        ) { popUpTo(RotasDestinos.Home.rota) { inclusive = true } }
-                    },
+                            route = RotasDestinos.DetalhesEstabelecimento.rota
+                        )
+                    }
                 )
             }
+
+            /* ######################
+             *   DETALHES DE CATEGORIAS
+             * ######################
+             */
+            composable(RotasDestinos.CategoriaSelecionada.rota) {
+                TelaSelectedCategories(
+                    hiltViewModel(),
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.Pesquisar.rota
+                        )
+                    },
+                    navigateToEstablishmentDetails = {
+                        navController.navigate(
+                            route = RotasDestinos.DetalhesEstabelecimento.rota
+                        )
+                    }
+                )
+            }
+
             /* ######################
              *   TELA DE PERFIL
              * ######################
@@ -234,7 +256,7 @@ fun NavGraph(startDestination: String = RotasDestinos.Splash.rota) {
                     },
                     navigateToBack = {
                         navController.navigate(
-                            route = RotasDestinos.Detalhes.rota
+                            route = RotasDestinos.DetalhesEstabelecimento.rota
                         )
                     }
                 )

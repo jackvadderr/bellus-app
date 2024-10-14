@@ -1,22 +1,32 @@
 package br.sapiens.bellus_app.di
 
 
+import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetCategoriesByNumberRepository
+import br.sapiens.bellus_app.data.repository.base.GetCategoriesListNameRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentsSummaryRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsByEstalishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmentIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetSearchRepository
+import br.sapiens.bellus_app.data.repository.base.GetServiceByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
-import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentByIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentsSummariesUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetReviewsByEstablishmentIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetServicesByEstablishmentUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetUserUseCase
-import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
-import br.sapiens.bellus_app.dominio.usecase.PostAppointmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByClientIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.PostAppointmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesByNumberUseCase
+import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesListNameUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentsSummariesUseCase
+import br.sapiens.bellus_app.dominio.usecase.login.LoginUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.search.GetSearchUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.user.GetUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,4 +84,34 @@ class UseCaseModule {
     fun providePostAppointmentUseCase(
         repository: PostAppointmentRepository
     ) = PostAppointmentUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetAppointmentsByClientIdUseCase(
+        repository: GetAppointmentsByClientIdRepository
+    ) = GetAppointmentsByClientIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetCategoriesByNumberUseCase(
+        repository: GetCategoriesByNumberRepository
+    ) = GetCategoriesByNumberUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetServiceeByIdUseCase(
+        repository: GetServiceByIdRepository
+    ) = GetServiceByIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetCategoriesListNameUseCase(
+        repository: GetCategoriesListNameRepository
+    ) = GetCategoriesListNameUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetSearchUseCase(
+        repository: GetSearchRepository
+    ) = GetSearchUseCase(repository)
 }

@@ -1,7 +1,6 @@
 package br.sapiens.bellus_app.presentation.ui.component.sections
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,35 +13,47 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.presentation.ui.component.LoadImage
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryItem(
-    imageRes: Int,
+    number: Int,
+    imageRes: String,
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    marketplaceStore: MarketplaceStore,
+    navigate: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Card(
         modifier = modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                coroutineScope.launch {
+                    marketplaceStore.setCurrentNumberCategory(number)
+                }
+                navigate()
+            },
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = imageRes),
+            LoadImage(
+                url = imageRes,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -68,7 +79,12 @@ fun CategoryItem(
 }
 
 @Composable
-fun CategoriesList(modifier: Modifier = Modifier) {
+fun CategoriesList(
+    modifier: Modifier = Modifier,
+    categories: List<Category>,
+    marketplaceStore: MarketplaceStore,
+    navigate: () -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier
@@ -77,32 +93,24 @@ fun CategoriesList(modifier: Modifier = Modifier) {
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
         horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
     ) {
-        items(getCategories().size) { index ->
-            val category = getCategories()[index]
+        items(categories.size) { index ->
             CategoryItem(
-                imageRes = category.imageRes,
-                title = category.title,
-                modifier = Modifier.fillMaxWidth()
+                imageRes = categories[index].imageRes,
+                title = categories[index].title,
+                modifier = Modifier.fillMaxWidth(),
+                number = categories[index].number,
+                marketplaceStore = marketplaceStore,
+                navigate = navigate
             )
         }
     }
 }
 
 data class Category(
-    @DrawableRes val imageRes: Int,
-    val title: String
+//    @DrawableRes val imageRes: Int,
+    val imageRes: String,
+    val title: String,
+    val number: Int,
 )
 
-fun getCategories(): List<Category> {
-    return listOf(
-        Category(imageRes = R.mipmap.barbearia, title = "Barbearias"),
-        Category(imageRes = R.mipmap.barbearia, title = "Salões de Beleza"),
-        Category(imageRes = R.mipmap.barbearia, title = "Saúde & Bem-estar"),
-        Category(imageRes = R.mipmap.barbearia, title = "Depilação"),
-        Category(imageRes = R.mipmap.barbearia, title = "Esteticistas"),
-        Category(imageRes = R.mipmap.barbearia, title = "Manicure & Nail Designer"),
-        Category(imageRes = R.mipmap.barbearia, title = "Sobrancelhas & Cílios"),
-        Category(imageRes = R.mipmap.barbearia, title = "Make Up")
-    )
-}
 

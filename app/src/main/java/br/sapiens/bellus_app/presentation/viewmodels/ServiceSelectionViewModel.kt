@@ -11,10 +11,10 @@ import br.sapiens.bellus_app.data.datasource.entity.ReviewsSummary
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
-import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentByIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetReviewsByEstablishmentIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetServicesByEstablishmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentUseCase
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
@@ -34,7 +34,7 @@ class ServiceSelectionViewModel @Inject constructor(
     private val establishmentUseCase: GetEstablishmentByIdUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
-    private val coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope
 ) : BaseViewModel<ServiceSelectionViewModel.ViewState, ServiceSelectionViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
@@ -138,10 +138,6 @@ class ServiceSelectionViewModel @Inject constructor(
                         reviewsState
                     )
                 )
-//                val newEstablishmentDetails = marketplaceStore.getCurrentEstablishment()
-//                val updatedServiceDetails = marketplaceStore.getServiceDetails()
-//                Log.d("ServiceSelectionVM", "NewEstablishmentDetails: $currentEstablishment")
-//                Log.d("ServiceSelectionVM", "UpdatedServiceDetails: $serviceDetails")
 
                 Log.d("ServiceSelectionVM", "Deu bom!")
                 setState {

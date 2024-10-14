@@ -38,11 +38,12 @@ import kotlinx.coroutines.launch
 fun CardEstablishments(
     navigateToDetails: () -> Unit,
     item: AvailableEstablishment,
-    marketplaceStore: MarketplaceStore
+    marketplaceStore: MarketplaceStore,
+    modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
     Card(
-        modifier = Modifier
+        modifier = modifier
             .width(250.dp)
             .height(180.dp)
             .clickable {

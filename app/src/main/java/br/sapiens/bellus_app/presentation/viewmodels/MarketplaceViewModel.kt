@@ -8,8 +8,8 @@ import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoSummaryDTO
 import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
-import br.sapiens.bellus_app.dominio.usecase.GetEstablishmentsSummariesUseCase
-import br.sapiens.bellus_app.dominio.usecase.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentsSummariesUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toAvailableEstablishment
@@ -63,7 +63,7 @@ class MarketplaceViewModel @Inject constructor(
                                         averageReviews = reviewsSummary.data.average_rating
                                     }
 
-                                    is State.Error -> TODO()
+                                    is State.Error -> {}
                                 }
                                 it.toAvailableEstablishment(averageReviews)
                             }

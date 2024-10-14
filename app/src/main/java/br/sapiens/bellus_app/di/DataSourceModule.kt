@@ -1,23 +1,33 @@
 package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetCategoriesByNumberDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetCategoriesListNameDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentsSummaryDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishmentIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetSearchDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetServiceByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
-import br.sapiens.bellus_app.data.datasource.implemetation.GetAllEstablishmentsDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentByIdDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetEstablishmentSummariesDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetReviewsByEstablishmentIdDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetReviewsSummaryByEstablishmentIdDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetServicesByEstablishmentDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.GetUserDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.LoginDataSourceImpl
-import br.sapiens.bellus_app.data.datasource.implemetation.PostAppointmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentsByClientIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.appointment.PostAppointmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.categories.GetCategoriesByNumberDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.categories.GetCategoriesListNameDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetAllEstablishmentsDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentByIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentSummariesDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.login.LoginDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsByEstablishmentIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsSummaryByEstablishmentIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.search.GetSearchDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServiceByIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServicesByEstablishmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.user.GetUserDataSourceImpl
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import dagger.Module
@@ -83,4 +93,34 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): PostAppointmentDataSource =
         PostAppointmentDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetAppointmentByIdDataSource(
+        provider: KtorClientProvider
+    ): GetAppointmentsByClientIdDataSource =
+        GetAppointmentsByClientIdDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetCategoriesByNumberDataSource(
+        provider: KtorClientProvider
+    ): GetCategoriesByNumberDataSource =
+        GetCategoriesByNumberDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetServiceByIdDataSource(
+        provider: KtorClientProvider
+    ): GetServiceByIdDataSource =
+        GetServiceByIdDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetCategoriesListNameDataSource(
+        provider: KtorClientProvider
+    ): GetCategoriesListNameDataSource =
+        GetCategoriesListNameDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetSearchDataSource(
+        provider: KtorClientProvider
+    ): GetSearchDataSource =
+        GetSearchDataSourceImpl(provider)
 }

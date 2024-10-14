@@ -6,7 +6,7 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.repository.model.GeneroEnum
-import br.sapiens.bellus_app.dominio.usecase.CadastroUseCase
+import br.sapiens.bellus_app.dominio.usecase.login.CadastroUseCase
 import br.sapiens.bellus_app.utils.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -35,6 +35,7 @@ class CadastroViewModel @Inject constructor(
                 is State.Success -> {
                     Log.d("CadastroViewModel", "Cadastro realizado com sucesso: ${response.data}")
                 }
+
                 is State.Error -> {
                     Log.e("CadastroViewModel", "Erro ao realizar cadastro", response.exception)
                 }
@@ -120,6 +121,7 @@ class CadastroViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is ViewEvent.SetTermsCheck -> {
                     setState {
                         state.copy(

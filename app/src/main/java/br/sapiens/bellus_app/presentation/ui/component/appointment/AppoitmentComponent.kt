@@ -69,6 +69,7 @@ fun CalendarView(modifier: Modifier = Modifier, onDateSelected: (Long) -> Unit) 
                     setOnDateChangeListener { _, year, month, dayOfMonth ->
                         val calendar = Calendar.getInstance()
                         calendar.set(year, month, dayOfMonth)
+//                        calendar.add(Calendar.DAY_OF_MONTH, -1)
                         selectedDate = calendar.timeInMillis
                         onDateSelected(selectedDate)
                     }

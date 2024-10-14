@@ -2,35 +2,50 @@ package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetCategoriesByNumberDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetCategoriesListNameDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentsSummaryDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishmentIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetSearchDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetServiceByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
-import br.sapiens.bellus_app.data.datasource.implemetation.CadastroDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.login.CadastroDataSourceImpl
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.base.GetAllEstablishmentsRepository
+import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetCategoriesByNumberRepository
+import br.sapiens.bellus_app.data.repository.base.GetCategoriesListNameRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentsSummaryRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsByEstalishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmentIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetSearchRepository
+import br.sapiens.bellus_app.data.repository.base.GetServiceByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
-import br.sapiens.bellus_app.data.repository.implemetation.CadastroRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetAllEstablishmentsRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetEstablishmentByIdRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetEstablishmentsSummariesRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetReviewsByEstablishmentIdRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetReviewsSummaryByEstablishmentIdRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetServicesByEstablishmentsRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.GetUserRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.LoginRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.PostAppointmentRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentsByClientIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.appointment.PostAppointmentRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.categories.GetCategoriesByNumberRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.categories.GetCategoriesListNameRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetAllEstablishmentsRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentByIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentsSummariesRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetSearchRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.login.CadastroRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.login.LoginRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsSummaryByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.services.GetServiceByIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.services.GetServicesByEstablishmentsRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.user.GetUserRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -109,4 +124,34 @@ class RepositoryModule {
         data: PostAppointmentDataSource
     ): PostAppointmentRepository =
         PostAppointmentRepositoryImpl(data)
+
+    @Provides
+    fun provideGetAppointmentByClientIdRepository(
+        data: GetAppointmentsByClientIdDataSource
+    ): GetAppointmentsByClientIdRepository =
+        GetAppointmentsByClientIdRepositoryImpl(data)
+
+    @Provides
+    fun provideGetCategoriesByNumberRepository(
+        data: GetCategoriesByNumberDataSource
+    ): GetCategoriesByNumberRepository =
+        GetCategoriesByNumberRepositoryImpl(data)
+
+    @Provides
+    fun provideGetServiceByIdRepository(
+        data: GetServiceByIdDataSource
+    ): GetServiceByIdRepository =
+        GetServiceByIdRepositoryImpl(data)
+
+    @Provides
+    fun provideGetCategoriesListNameRepository(
+        data: GetCategoriesListNameDataSource
+    ): GetCategoriesListNameRepository =
+        GetCategoriesListNameRepositoryImpl(data)
+
+    @Provides
+    fun provideGetSearchRepository(
+        data: GetSearchDataSource
+    ): GetSearchRepository =
+        GetSearchRepositoryImpl(data)
 }

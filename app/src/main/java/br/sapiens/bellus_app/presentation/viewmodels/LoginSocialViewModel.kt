@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
+import br.sapiens.bellus_app.dominio.usecase.login.LoginUseCase
 //import br.sapiens.bellus_app.utils.FornecedorCredenciais.WEB_GOOGLE
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginSocialViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-): BaseViewModel<LoginSocialViewModel.ViewState, LoginSocialViewModel.ViewEvent>() {
+) : BaseViewModel<LoginSocialViewModel.ViewState, LoginSocialViewModel.ViewEvent>() {
 
     override fun createInitialState(): ViewState = ViewState()
 
@@ -34,6 +34,7 @@ class LoginSocialViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is ViewEvent.SetLoading -> {
                     setState {
                         state.copy(

@@ -19,13 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomSearchBar() {
+fun CustomSearchBar(onSearch: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     var items = remember {
@@ -41,21 +40,42 @@ fun CustomSearchBar() {
         onQueryChange = { text = it },
         onSearch = {
             items.add(text)
+            onSearch(text)
             active = false
         },
         active = active,
         onActiveChange = { active = it },
         placeholder = { Text("Buscar em Todo o Bellus") },
-        leadingIcon = { Icon(modifier = Modifier.clickable { text = "" }, imageVector = Icons.Default.Search, contentDescription = "Abrir campo de pesquisa") },
+        leadingIcon = {
+            Icon(
+                modifier = Modifier.clickable { text = "" },
+                imageVector = Icons.Default.Search,
+                contentDescription = "Abrir campo de pesquisa"
+            )
+        },
         trailingIcon = {
             if (active) {
-                Icon(modifier = Modifier.clickable { if (text.isNotEmpty()) {text = ""} else {active = false} }, imageVector = Icons.Default.Close, contentDescription = "Fechar campo de pesquisa")
+                Icon(
+                    modifier = Modifier.clickable {
+                        if (text.isNotEmpty()) {
+                            text = ""
+                        } else {
+                            active = false
+                        }
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Fechar campo de pesquisa"
+                )
             }
         }
     ) {
         items.forEach {
             Row(modifier = Modifier.padding(all = 14.dp)) {
-                Icon(modifier = Modifier.padding(end = 10.dp), imageVector = Icons.Default.History, contentDescription = "Histórico de pesquisa")
+                Icon(
+                    modifier = Modifier.padding(end = 10.dp),
+                    imageVector = Icons.Default.History,
+                    contentDescription = "Histórico de pesquisa"
+                )
                 Text(text = it)
             }
 
@@ -64,9 +84,8 @@ fun CustomSearchBar() {
 }
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchBar() {
-    CustomSearchBar()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSearchBar() {
+//    CustomSearchBar()
+//}

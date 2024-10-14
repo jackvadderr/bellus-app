@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
-import br.sapiens.bellus_app.presentation.ui.model.Duration
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
+import br.sapiens.bellus_app.utils.formatDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,7 +40,7 @@ fun ServiceItem(
         Column {
             Text(text = item.name, style = MaterialTheme.typography.titleSmall)
             Text(
-                text = formatDuration(item.duration), // TODO: Apenas transformar a hora
+                text = formatDuration(item.duration),
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(text = "a partir de R$ ${item.preco}", style = MaterialTheme.typography.bodyMedium)
@@ -67,20 +67,3 @@ fun ServiceItem(
     }
 }
 
-fun formatDuration(duration: Duration): String {
-    val totalMinutes = when (duration.type) {
-        "Hour" -> duration.value * 60
-        "Minute" -> duration.value
-        else -> 0f
-    }.toLong()
-
-    val hours = totalMinutes / 60
-    val minutes = totalMinutes % 60
-
-    return when {
-        hours > 0 && minutes > 0 -> "${hours}h ${minutes}m"
-        hours > 0 -> "${hours}h"
-        minutes > 0 -> "${minutes}m"
-        else -> "0m"
-    }
-}

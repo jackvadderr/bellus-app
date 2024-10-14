@@ -72,16 +72,19 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AgendamentoCard(
-    date: String,
+    day: String,
+    weekDay: String,
     month: String,
     name: String,
     time: String,
-    price: String
+    price: Float
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF8C6D3A)),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(90.dp, 120.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -91,19 +94,26 @@ fun AgendamentoCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = date,
-                    fontSize = 14.sp,
+                    text = weekDay,
+                    fontSize = 18.sp,
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Text(
+                    text = day,
+                    fontSize = 32.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
                     text = month,
-                    fontSize = 12.sp,
-                    color = Color.White
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(2f)
             ) {
@@ -111,17 +121,17 @@ fun AgendamentoCard(
                     text = name,
                     fontSize = 16.sp,
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = time,
+                    text = "Duração: $time",
                     fontSize = 14.sp,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Text(
-                    text = price,
+                    text = "R$ $price",
                     fontSize = 14.sp,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
@@ -129,7 +139,10 @@ fun AgendamentoCard(
 }
 
 @Composable
-fun EmptyState() {
+fun EmptyState(
+    text1: String,
+    text2: String,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,12 +161,14 @@ fun EmptyState() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Não há agendamentos anteriores",
+//                text = "Não há agendamentos anteriores",
+                text = text1,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Seus agendamentos aparecerão aqui",
+//                text = "Seus agendamentos aparecerão aqui",
+                text = text2,
                 style = MaterialTheme.typography.bodySmall
             )
         }

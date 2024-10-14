@@ -8,6 +8,7 @@ data class ResponseAppointmentSchema(
     val user_id: String,
     val establishment_id: String,
     val service_id: String,
-    val date: String,
+    val scheduled_date: String,
     val status_request: String,
+    val completion_date: String,
 )

@@ -16,6 +16,8 @@ data class MarketplaceState(
     val reviewsCurrentEstablishment: List<ReviewsDetails>? = null,
     val establishmentSummaries: List<AvailableEstablishment> = emptyList(),
 
+    val currentNumberCategory: Int? = null,
+
     val serviceDetails: List<ServiceDetails> = emptyList(),
     val currentServiceDetails: ServiceDetails? = null,
 

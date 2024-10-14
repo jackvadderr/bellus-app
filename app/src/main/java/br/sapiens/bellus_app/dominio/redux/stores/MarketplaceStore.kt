@@ -68,4 +68,16 @@ class MarketplaceStore @Inject constructor(
         val newState = currentState.copy(marketplaceState = newMarketplaceState)
         store.updateState(newState)
     }
+
+    suspend fun setCurrentNumberCategory(id: Int) {
+        val currentState = store.stateFlow.value
+        val newMarketplaceState =
+            currentState.marketplaceState.copy(currentNumberCategory = id)
+        val newState = currentState.copy(marketplaceState = newMarketplaceState)
+        store.updateState(newState)
+    }
+
+    fun getCurrentNumberCategory(): Int? {
+        return store.stateFlow.value.marketplaceState.currentNumberCategory
+    }
 }

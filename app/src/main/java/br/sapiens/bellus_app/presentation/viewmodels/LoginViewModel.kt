@@ -12,7 +12,7 @@ import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ClientInfo
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
-import br.sapiens.bellus_app.dominio.usecase.LoginUseCase
+import br.sapiens.bellus_app.dominio.usecase.login.LoginUseCase
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import com.google.firebase.auth.AuthCredential
