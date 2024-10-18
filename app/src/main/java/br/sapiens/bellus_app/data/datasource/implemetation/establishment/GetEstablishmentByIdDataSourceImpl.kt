@@ -5,7 +5,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishment
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishmentSchema
 import br.sapiens.bellus_app.utils.State
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -31,8 +31,8 @@ class GetEstablishmentByIdDataSourceImpl @Inject constructor(
                 val responseBody = response.bodyAsText()
                 Log.d("GetEstablishmentsByIdDataSourceImpl", "Corpo da resposta: $responseBody")
 
-                val establishments: ResponseEstablishment =
-                    Json.decodeFromString<ResponseEstablishment>(responseBody)
+                val establishments: ResponseEstablishmentSchema =
+                    Json.decodeFromString<ResponseEstablishmentSchema>(responseBody)
 
                 // TODO: Lembrar fazer um Mapper XD
                 val establishmentDto: EstabelecimentoDTO = EstabelecimentoDTO(

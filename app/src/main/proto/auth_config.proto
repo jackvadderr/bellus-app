@@ -4,11 +4,7 @@ option java_package = "br.sapiens.bellus_app";
 option java_multiple_files = true;
 
 message AuthConfig {
-  bool is_authenticated_client = 1;
-  string user_id_client = 2;
-  string token_bearer_client = 3;
-  string user_id_professional = 4;
-  string token_bearer_professional = 5;
-  bool is_authenticated_professional = 6;
+  string user_id = 2;
+  string token_bearer = 3;
 }
 

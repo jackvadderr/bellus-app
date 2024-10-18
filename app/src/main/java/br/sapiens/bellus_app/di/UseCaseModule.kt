@@ -2,6 +2,7 @@ package br.sapiens.bellus_app.di
 
 
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByEstablishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesByNumberRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesListNameRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
@@ -14,12 +15,17 @@ import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRep
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
+import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
+import br.sapiens.bellus_app.data.repository.base.PutAppointmentRepository
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByClientIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.appointment.PostAppointmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.PutAppointmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesByNumberUseCase
 import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesListNameUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentsSummariesUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.PostEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.login.LoginUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
@@ -114,4 +120,23 @@ class UseCaseModule {
     fun provideGetSearchUseCase(
         repository: GetSearchRepository
     ) = GetSearchUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun providePostEstablishmentUseCase(
+        repository: PostEstablishmentRepository
+    ) = PostEstablishmentUseCase(repository)
+
+
+    @ViewModelScoped
+    @Provides
+    fun providePutAppointmentUseCase(
+        repository: PutAppointmentRepository,
+    ) = PutAppointmentUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetAppointmentsByEstablishmentIdUseCase(
+        repository: GetAppointmentsByEstablishmentIdRepository
+    ) = GetAppointmentsByEstablishmentIdUseCase(repository)
 }

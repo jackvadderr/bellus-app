@@ -5,7 +5,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentData
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseService
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseServiceSchema
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toServiceDTO
 import io.ktor.client.request.get
@@ -33,9 +33,9 @@ class GetServicesByEstablishmentDataSourceImpl @Inject constructor(
                 val responseBody = response.bodyAsText()
                 Log.d("GetServiceDataSourceImpl", "Corpo da resposta: $responseBody")
 
-                val responseServices: List<ResponseService> =
-                    Json.decodeFromString<List<ResponseService>>(responseBody)
-                val services: List<ServiceDTO> = responseServices.map { it.toServiceDTO() }
+                val responseServiceSchemas: List<ResponseServiceSchema> =
+                    Json.decodeFromString<List<ResponseServiceSchema>>(responseBody)
+                val services: List<ServiceDTO> = responseServiceSchemas.map { it.toServiceDTO() }
                 Log.d("GetServiceDataSourceImpl", "Serviços decodificados: $services")
 
                 State.Success(services)

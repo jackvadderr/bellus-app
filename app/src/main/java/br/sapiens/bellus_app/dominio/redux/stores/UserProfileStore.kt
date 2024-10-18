@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.dominio.redux.stores
 
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
+import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.reducer.UserProfileReducer
 import br.sapiens.bellus_app.dominio.redux.updater.UserProfileStateUpdater
@@ -31,6 +32,15 @@ class UserProfileStore @Inject constructor(
         val currentState: ApplicationState = store.stateFlow.value
         val newUserProfileState = userProfileStateUpdater.update(event, currentState)
         store.updateState(newUserProfileState)
+    }
+
+
+    fun getActiveProfileType(): UserProfileType {
+        return store.stateFlow.value.userProfileState.currentProfileType
+    }
+
+    fun getClientInfo(): String? {
+        return store.stateFlow.value.userProfileState.clientInfo?.name
     }
 
     fun hasUserClient(): Boolean {

@@ -16,4 +16,10 @@ sealed class RotasDestinos(val rota: String) {
     data object GerenciarAgendamentos : RotasDestinos("gerenciar-agendamentos")
 
     data object CategoriaSelecionada : RotasDestinos("selecionar-categoria")
+
+    data object ParceiroHome : RotasDestinos("parceiro")
+    data object ParceiroCadastro : RotasDestinos("parceiro-cadastro")
+    data object ParceiroProfile : RotasDestinos("parceiro-profile")
+    data object ParceiroAgendamentos : RotasDestinos("parceiro-agendamentos")
+    data object ModificarEstabelecimento : RotasDestinos("modificar-estabelecimento")
 }

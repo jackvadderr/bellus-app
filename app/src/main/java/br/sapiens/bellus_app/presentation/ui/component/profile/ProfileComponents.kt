@@ -76,7 +76,7 @@ fun MenuItem(
             painter = painterResource(id = iconResId),
             contentDescription = title,
             modifier = Modifier.size(30.dp),
-            tint = Color(0xFF8E734D) // Cor do ícone (marrom claro)
+            tint = Color(0xFF8E734D)
         )
 
         Spacer(modifier = Modifier.width(16.dp))

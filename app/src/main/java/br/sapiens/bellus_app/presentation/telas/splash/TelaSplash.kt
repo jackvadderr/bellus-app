@@ -38,6 +38,7 @@ fun TelaSplash(
     viewModel: SplashViewModel,
     navigateToLogin: () -> Unit,
     navigateToHome: () -> Unit,
+    navigateToParceiroHome: () -> Unit
 ) {
     val isSplashShow by viewModel.isSplashShow.collectAsState()
 

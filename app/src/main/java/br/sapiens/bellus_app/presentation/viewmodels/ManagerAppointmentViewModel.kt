@@ -5,13 +5,11 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
-import br.sapiens.bellus_app.data.datasource.entity.GetAppointmentDTO
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
-import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByClientIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.appointment.PostAppointmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
 import br.sapiens.bellus_app.utils.State
@@ -23,9 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ManagerAppointmentViewModel @Inject constructor(
-    private val postAppointmentUseCase: PostAppointmentUseCase, // TODO: Usara para modificar o agendamento
+    //private val postAppointmentUseCase: PostAppointmentUseCase, // TODO: Usara para modificar o agendamento
     private val storeUser: UserProfileStore,
-    private val storeMarketplace: MarketplaceStore,
+    //private val storeMarketplace: MarketplaceStore,
     private val getAppointmentsUseCase: GetAppointmentsByClientIdUseCase,
     private val getEstablishmentDetailsUsecase: GetEstablishmentByIdUseCase,
     private val getServiceUseCase: GetServiceByIdUseCase,
@@ -116,7 +114,7 @@ class ManagerAppointmentViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = storeUser.getCurrentUserId()
             if (userId != null) {
-                when (val result: State<List<GetAppointmentDTO>> =
+                when (val result: State<List<AppointmentDTO>> =
                     getAppointmentsUseCase.invoke(userId)) {
                     is State.Success -> {
                         Log.d("ManagerAppointmentViewModel", "Appointments loaded successfully")
@@ -146,12 +144,12 @@ class ManagerAppointmentViewModel @Inject constructor(
 
     sealed class ViewState : IViewState {
         data object Loading : ViewState()
-        data class LoadedAppointments(val appointments: List<GetAppointmentDTO>) : ViewState()
+        data class LoadedAppointments(val appointments: List<AppointmentDTO>) : ViewState()
         data class Error(val exception: Exception) : ViewState()
     }
 
     sealed class ViewEvent : IViewEvent {
         data object Loading : ViewEvent()
-        data class LoadedAppointments(val appointments: List<GetAppointmentDTO>) : ViewEvent()
+        data class LoadedAppointments(val appointments: List<AppointmentDTO>) : ViewEvent()
     }
 }

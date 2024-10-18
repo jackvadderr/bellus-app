@@ -1,14 +1,13 @@
 package br.sapiens.bellus_app.dominio.model.state
 
-import br.sapiens.bellus_app.dominio.model.AuthUserClient
-import br.sapiens.bellus_app.dominio.model.AuthUserProfessional
+import br.sapiens.bellus_app.dominio.model.AuthUser
 
 /**
  * Representa os possíveis estados de autenticação de um usuário na aplicação.
  */
 sealed class AuthState {
-    data class AuthenticatedAsClient(val user: AuthUserClient, val token: String) : AuthState()
-    data class AuthenticatedAsProfessional(val user: AuthUserProfessional, val token: String) :
+    data class AuthenticatedAsClient(val user: AuthUser, val token: String) : AuthState()
+    data class AuthenticatedAsProfessional(val user: AuthUser, val token: String) :
         AuthState()
 
     data object Unauthenticated : AuthState()

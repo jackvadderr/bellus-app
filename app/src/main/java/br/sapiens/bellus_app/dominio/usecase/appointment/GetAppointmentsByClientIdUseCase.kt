@@ -1,17 +1,17 @@
 package br.sapiens.bellus_app.dominio.usecase.appointment
 
 import br.sapiens.bellus_app.base.UseCase
-import br.sapiens.bellus_app.data.datasource.entity.GetAppointmentDTO
+import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
 import br.sapiens.bellus_app.utils.State
 import javax.inject.Inject
 
 class GetAppointmentsByClientIdUseCase @Inject constructor(
     private val repository: GetAppointmentsByClientIdRepository
-) : UseCase<String, List<GetAppointmentDTO>>() {
-    public override suspend fun invoke(input: String?): State<List<GetAppointmentDTO>> {
+) : UseCase<String, List<AppointmentDTO>>() {
+    public override suspend fun invoke(input: String?): State<List<AppointmentDTO>> {
         return try {
-            when (val response: State<List<GetAppointmentDTO>> = repository.get(input!!)) {
+            when (val response: State<List<AppointmentDTO>> = repository.get(input!!)) {
                 is State.Success -> {
                     val responseAppointment = response.data
                     State.Success(responseAppointment)

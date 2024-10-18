@@ -7,6 +7,7 @@ import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ClientInfo
+import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
@@ -40,6 +41,10 @@ class SplashViewModel @Inject constructor(
     private fun checkUser() {
         viewModelScope.launch {
             delay(2000)
+
+            val currentUserType: UserProfileType = storeUser.getActiveProfileType()
+
+
             val userId = storeConfig.store.stateFlow.value.authState.getUserId()
             Log.d("SplashViewModel", "DEBUG 1")
             if (userId != null) {
@@ -60,6 +65,7 @@ class SplashViewModel @Inject constructor(
             } else {
                 triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))
             }
+
         }
     }
 
@@ -82,13 +88,16 @@ class SplashViewModel @Inject constructor(
                         )
                     }
                 }
+
+                is ViewEvent.SetProfileType -> {}
             }
         }
     }
 
     sealed class ViewEvent : IViewEvent {
         data object Event : ViewEvent()
-        class SetAuthState(val authState: EstadoAutenticacao) : ViewEvent()
+        data class SetAuthState(val authState: EstadoAutenticacao) : ViewEvent()
+        data class SetProfileType(val profileType: UserProfileEvent) : ViewEvent()
     }
 
     data class ViewState(

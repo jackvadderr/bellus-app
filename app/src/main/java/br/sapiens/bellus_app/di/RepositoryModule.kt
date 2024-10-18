@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.di
 import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetCategoriesByNumberDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetCategoriesListNameDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
@@ -15,10 +16,13 @@ import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentData
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PutAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.implemetation.login.CadastroDataSourceImpl
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
 import br.sapiens.bellus_app.data.repository.base.GetAllEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
+import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByEstablishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesByNumberRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesListNameRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
@@ -31,14 +35,19 @@ import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRep
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
+import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
+import br.sapiens.bellus_app.data.repository.base.PutAppointmentRepository
 import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentsByClientIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentsByEstablishmentIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.appointment.PostAppointmentRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.appointment.PutAppointmentRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.categories.GetCategoriesByNumberRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.categories.GetCategoriesListNameRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetAllEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentsSummariesRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetSearchRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.PostEstablishmentRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.login.CadastroRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.login.LoginRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsByEstablishmentIdRepositoryImpl
@@ -154,4 +163,22 @@ class RepositoryModule {
         data: GetSearchDataSource
     ): GetSearchRepository =
         GetSearchRepositoryImpl(data)
+
+    @Provides
+    fun providePostEstablishmentRepository(
+        data: PostEstablishmentDataSource
+    ): PostEstablishmentRepository =
+        PostEstablishmentRepositoryImpl(data)
+
+    @Provides
+    fun providePutAppointmentRepository(
+        data: PutAppointmentDataSource
+    ): PutAppointmentRepository =
+        PutAppointmentRepositoryImpl(data)
+
+    @Provides
+    fun provideGetAppointmentsByEstablishmentIdRepository(
+        data: GetAppointmentsByEstablishmentIdDataSource
+    ): GetAppointmentsByEstablishmentIdRepository =
+        GetAppointmentsByEstablishmentIdRepositoryImpl(data)
 }

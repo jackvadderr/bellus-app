@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthConfigManager {
     val Context.authConfig: Flow<AuthConfig>
-    suspend fun Context.updateClientAuthState(
+    suspend fun Context.updateUserAuthState(
         isAuthenticated: Boolean,
         userId: String,
         tokenBearer: String

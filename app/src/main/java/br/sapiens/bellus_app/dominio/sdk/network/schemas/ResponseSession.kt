@@ -1,9 +1,0 @@
-package br.sapiens.bellus_app.dominio.sdk.network.schemas
-
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class ResponseSession (
-    val session_token: String,
-    val expires_at: String
-)

@@ -18,18 +18,34 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.presentation.navegation.RotasDestinos
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
 
 @Composable
-fun BottomNavigation(navController: NavHostController, selectedItem: BottomNavItem?) {
+fun BottomNavigation(
+    navController: NavHostController,
+    selectedItem: BottomNavItem?,
+    userActiveProfileType: UserProfileType
+) {
+    val items = when (userActiveProfileType) {
+        UserProfileType.CLIENT -> {
+            listOf(
+                BottomNavItem.Home,
+                BottomNavItem.Pesquisar,
+                BottomNavItem.Agendamentos,
+                BottomNavItem.Perfil,
+            )
+        }
 
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Pesquisar,
-        BottomNavItem.Agendamentos,
-        BottomNavItem.Perfil,
-    )
+        UserProfileType.PROFESSIONAL -> {
+            listOf(
+                BottomNavItem.ParceiroHome,
+                BottomNavItem.ParceiroAgendamentos,
+                BottomNavItem.ParceiroProfile,
+            )
+        }
+    }
 
     NavigationBar(
         modifier = Modifier
@@ -109,6 +125,27 @@ sealed class BottomNavItem(
         BottomNavItem(
             "Perfil",
             R.drawable.ic_baseline_person_24,
-            RotasDestinos.Perfil.rota
+            RotasDestinos.ParceiroProfile.rota
+        )
+
+    data object ParceiroProfile :
+        BottomNavItem(
+            "Perfil",
+            R.drawable.ic_baseline_person_24,
+            RotasDestinos.ParceiroProfile.rota
+        )
+
+    data object ParceiroAgendamentos :
+        BottomNavItem(
+            "Agendamentos,",
+            R.drawable.calendar,
+            RotasDestinos.ParceiroAgendamentos.rota
+        )
+
+    data object ParceiroHome :
+        BottomNavItem(
+            "Home",
+            R.drawable.ic_home_black_24dp,
+            RotasDestinos.ParceiroHome.rota
         )
 }

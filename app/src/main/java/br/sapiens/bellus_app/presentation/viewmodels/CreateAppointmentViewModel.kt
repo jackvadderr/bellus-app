@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.data.datasource.entity.PostAppointmentDTO
+import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.RequestAppointmentSchema
@@ -151,7 +151,7 @@ class CreateAppointmentViewModel @Inject constructor(
 
     sealed class ViewState : IViewState {
         data object Loading : ViewState()
-        data class CreateAppointment(val post: PostAppointmentDTO) : ViewState()
+        data class CreateAppointment(val post: AppointmentDTO) : ViewState()
     }
 
     sealed class ViewEvent : IViewEvent {

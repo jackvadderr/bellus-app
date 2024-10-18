@@ -2,6 +2,7 @@ package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByEstablishmentIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetCategoriesByNumberDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetCategoriesListNameDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetEstablishmentByIdDataSource
@@ -14,13 +15,18 @@ import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentData
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PutAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentsByClientIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentsByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.appointment.PostAppointmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.appointment.PutAppointmentDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.categories.GetCategoriesByNumberDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.categories.GetCategoriesListNameDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetAllEstablishmentsDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentSummariesDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.establishment.PostEstablishmentDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.login.LoginDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsSummaryByEstablishmentIdDataSourceImpl
@@ -123,4 +129,22 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): GetSearchDataSource =
         GetSearchDataSourceImpl(provider)
+
+    @Provides
+    fun providePostEstablishmentDataSource(
+        provider: KtorClientProvider
+    ): PostEstablishmentDataSource =
+        PostEstablishmentDataSourceImpl(provider)
+
+    @Provides
+    fun providePutAppointmentDataSource(
+        provider: KtorClientProvider
+    ): PutAppointmentDataSource =
+        PutAppointmentDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetAppointmentsByEstablishmentIdDataSource(
+        provider: KtorClientProvider
+    ): GetAppointmentsByEstablishmentIdDataSource =
+        GetAppointmentsByEstablishmentIdDataSourceImpl(provider)
 }

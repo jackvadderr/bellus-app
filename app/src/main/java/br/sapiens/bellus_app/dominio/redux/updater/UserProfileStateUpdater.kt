@@ -14,14 +14,14 @@ class UserProfileStateUpdater @Inject constructor() {
         val newState = when (event) {
             is UserProfileEvent.SetClientProfile -> {
                 currentState.userProfileState.copy(
-                    profileType = UserProfileType.CLIENT,
+                    currentProfileType = UserProfileType.CLIENT,
                     clientInfo = event.clientInfo
                 )
             }
 
             is UserProfileEvent.SetProfessionalProfile -> {
                 currentState.userProfileState.copy(
-                    profileType = UserProfileType.PROFESSIONAL,
+                    currentProfileType = UserProfileType.PROFESSIONAL,
                     professionalInfo = event.professionalInfo
                 )
             }

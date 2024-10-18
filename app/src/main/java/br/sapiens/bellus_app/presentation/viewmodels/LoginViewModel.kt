@@ -6,7 +6,7 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
-import br.sapiens.bellus_app.dominio.model.AuthUserClient
+import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ClientInfo
@@ -33,10 +33,10 @@ class LoginViewModel @Inject constructor(
             when (val result: State<AuthDTO> =
                 loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
                 is State.Success -> {
-                    val authUserClient = AuthUserClient(result.data.id ?: "")
+                    val authUser = AuthUser(result.data.id ?: "")
                     storeConfig.dispatch(
-                        AuthEvent.UserAuthenticatedAsClient(
-                            authUserClient,
+                        AuthEvent.UserAuthenticated(
+                            authUser,
                             result.data.tokenBearer ?: ""
                         )
                     )

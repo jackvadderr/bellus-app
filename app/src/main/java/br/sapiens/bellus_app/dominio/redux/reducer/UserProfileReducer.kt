@@ -17,7 +17,7 @@ class UserProfileReducer @Inject constructor() {
                 when (val event: UserProfileEvent? = store.getLastAction() as? UserProfileEvent) {
                     is UserProfileEvent.SetClientProfile -> {
                         currentState.userProfileState.copy(
-                            profileType = UserProfileType.CLIENT,
+                            currentProfileType = UserProfileType.CLIENT,
                             clientInfo = event.clientInfo
 //                                ?: currentState.userProfileState.clientInfo
                         )
@@ -25,7 +25,7 @@ class UserProfileReducer @Inject constructor() {
 
                     is UserProfileEvent.SetProfessionalProfile -> {
                         currentState.userProfileState.copy(
-                            profileType = UserProfileType.PROFESSIONAL,
+                            currentProfileType = UserProfileType.PROFESSIONAL,
                             professionalInfo = event.professionalInfo
 //                                ?: currentState.userProfileState.professionalInfo
                         )

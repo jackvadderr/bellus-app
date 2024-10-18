@@ -3,12 +3,12 @@ package br.sapiens.bellus_app.data.datasource.implemetation.login
 import android.util.Log
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
-import br.sapiens.bellus_app.dominio.model.AuthUserClient
+import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
-import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSession
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSessionSchema
 import br.sapiens.bellus_app.utils.State
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -55,19 +55,20 @@ class LoginDataSourceImpl @Inject constructor(
                     setBody(Json.encodeToString(mapOf("firebase_token" to token)))
                 }
                 Log.d("LoginDataSourceImpl", "Response from session endpoint: ${response.status}")
-                val responseSession: ResponseSession = Json.decodeFromString(response.bodyAsText())
+                val responseSessionSchema: ResponseSessionSchema =
+                    Json.decodeFromString(response.bodyAsText())
                 Log.d(
                     "LoginDataSourceImpl",
-                    "Response session token: ${responseSession.session_token}"
+                    "Response session token: ${responseSessionSchema.session_token}"
                 )
-                provider.setBearerTokenPrimary(responseSession.session_token)
-                sessionToken = responseSession.session_token
+                provider.setBearerTokenPrimary(responseSessionSchema.session_token)
+                sessionToken = responseSessionSchema.session_token
                 authStore.store.dispatch(
-                    AuthEvent.UserAuthenticatedAsClient(
-                        AuthUserClient(
+                    AuthEvent.UserAuthenticated(
+                        AuthUser(
                             firebaseUser.uid,
                         ),
-                        responseSession.session_token
+                        responseSessionSchema.session_token
                     )
                 )
             }

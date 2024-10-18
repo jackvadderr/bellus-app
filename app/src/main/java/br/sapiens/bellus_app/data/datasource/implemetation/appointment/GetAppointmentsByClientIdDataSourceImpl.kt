@@ -2,7 +2,7 @@ package br.sapiens.bellus_app.data.datasource.implemetation.appointment
 
 import android.util.Log
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
-import br.sapiens.bellus_app.data.datasource.entity.GetAppointmentDTO
+import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
@@ -17,7 +17,7 @@ class GetAppointmentsByClientIdDataSourceImpl @Inject constructor(
     private val provider: KtorClientProvider
 ) : GetAppointmentsByClientIdDataSource {
 
-    override suspend fun get(id: String): State<List<GetAppointmentDTO>> {
+    override suspend fun get(id: String): State<List<AppointmentDTO>> {
         return if (provider.isTokenAvailable()) {
             try {
                 Log.d("GetAppointmentByClientIdDataSourceImpl", "Token disponível")
@@ -35,7 +35,7 @@ class GetAppointmentsByClientIdDataSourceImpl @Inject constructor(
 
                 val appointmentResponse: List<ResponseAppointmentSchema> =
                     Json.decodeFromString<List<ResponseAppointmentSchema>>(responseBody)
-                val appointments: List<GetAppointmentDTO> = appointmentResponse.map {
+                val appointments: List<AppointmentDTO> = appointmentResponse.map {
                     it.toGetAppointmentDTO()
                 }
                 State.Success(appointments)

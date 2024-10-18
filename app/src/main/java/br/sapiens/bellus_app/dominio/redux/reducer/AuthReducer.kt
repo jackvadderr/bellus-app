@@ -1,6 +1,6 @@
 package br.sapiens.bellus_app.dominio.redux.reducer
 
-import br.sapiens.bellus_app.dominio.model.AuthUserClient
+import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.state.AuthState
 import br.sapiens.bellus_app.dominio.redux.ApplicationState
@@ -19,11 +19,11 @@ class AuthReducer @Inject constructor(
         return store.stateFlow.map { currentState ->
 
             val newState: AuthState = when (val event = store.getLastAction() as? AuthEvent) {
-                is AuthEvent.UserAuthenticatedAsClient -> {
+                is AuthEvent.UserAuthenticated -> {
                     val user: FirebaseUser? = firebaseUserProvider.getCurrentUser()
                     if (user != null) {
                         AuthState.AuthenticatedAsClient(
-                            AuthUserClient(user.uid),
+                            AuthUser(user.uid),
                             event.tokenBearer
                         )
                     } else {

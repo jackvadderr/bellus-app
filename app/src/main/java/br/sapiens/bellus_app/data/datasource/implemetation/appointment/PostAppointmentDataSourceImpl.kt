@@ -2,12 +2,13 @@ package br.sapiens.bellus_app.data.datasource.implemetation.appointment
 
 import android.util.Log
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
-import br.sapiens.bellus_app.data.datasource.entity.PostAppointmentDTO
+import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.RequestAppointmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
 import br.sapiens.bellus_app.utils.State
+import br.sapiens.bellus_app.utils.toAppointmentDTO
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -20,7 +21,7 @@ class PostAppointmentDataSourceImpl @Inject constructor(
     private val provider: KtorClientProvider
 ) : PostAppointmentDataSource {
 
-    override suspend fun post(schema: RequestAppointmentSchema): State<PostAppointmentDTO> {
+    override suspend fun post(schema: RequestAppointmentSchema): State<AppointmentDTO> {
         return if (provider.isTokenAvailable()) {
             try {
                 Log.d("PostAppointmentDataSourceImpl", "Token disponível")
@@ -39,22 +40,10 @@ class PostAppointmentDataSourceImpl @Inject constructor(
                 val responseBody = response.bodyAsText()
                 Log.d("PostAppointmentDataSourceImpl", "Corpo da resposta: $responseBody")
 
-//                val json = Json {
-//                    ignoreUnknownKeys = true
-//                }
-
                 val appointmentResponse: ResponseAppointmentSchema =
                     Json.decodeFromString<ResponseAppointmentSchema>(responseBody)
 
-                val appointmentDTO = PostAppointmentDTO(
-                    appointmentResponse.id,
-                    appointmentResponse.user_id,
-                    appointmentResponse.establishment_id,
-                    appointmentResponse.service_id,
-                    appointmentResponse.scheduled_date,
-                    appointmentResponse.status_request,
-                )
-
+                val appointmentDTO = appointmentResponse.toAppointmentDTO()
                 Log.d(
                     "PostAppointmentDataSourceImpl",
                     "Estabelecimentos decodificados: $appointmentDTO"

@@ -6,7 +6,7 @@ enum class UserProfileType {
 }
 
 data class UserProfileState(
-    val profileType: UserProfileType = UserProfileType.CLIENT,
+    val currentProfileType: UserProfileType = UserProfileType.CLIENT,
     val clientInfo: ClientInfo? = null,
     val professionalInfo: ProfessionalInfo? = null,
 )
