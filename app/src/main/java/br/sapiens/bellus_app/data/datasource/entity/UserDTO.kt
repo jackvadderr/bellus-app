@@ -12,4 +12,5 @@ data class UserDTO(
     val email: String,
     val phone: String? = null,
     val genero: String? = null,
+    val isProfessional: Boolean,
 )

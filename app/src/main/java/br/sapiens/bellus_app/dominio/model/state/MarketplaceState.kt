@@ -21,6 +21,9 @@ data class MarketplaceState(
     val serviceDetails: List<ServiceDetails> = emptyList(),
     val currentServiceDetails: ServiceDetails? = null,
 
+    val createService: ServiceDetails? = null,
+    val updateService: ServiceDetails? = null,
+
     val isLoading: Boolean = false,
     val isServiceDetailsLoading: Boolean = false,
     val isEstablishmentDetailsLoading: Boolean = false,

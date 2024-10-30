@@ -3,16 +3,28 @@ package br.sapiens.bellus_app.presentation.telas.clientSide.profile
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.presentation.ui.component.profile.MenuItem
-import br.sapiens.bellus_app.presentation.viewmodels.ParceiroProfileViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.ProfileViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun Profile(
-    viewModel: ParceiroProfileViewModel,
-    navigateToPartner: () -> Unit,
+    viewModel: ProfileViewModel,
+    navigateToSplash: () -> Unit,
+    navigateToCadastroParceiro: () -> Unit
+
 ) {
+    val viewState by viewModel.uiState.collectAsState()
+
+    val userStore = viewModel.userStore
+    val coroutine = viewModel.coroutine
+
     Column {
 //        ProfileHeader(name = "João Marcos") TODO: Pegar do DataStore
 
@@ -52,9 +64,28 @@ fun Profile(
             iconResId = R.drawable.endereco,
             title = "Login de parceiro Bellus",
             subtitle = "Faça aqui o login do seu perfil de estabelecimento",
-            // Quando eu clickar nesse botão ele deve mudar o perfil do redux
-            // e atualizar o redux mudando as telas
-            onClick = { navigateToPartner() },
+            onClick = {
+                coroutine.launch(Dispatchers.Main) {
+                    viewModel.getProfessionalInfo()
+                    when (viewState) {
+                        is ProfileViewModel.ViewState.LoadedProfessionalInfo -> {
+                            val professionalInfo =
+                                (viewState as ProfileViewModel.ViewState.LoadedProfessionalInfo).professionalInfo
+                            userStore.dispatch(
+                                UserProfileEvent.SetProfessionalProfile(
+                                    professionalInfo
+                                )
+                            )
+                            navigateToSplash()
+                        }
+
+                        ProfileViewModel.ViewState.Loading -> {}
+                        is ProfileViewModel.ViewState.Error -> {
+                            navigateToCadastroParceiro()
+                        }
+                    }
+                }
+            },
         )
         HorizontalDivider()
         MenuItem(

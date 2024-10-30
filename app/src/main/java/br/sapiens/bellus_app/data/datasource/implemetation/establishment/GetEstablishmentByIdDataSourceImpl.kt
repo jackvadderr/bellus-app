@@ -7,6 +7,7 @@ import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishmentSchema
 import br.sapiens.bellus_app.utils.State
+import br.sapiens.bellus_app.utils.toEstablishmentDTO
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
@@ -35,21 +36,7 @@ class GetEstablishmentByIdDataSourceImpl @Inject constructor(
                     Json.decodeFromString<ResponseEstablishmentSchema>(responseBody)
 
                 // TODO: Lembrar fazer um Mapper XD
-                val establishmentDto: EstabelecimentoDTO = EstabelecimentoDTO(
-                    establishments.id,
-                    establishments.created_at,
-                    establishments.updated_at,
-                    establishments.nome,
-                    establishments.cnpj,
-                    establishments.average_rating,
-                    establishments.endereco,
-                    establishments.telefone,
-                    establishments.horario_funcionamento,
-                    establishments.imagem,
-                    establishments.portfolio,
-                    establishments.description,
-                    establishments.reviews_id
-                )
+                val establishmentDto: EstabelecimentoDTO = establishments.toEstablishmentDTO()
                 Log.d(
                     "GetEstablishmentsByIdDataSourceImpl",
                     "Estabelecimentos decodificados: $establishments"

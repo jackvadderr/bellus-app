@@ -59,6 +59,18 @@ class MarketplaceStateUpdater @Inject constructor() {
                     currentServiceDetails = event.details
                 )
             }
+
+            is MarketplaceEvent.SuccessCreateService -> {
+                currentState.marketplaceState.copy(
+                    createService = event.createService
+                )
+            }
+
+            is MarketplaceEvent.SuccessUpdateService -> {
+                currentState.marketplaceState.copy(
+                    updateService = event.updateService
+                )
+            }
         }
         return currentState.copy(
             marketplaceState = newMarketplaceState

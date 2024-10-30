@@ -6,6 +6,7 @@ import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 
+
 sealed class MarketplaceEvent {
     data object Loading : MarketplaceEvent()
     data class SuccessGetEstablishmentSummary(val details: List<AvailableEstablishment>) :
@@ -13,6 +14,10 @@ sealed class MarketplaceEvent {
 
     data class SuccessGetEstablishmentCurrent(val details: EstablishmentDetail) :
         MarketplaceEvent()
+
+    data class SuccessCreateService(val createService: ServiceDetails) : MarketplaceEvent()
+
+    data class SuccessUpdateService(val updateService: ServiceDetails) : MarketplaceEvent()
 
     data class SuccessServiceDetails(val details: List<ServiceDetails>) : MarketplaceEvent()
 

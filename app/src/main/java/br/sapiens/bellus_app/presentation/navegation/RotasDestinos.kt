@@ -21,5 +21,13 @@ sealed class RotasDestinos(val rota: String) {
     data object ParceiroCadastro : RotasDestinos("parceiro-cadastro")
     data object ParceiroProfile : RotasDestinos("parceiro-profile")
     data object ParceiroAgendamentos : RotasDestinos("parceiro-agendamentos")
-    data object ModificarEstabelecimento : RotasDestinos("modificar-estabelecimento")
+    data object ParceiroListarAgendamentos : RotasDestinos("modificar-estabelecimento")
+    data object ParceiroSelectedAppointmentManager :
+        RotasDestinos("parceiro-selected-appointment-manager")
+
+    data object ParceiroManagerEstablishment : RotasDestinos("parceiro-manager-establishment")
+    data object ParceiroManagerService : RotasDestinos("parceiro-manager-service")
+    data object ParceiroManagerProfissionais : RotasDestinos("parceiro-manager-profissionais")
+    data object ParceiroManagerPortfolio : RotasDestinos("parceiro-manager-portfolio")
+    data object ParceiroManagerAbout : RotasDestinos("parceiro-manager-about")
 }

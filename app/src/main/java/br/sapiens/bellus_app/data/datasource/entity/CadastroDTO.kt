@@ -7,4 +7,5 @@ data class CadastroDTO(
     val phone: String? = null,
     val genero: GeneroEnum? = null,
     val email: String?,
+    val isProfessional: Boolean? = null
 )

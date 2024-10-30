@@ -19,5 +19,6 @@ data class ResponseEstablishmentSchema(
     val imagem: List<String>,
     val portfolio: List<String>,
     val description: String,
-    val reviews_id: String,
+    val profissionais_filiados: List<String>,
+    val profissional_dono: String,
 )

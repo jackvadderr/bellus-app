@@ -9,7 +9,7 @@ data class PostEstablishmentSchema(
     val cnpj: String,
     val nome: String,
     val endereco: EnderecoPartialModel,
-    val telefone: String,
+    val telefone: List<String>,
     val horario_funcionamento: HorarioFuncionamento,
     val imagem: List<String>,
     val portfolio: List<String>,

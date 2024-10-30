@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -24,8 +25,11 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val storeConfig: AuthStore,
-    private val storeUser: UserProfileStore
+    private val storeUser: UserProfileStore,
+    context: Context
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
+
+    val context = context
 
     fun loginWithCredential(authCredential: AuthCredential) {
         setState { state.copy(isLoading = true) }

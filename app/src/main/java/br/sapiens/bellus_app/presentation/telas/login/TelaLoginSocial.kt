@@ -31,7 +31,6 @@ import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.viewmodels.LoginSocialViewModel
 import br.sapiens.bellus_app.utils.getAndroidSDKVersion
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -45,9 +44,11 @@ fun TelaSocialLogin(
     val context: Context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -73,27 +74,27 @@ fun TelaSocialLogin(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.padding(5.dp))
-                if(getAndroidSDKVersion() >= 15) {
-                    /*
-                     * BOTÃO DO GOOGLE
-                     */
-                    CustomButton(onClick = {
-                        coroutineScope.launch {
-//                            viewModel.googleSign(context)
-                        }
-                    }, texto = "Entrar com Google")
-                    Spacer(modifier = Modifier.padding(10.dp))
-                }
-                    /*
-                     * BOTÃO LOGIN COM EMAIL E SENHA
-                     */
-                    CustomButton(onClick = {
-                        navigateToLoginCredencial()
-                    }, texto = "Entrar com credenciais")
-                }
+
+                /*
+                 * BOTÃO DO GOOGLE
+                 */
+//                    CustomButton(onClick = {
+//                        coroutineScope.launch {
+////                            viewModel.googleSign(context)
+//                        }
+//                    }, texto = "Entrar com Google")
+//                    Spacer(modifier = Modifier.padding(10.dp))
+            }
+            /*
+             * BOTÃO LOGIN COM EMAIL E SENHA
+             */
+            CustomButton(onClick = {
+                navigateToLoginCredencial()
+            }, texto = "Entrar com credenciais")
+
         }
     }
-    if(state.loginState == EstadoAutenticacao.AUTENTICADO) {
+    if (state.loginState == EstadoAutenticacao.AUTENTICADO) {
         navigateToHome()
     }
 }

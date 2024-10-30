@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +42,7 @@ private fun CustomTextField(
     isPassword: Boolean = false,
     placeholder: String
 ) {
-    var passwordVisible by remember { mutableStateOf(false)}
+    var passwordVisible by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
             .fillMaxHeight(0.8f)
@@ -65,7 +69,7 @@ private fun CustomTextField(
                 fontSize = 16.sp,
             ),
             singleLine = true,
-            visualTransformation = if(isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
@@ -77,11 +81,11 @@ private fun CustomTextField(
                 innerTextField()
             }
         )
-        if(isPassword && value.isNotEmpty()) {
+        if (isPassword && value.isNotEmpty()) {
             IconButton(
                 onClick = { passwordVisible = !passwordVisible },
                 modifier = Modifier.align(Alignment.CenterEnd)
-            ){
+            ) {
                 Icon(
                     imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                     contentDescription = "Toggle password visibility"
@@ -118,7 +122,8 @@ fun SenhaTextField(
         onValueChange = onValueChange,
         modifier = modifier,
         placeholder = placeholder,
-        isPassword = true)
+        isPassword = true
+    )
 }
 
 @Composable
@@ -133,4 +138,46 @@ fun GeralTextField(
         modifier = Modifier,
         placeholder = placeholder
     )
+}
+
+@Composable
+fun CustomOutlinedTextField(
+    selectedSpecialty: String,
+    onSpecialtySelected: (String) -> Unit,
+    options: List<String>
+) {
+    var expanded by remember { mutableStateOf(false) }
+//    val options = listOf("Especialidade 1", "Especialidade 2", "Especialidade 3")
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = selectedSpecialty,
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Especialidade") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
+            }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onSpecialtySelected(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }

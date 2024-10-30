@@ -27,7 +27,8 @@ fun ServiceItem(
     item: ServiceDetails,
     navigate: () -> Unit,
     store: MarketplaceStore,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    theText: String,
 ) {
 
     Row(
@@ -62,8 +63,53 @@ fun ServiceItem(
                 contentColor = Color.White
             )
         ) {
-            Text(text = "Agendar")
+            Text(text = theText)
         }
     }
 }
 
+@Composable
+fun UpdateServiceItemParceiro(
+    item: ServiceDetails,
+    navigate: () -> Unit,
+    store: MarketplaceStore,
+    coroutineScope: CoroutineScope,
+    theText: String,
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(text = item.name, style = MaterialTheme.typography.titleSmall)
+            Text(
+                text = formatDuration(item.duration),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(text = "a partir de R$ ${item.preco}", style = MaterialTheme.typography.bodyMedium)
+        }
+        Button(
+            onClick = {
+                coroutineScope.launch {
+                    store.dispatch(
+                        MarketplaceEvent.SucessGetCurrentService(
+                            item
+                        )
+                    )
+                }
+
+                navigate()
+            },
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MarronNaoSei,
+                contentColor = Color.White
+            )
+        ) {
+            Text(text = theText)
+        }
+    }
+}

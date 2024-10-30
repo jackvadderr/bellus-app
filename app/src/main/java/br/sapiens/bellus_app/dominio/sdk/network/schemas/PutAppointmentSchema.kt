@@ -7,3 +7,8 @@ data class PutAppointmentSchema(
     val status_request: String,
     val completion_date: String,
 )
+
+data class PutAppointmentSchemeEncapsulation(
+    val schema: PutAppointmentSchema,
+    val id: String
+)

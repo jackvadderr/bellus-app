@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
@@ -16,8 +17,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CadastroViewModel @Inject constructor(
     private val cadastroUseCase: CadastroUseCase,
+    context: Context
 ) : BaseViewModel<CadastroViewModel.ViewState, CadastroViewModel.ViewEvent>() {
     override fun createInitialState(): ViewState = ViewState()
+
+    val context = context
 
     private fun cadastrar() {
         viewModelScope.launch {

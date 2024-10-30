@@ -15,9 +15,15 @@ data class ClientInfo(
     val id: String,
     val name: String? = "",
     val email: String? = "",
+    val phone: String? = "",
+    val genero: String? = "",
 )
 
 data class ProfessionalInfo(
     val id: String,
-    val name: String,
+    val userId: String? = "",
+    val establishmentId: String? = "",
+    val name: String? = "",
+    val email: String? = "",
+//    val endereco: String? = "",
 )

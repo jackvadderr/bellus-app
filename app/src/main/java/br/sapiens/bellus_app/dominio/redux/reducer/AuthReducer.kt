@@ -22,7 +22,7 @@ class AuthReducer @Inject constructor(
                 is AuthEvent.UserAuthenticated -> {
                     val user: FirebaseUser? = firebaseUserProvider.getCurrentUser()
                     if (user != null) {
-                        AuthState.AuthenticatedAsClient(
+                        AuthState.AuthenticatedAsUser(
                             AuthUser(user.uid),
                             event.tokenBearer
                         )

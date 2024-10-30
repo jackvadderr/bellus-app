@@ -2,6 +2,7 @@ package br.sapiens.bellus_app.presentation.telas.login
 
 import CustomButton
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ fun TelaCadastro(
     viewModel: CadastroViewModel,
     navigateToBack: () -> Unit,
 ) {
+    val context = viewModel.context
 
     val nome = remember {
         mutableStateOf("")
@@ -66,9 +68,11 @@ fun TelaCadastro(
         mutableStateOf("")
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -122,7 +126,7 @@ fun TelaCadastro(
                  */
                 GeralTextField(
                     value = telefone.value,
-                    onValueChange = {telefone.value = it },
+                    onValueChange = { telefone.value = it },
                     placeholder = "Telefone"
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -161,6 +165,12 @@ fun TelaCadastro(
                             viewModel.triggerEvent(CadastroViewModel.ViewEvent.SetSenha(senha.value))
                         }
                         viewModel.triggerEvent(CadastroViewModel.ViewEvent.Event)
+                        Toast.makeText(
+                            context,
+                            "Cadastro realizado com sucesso!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToBack()
                     },
                     texto = "Cadastrar"
                 )

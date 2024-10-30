@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
@@ -34,13 +35,15 @@ import br.sapiens.bellus_app.utils.getMonth
 
 @Composable
 fun AgendamentoParceiro(
-    viewModel: ParceiroAppointmentViewModel
+    viewModel: ParceiroAppointmentViewModel,
+    navigateToSelectedAppointmentParceiro: () -> Unit,
 ) {
     val viewState by viewModel.uiState.collectAsState()
     var qtdAppointment by remember { mutableIntStateOf(0) }
     val namesEstablishments = remember { mutableStateListOf<String>() }
     val servicePrices = remember { mutableStateListOf<Float>() }
     val serviceTime = remember { mutableStateListOf<String>() }
+    val serviceStatus = remember { mutableStateListOf<String>() }
 
     Column(
         modifier = Modifier
@@ -62,35 +65,33 @@ fun AgendamentoParceiro(
         Spacer(modifier = Modifier.height(8.dp))
 
         when (viewState) {
-
-
-//
-//                Text(
-//                    text = "Erro ao carregar os agendamentos",
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = Color.Red
-//                )
             is ParceiroAppointmentViewModel.ViewState.Loading -> {
                 WhyDontFuckingLoading()
             }
 
-            is ParceiroAppointmentViewModel.ViewState.LoadAppointments -> {
+            is ParceiroAppointmentViewModel.ViewState.LoadedAppointments -> {
                 val appointments: List<AppointmentDTO> =
-                    (viewState as ParceiroAppointmentViewModel.ViewState.LoadAppointments).appointments
+                    (viewState as ParceiroAppointmentViewModel.ViewState.LoadedAppointments).appointments
                 qtdAppointment = appointments.size
-                if (appointments.isNotEmpty()) {
 
+                if (appointments.isNotEmpty()) {
                     Log.d("TelaAppointmentManager", appointments.toString())
                     LaunchedEffect(appointments) {
                         namesEstablishments.clear()
                         servicePrices.clear()
-//                        appointments.forEach { appointment ->
-//                            val name = viewModel.getEstablishmentsName(appointment.establishmentId)
-//                            namesEstablishments.add(name)
-//
-//                            val price = viewModel.getServicePrice(appointment.serviceId)
-//                            servicePrices.add(price)
-//                        }
+                        serviceStatus.clear()
+                        // Aqui a gente carrega os dados que não podemos pegar de uma vez
+                        // Acontece que temos uma lista de agendamentos
+                        // Para cada elemento vamos verificar o nome e o preço
+                        // Acho que seria melhor verificar por serviço
+                        appointments.forEach { appointment ->
+                            val name = viewModel.getEstablishmentsName(appointment.establishmentId)
+                            namesEstablishments.add(name)
+
+                            val price = viewModel.getServicePrice(appointment.serviceId)
+                            servicePrices.add(price)
+
+                        }
                     }
                     if (namesEstablishments.size == appointments.size && servicePrices.size == appointments.size) {
                         LazyColumn(
@@ -112,6 +113,10 @@ fun AgendamentoParceiro(
                                         15
                                     ),
                                     price = price,
+                                    status = appointment.statusRequest,
+                                    onClick = {
+                                        navigateToSelectedAppointmentParceiro()
+                                    }
                                 )
                                 Spacer(modifier = Modifier.height(7.dp))
                             }
@@ -123,7 +128,18 @@ fun AgendamentoParceiro(
                 }
             }
 
-            is ParceiroAppointmentViewModel.ViewState.UpdatedAppointment -> {}
+            is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> {}
+            ParceiroAppointmentViewModel.ViewState.Error -> {
+                Text(
+                    text = "Erro ao carregar os agendamentos",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Red
+                )
+            }
+
+            is ParceiroAppointmentViewModel.ViewState.EstablishmentId -> {}
+            is ParceiroAppointmentViewModel.ViewState.LoadedAppointment -> TODO()
+//            is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> TODO()
         }
 
 

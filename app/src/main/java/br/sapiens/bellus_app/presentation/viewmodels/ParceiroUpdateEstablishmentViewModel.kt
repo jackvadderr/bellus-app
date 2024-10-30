@@ -28,14 +28,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ServiceSelectionViewModel @Inject constructor(
+class ParceiroUpdateEstablishmentViewModel @Inject constructor(
     private val marketplaceStore: MarketplaceStore,
     private val serviceUseCase: GetServicesByEstablishmentUseCase,
     private val establishmentUseCase: GetEstablishmentByIdUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
     coroutineScope: CoroutineScope
-) : BaseViewModel<ServiceSelectionViewModel.ViewState, ServiceSelectionViewModel.ViewEvent>() {
+) : BaseViewModel<ParceiroUpdateEstablishmentViewModel.ViewState, ParceiroUpdateEstablishmentViewModel.ViewEvent>() {
+
+    init {
+        Log.d("ParceiroAppointmentViewModel", "ViewModel initialized")
+//        triggerEvent(ViewEvent.Loading)
+    }
 
     val mkt = marketplaceStore
     val scope = coroutineScope
@@ -126,7 +131,7 @@ class ServiceSelectionViewModel @Inject constructor(
                     )
                 )
                 // Aqui começa a lista das avaliações
-                // TODO: ESTAMOS SOBRECARREGANDO ESSA VIEWMODEL MAS FDS
+                
                 val reviewsList: State<List<ReviewsDTO>> = reviewsUseCase.execute(establishmentId)
                 val reviewsState: List<ReviewsDetails> =
                     when (reviewsList) {

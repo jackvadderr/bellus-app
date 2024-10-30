@@ -11,14 +11,15 @@ data class EstabelecimentoDTO(
     val updated_at: LocalDateTime,
     val nome: String,
     val cnpj: String,
-    val rating: Float,
+    val average_rating: Float,
     val endereco: EnderecoPartialModel,
     val telefone: List<String>,
     val horario_funcionamento: HorarioFuncionamento,
     val imagem: List<String>,
     val portfolio: List<String>,
     val description: String,
-    val reviews_id: String,
+    val profissionaisFiliados: List<String>,
+    val profissionalDono: String,
 )
 
 @Serializable

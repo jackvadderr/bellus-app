@@ -59,6 +59,7 @@ class CadastroDataSourceImpl @Inject constructor(
                     phone = phone,
                     genero = genero,
                     email = email,
+                    isProfessional = false,
                 )
                 /*
                  * Caso o cadastro dê certo,

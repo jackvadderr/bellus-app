@@ -12,7 +12,6 @@ data class EstablishmentDetail(
     val imageResource: List<String>,
     val portfolio: List<String>,
     val horario_funcionamento: HorarioFuncionamento,
-    val reviews_id: String, // TODO: Não preciso desse campo
     val description: String,
     val totalReviews: Int,
 )

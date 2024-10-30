@@ -11,10 +11,12 @@ import br.sapiens.bellus_app.presentation.viewmodels.ParceiroProfileViewModel
 @Composable
 fun PerfilParceiro(
     viewModel: ParceiroProfileViewModel,
+    navigateToSplash: () -> Unit,
 ) {
+//    val userStore = viewModel.userStore
+//    val coroutine = viewModel.coroutine
     Column {
 //        ProfileHeader(name = "João Marcos") TODO: Pegar do DataStore
-
         MenuItem(
             iconResId = R.drawable.bubble_chat,
             title = "Dashboard",
@@ -45,6 +47,22 @@ fun PerfilParceiro(
             iconResId = R.drawable.arquivo,
             title = "Dados da conta",
             subtitle = "Minhas informações da conta"
+        )
+        MenuItem(
+            iconResId = R.drawable.ic_baseline_person_24,
+            title = "Sair do modo profissional",
+            subtitle = "Sair do modo profissional",
+            onClick = {
+//                val clientInfo = ClientInfo(
+//                    id = "",
+//                    name = "",
+//                    email = "",
+//                    phone = "",
+//                    genero = "",
+//                )
+                viewModel.getLocalUser()
+                navigateToSplash()
+            }
         )
     }
 }

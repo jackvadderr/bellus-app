@@ -100,6 +100,9 @@ sealed class BottomNavItem(
     var icon: Int,
     var route: String
 ) {
+    // #############################
+    // # CLIENTE NAVIGATION
+    // #############################
     data object Home :
         BottomNavItem(
             "Home",
@@ -125,9 +128,12 @@ sealed class BottomNavItem(
         BottomNavItem(
             "Perfil",
             R.drawable.ic_baseline_person_24,
-            RotasDestinos.ParceiroProfile.rota
+            RotasDestinos.Perfil.rota
         )
 
+    // #############################
+    // # PROFESSIONAL NAVIGATION
+    // #############################
     data object ParceiroProfile :
         BottomNavItem(
             "Perfil",
@@ -139,13 +145,13 @@ sealed class BottomNavItem(
         BottomNavItem(
             "Agendamentos,",
             R.drawable.calendar,
-            RotasDestinos.ParceiroAgendamentos.rota
+            RotasDestinos.ParceiroListarAgendamentos.rota
         )
 
     data object ParceiroHome :
         BottomNavItem(
             "Home",
             R.drawable.ic_home_black_24dp,
-            RotasDestinos.ParceiroHome.rota
+            RotasDestinos.ParceiroManagerEstablishment.rota
         )
 }

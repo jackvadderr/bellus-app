@@ -6,4 +6,5 @@ data class Cadastro(
     val phone: String? = null,
     val email: String? = null,
     val gender: Boolean? = null,
+    val isProfessional: Boolean? = null
 )

@@ -107,7 +107,6 @@ class ManagerAppointmentViewModel @Inject constructor(
             }
             price
         }
-
     }
 
     private fun listAppointments() {

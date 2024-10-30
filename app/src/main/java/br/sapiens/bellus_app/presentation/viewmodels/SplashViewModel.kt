@@ -7,6 +7,7 @@ import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ClientInfo
+import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
 import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
@@ -32,26 +33,45 @@ class SplashViewModel @Inject constructor(
             splashShowFlow.value = false
         }
         Log.d("SplashViewModel", "DEBUG 0")
-        checkUser()
+        triggerEvent(ViewEvent.Loading)
     }
 
-    override fun createInitialState(): ViewState = ViewState()
+    override fun createInitialState(): ViewState {
+        Log.d("SplashViewModel", "Creating initial state: Loading")
+        return ViewState.Loading
+    }
 
+    override fun triggerEvent(event: ViewEvent) {
+        viewModelScope.launch {
+            Log.d("SplashViewModel", "Triggering event: $event")
+            when (event) {
+                ViewEvent.Loading -> {
+                    Log.d("SplashViewModel", "Event: Loading")
+                    checkUser()
+                }
+            }
+        }
+    }
 
     private fun checkUser() {
         viewModelScope.launch {
+            Log.d("SplashViewModel", "Checking user")
             delay(2000)
 
-            val currentUserType: UserProfileType = storeUser.getActiveProfileType()
+            val userType: UserProfileType =
+                storeUser.store.stateFlow.value.userProfileState.currentProfileType
+            Log.d("SplashViewModel", "User type: $userType")
 
-
-            val userId = storeConfig.store.stateFlow.value.authState.getUserId()
-            Log.d("SplashViewModel", "DEBUG 1")
-            if (userId != null) {
-                Log.d("SplashViewModel", "User ID: $userId")
-                triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.AUTENTICADO))
+            val userId: String? = storeConfig.store.stateFlow.value.authState.getUserId()
+            Log.d("SplashViewModel", "User ID: $userId")
+            if (!userId.isNullOrEmpty()) {
+                Log.d("SplashViewModel", "User ID is not empty")
+                setState {
+                    ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
+                }
                 Log.d("SplashViewModel", "DEBUG 2")
-                if (!storeUser.hasUserClient()) {
+                if (userType == UserProfileType.CLIENT) {
+                    Log.d("SplashViewModel", "User Type: CLIENT")
                     val clientInfo = ClientInfo(
                         id = userId,
                     )
@@ -60,48 +80,56 @@ class SplashViewModel @Inject constructor(
                             clientInfo
                         )
                     )
-                    Log.d("SplashViewModel", "DEBUG 3")
+                    setState {
+                        ViewState.ProfileType(
+                            userType
+                        )
+                    }
+                } else if (userType == UserProfileType.PROFESSIONAL) {
+                    Log.d("SplashViewModel", "User Type: PROFESSIONAL")
+                    setState {
+                        ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
+                    }
+                    val professionalInfo = ProfessionalInfo(
+                        id = userId,
+                    )
+                    storeUser.dispatch(
+                        UserProfileEvent.SetProfessionalProfile(
+                            professionalInfo
+                        )
+                    )
+                    setState {
+                        ViewState.ProfileType(
+                            userType
+                        )
+                    }
                 }
             } else {
-                triggerEvent(ViewEvent.SetAuthState(EstadoAutenticacao.NAO_AUTENTICADO))
+                Log.d("SplashViewModel", "User ID is empty")
+                setState {
+                    ViewState.AuthState(EstadoAutenticacao.NAO_AUTENTICADO)
+                }
             }
 
         }
     }
 
-    override fun triggerEvent(event: ViewEvent) {
-        viewModelScope.launch {
-            when (event) {
-                ViewEvent.Event -> {
-                    setState {
-                        state.copy(
-                            isLoading = true
-                        )
-                    }
-                }
-
-                is ViewEvent.SetAuthState -> {
-                    setState {
-                        state.copy(
-                            isLoading = false,
-                            authState = event.authState
-                        )
-                    }
-                }
-
-                is ViewEvent.SetProfileType -> {}
-            }
-        }
+    sealed class ViewState : IViewState {
+        data object Loading : ViewState()
+        data class AuthState(val authState: EstadoAutenticacao) : ViewState()
+        data class ProfileType(val profileType: UserProfileType) : ViewState()
     }
 
     sealed class ViewEvent : IViewEvent {
-        data object Event : ViewEvent()
-        data class SetAuthState(val authState: EstadoAutenticacao) : ViewEvent()
-        data class SetProfileType(val profileType: UserProfileEvent) : ViewEvent()
+        data object Loading : ViewEvent()
     }
-
-    data class ViewState(
-        val isLoading: Boolean = false,
-        val authState: EstadoAutenticacao? = null,
-    ) : IViewState
 }
+
+//sealed class ViewState : IViewState {
+//    data object Loading : ViewState()
+//    data class CreateAppointment(val post: AppointmentDTO) : ViewState()
+//}
+//
+//sealed class ViewEvent : IViewEvent {
+//    data class CreateAppointment(val servicePost: ServicePost) : ViewEvent()
+//}

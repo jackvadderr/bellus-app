@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.ui.component.appointment
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -77,7 +78,9 @@ fun AgendamentoCard(
     month: String,
     name: String,
     time: String,
-    price: Float
+    price: Float,
+    status: String,
+    onClick: () -> Unit = {}
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -85,6 +88,7 @@ fun AgendamentoCard(
         modifier = Modifier
             .fillMaxWidth()
             .size(90.dp, 120.dp)
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -130,6 +134,11 @@ fun AgendamentoCard(
                 )
                 Text(
                     text = "R$ $price",
+                    fontSize = 14.sp,
+                    color = Color.White,
+                )
+                Text(
+                    text = "Status: $status",
                     fontSize = 14.sp,
                     color = Color.White,
                 )

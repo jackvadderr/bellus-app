@@ -22,7 +22,7 @@ class AuthStateUpdater @Inject constructor() {
                 CoroutineScope(Dispatchers.IO).launch {
                     context.updateUserAuthState(true, event.user.id, event.tokenBearer)
                 }
-                AuthState.AuthenticatedAsClient(event.user, event.tokenBearer)
+                AuthState.AuthenticatedAsUser(event.user, event.tokenBearer)
             }
 
             is AuthEvent.UserNotAuthenticated -> AuthState.Unauthenticated

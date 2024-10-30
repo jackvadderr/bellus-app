@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
 import CustomButton
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,9 +32,10 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.SenhaTextField
 import br.sapiens.bellus_app.presentation.ui.component.UsuarioTextField
-import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import br.sapiens.bellus_app.presentation.viewmodels.LoginViewModel
+import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
@@ -51,10 +53,14 @@ fun TelaLoginCredenciais(
         mutableStateOf("")
     }
 
+    val context = viewModel.context
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1D2B3D)), contentAlignment = Alignment.Center
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -96,7 +102,30 @@ fun TelaLoginCredenciais(
                 Text(
                     text = "Esqueceu a senha?",
                     modifier = Modifier.clickable(onClick = {
-                        navigateToHome()
+                        if (email.value.isNotBlank()) {
+                            FirebaseAuth.getInstance().sendPasswordResetEmail(email.value)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Email de redefinição de senha enviado.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Erro ao enviar email de redefinição de senha.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Por favor, insira seu email.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }),
                     color = Color(0xFFA0A0A0)
                 )
@@ -107,14 +136,33 @@ fun TelaLoginCredenciais(
                         val authCredential =
                             EmailAuthProvider.getCredential(email.value, password.value)
                         viewModel.loginWithCredential(authCredential)
+                        Toast.makeText(context, "Tentando fazer login...", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
-                        // TODO: Não faz nada
+                        Toast.makeText(
+                            context,
+                            "Por favor, preencha todos os campos.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }, texto = "Entrar")
                 Spacer(modifier = Modifier.padding(10.dp))
                 // Botão de cadastro
                 CustomButton(
                     onClick = {
+                        if (email.value.isNotBlank() && password.value.isNotBlank()) {
+                            val authCredential =
+                                EmailAuthProvider.getCredential(email.value, password.value)
+                            viewModel.loginWithCredential(authCredential)
+                            Toast.makeText(context, "Tentando fazer login...", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Por favor, preencha todos os campos.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         navigateToRegister()
                     },
                     texto = "Criar conta nova"

@@ -105,6 +105,7 @@ fun TelaAppointmentManager(
                                         15
                                     ),
                                     price = price,
+                                    status = appointment.statusRequest,
                                 )
                                 Spacer(modifier = Modifier.height(7.dp))
                             }

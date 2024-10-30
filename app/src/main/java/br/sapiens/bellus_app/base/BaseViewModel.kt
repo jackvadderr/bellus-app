@@ -3,7 +3,6 @@ package br.sapiens.bellus_app.base
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,11 +44,13 @@ abstract class BaseViewModel<State : IViewState, Event : IViewEvent> : ViewModel
 
     // O MutableStateFlow para gerenciar o estado.
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
+
     // O StateFlow para expor o estado aos observadores.
     open val uiState: StateFlow<State> = _uiState
 
     // O MutableSharedFlow para gerenciar os eventos.
     private val _uiEvent: MutableSharedFlow<Event> = MutableSharedFlow()
+
     // O SharedFlow para expor os eventos aos observadores.
     val uiEvent = _uiEvent.asSharedFlow()
 

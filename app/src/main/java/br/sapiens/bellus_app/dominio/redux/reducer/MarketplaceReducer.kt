@@ -57,6 +57,21 @@ class MarketplaceReducer @Inject constructor() {
 
                     is MarketplaceEvent.Error -> currentState.marketplaceState.copy(currentEvent = event)
                     MarketplaceEvent.Loading -> currentState.marketplaceState.copy(currentEvent = event)
+
+                    is MarketplaceEvent.SuccessCreateService -> {
+                        currentState.marketplaceState.copy(
+                            createService = event.createService,
+                            currentEvent = event
+                        )
+                    }
+
+                    is MarketplaceEvent.SuccessUpdateService -> {
+                        currentState.marketplaceState.copy(
+                            updateService = event.updateService,
+                            currentEvent = event
+                        )
+                    }
+
                     null -> currentState.marketplaceState
 
                 }

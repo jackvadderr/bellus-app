@@ -20,7 +20,7 @@ object UserDataConfigManagerImpl : UserDataConfigManager {
     override suspend fun Context.updateClientData(
         name: String,
         email: String,
-        phone: String
+        phone: String,
     ) {
         userPreferencesStore.updateData { currentConfig ->
             currentConfig.toBuilder().apply {
@@ -38,7 +38,6 @@ object UserDataConfigManagerImpl : UserDataConfigManager {
         id: String,
         name: String,
         email: String,
-        cnpj: String
     ) {
         userPreferencesStore.updateData { currentConfig ->
             currentConfig.toBuilder().apply {
@@ -46,7 +45,6 @@ object UserDataConfigManagerImpl : UserDataConfigManager {
                     .setId(id)
                     .setName(name)
                     .setEmail(email)
-                    .setCnpj(cnpj)
                     .build()
 
             }.build()

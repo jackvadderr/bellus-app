@@ -14,39 +14,33 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.sapiens.bellus_app.dominio.model.state.UserProfileType
+import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.presentation.telas.barra_navegation.BottomNavigation
 import br.sapiens.bellus_app.presentation.telas.clientSide.appointment.create_appointment.TelaCreateAppointment
 import br.sapiens.bellus_app.presentation.telas.clientSide.appointment.create_appointment.TelaSelectionProfissional
 import br.sapiens.bellus_app.presentation.telas.clientSide.appointment.list_appointment.TelaAppointmentManager
 import br.sapiens.bellus_app.presentation.telas.clientSide.home.TelaMarketplace
+import br.sapiens.bellus_app.presentation.telas.clientSide.marketplaceSelection.TelaSelectionMarketplace
 import br.sapiens.bellus_app.presentation.telas.clientSide.pesquisa.TelaPesquisa
 import br.sapiens.bellus_app.presentation.telas.clientSide.pesquisa.TelaSelectedCategories
 import br.sapiens.bellus_app.presentation.telas.clientSide.profile.Profile
-import br.sapiens.bellus_app.presentation.telas.clientSide.service_selection.TelaSelectionService
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
 import br.sapiens.bellus_app.presentation.telas.professionalSide.AgendamentoParceiro
-import br.sapiens.bellus_app.presentation.telas.professionalSide.CadastroParceiro
-import br.sapiens.bellus_app.presentation.telas.professionalSide.HomeParceiro
 import br.sapiens.bellus_app.presentation.telas.professionalSide.PerfilParceiro
+import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaCadastroParceiro
+import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaSelectedAppointmentManagerParceiro
+import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaUpdateEstablishmentParceiro
 import br.sapiens.bellus_app.presentation.telas.splash.TelaSplash
 import br.sapiens.bellus_app.presentation.ui.component.CustomTopBar
 import br.sapiens.bellus_app.presentation.viewmodels.TelaNavegationBarViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavGraph() {
-    // Primeiro vamos pegar qual é o perfil atual ativo
-    val activeProfile: UserProfileType = UserProfileType.CLIENT
-    var startDestination: String = RotasDestinos.Splash.rota
-
-    if (activeProfile == UserProfileType.CLIENT) {
-        startDestination = RotasDestinos.Splash.rota
-    } else if (activeProfile == UserProfileType.PROFESSIONAL) {
-        startDestination = RotasDestinos.ParceiroProfile.rota
-    }
+fun NavGraph(userProfileStore: UserProfileStore) {
+    val currentActiveProfile = userProfileStore.getActiveProfileType()
+    val startDestination: String = RotasDestinos.Splash.rota
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -101,7 +95,7 @@ fun NavGraph() {
         },
         bottomBar = {
             if (deveExibirBarraNavegacao(rotaAtual)) {
-                BottomNavigation(navController, selectedItem.value, activeProfile)
+                BottomNavigation(navController, selectedItem.value, currentActiveProfile)
             }
         }
     )
@@ -128,9 +122,14 @@ fun NavGraph() {
                             route = RotasDestinos.LoginSocial.rota,
                         ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
                     },
-                    navigateToParceiroHome = {
+//                    navigateToParceiroHome = {
+//                        navController.navigate(
+//                            route = RotasDestinos.ParceiroHome.rota,
+//                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
+//                    },
+                    navigateToParceiroProfile = {
                         navController.navigate(
-                            route = RotasDestinos.ParceiroHome.rota,
+                            route = RotasDestinos.ParceiroProfile.rota,
                         ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
                     }
                 )
@@ -198,7 +197,7 @@ fun NavGraph() {
             */
             // Tela Home
             composable(RotasDestinos.DetalhesEstabelecimento.rota) {
-                TelaSelectionService(
+                TelaSelectionMarketplace(
                     hiltViewModel(),
                     navigateToBack = {
                         navController.navigate(
@@ -260,9 +259,14 @@ fun NavGraph() {
             composable(RotasDestinos.Perfil.rota) {
                 Profile(
                     viewModel = hiltViewModel(),
-                    navigateToPartner = {
+                    navigateToSplash = {
                         navController.navigate(
-                            route = RotasDestinos.ParceiroHome.rota
+                            route = RotasDestinos.Splash.rota
+                        )
+                    },
+                    navigateToCadastroParceiro = {
+                        navController.navigate(
+                            route = RotasDestinos.ParceiroCadastro.rota
                         )
                     }
                 )
@@ -271,32 +275,63 @@ fun NavGraph() {
             composable(RotasDestinos.ParceiroProfile.rota) {
                 PerfilParceiro(
                     viewModel = hiltViewModel(),
+                    navigateToSplash = {
+                        navController.navigate(
+                            route = RotasDestinos.Splash.rota
+                        )
+                    }
                 )
             }
             // Cadastrar como parceiro caso NÃO SEJA AINDA
             composable(RotasDestinos.ParceiroCadastro.rota) {
-                CadastroParceiro(
+                TelaCadastroParceiro(
                     hiltViewModel(),
+                    navigateToSplash = {
+                        navController.navigate(
+                            route = RotasDestinos.Splash.rota
+                        )
+                    }
                 )
             }
             // Home do parceiro mostrando todas os estabelecimento associado
-            composable(RotasDestinos.ParceiroHome.rota) {
-                HomeParceiro(
+            composable(RotasDestinos.ParceiroManagerEstablishment.rota) {
+                TelaUpdateEstablishmentParceiro(
                     hiltViewModel(),
+                    navigateToUpdateService = {
+                        navController.navigate(
+                            route = RotasDestinos.ParceiroHome.rota
+                        )
+                    }
                 )
             }
-            composable(RotasDestinos.ModificarEstabelecimento.rota) {
+            composable(RotasDestinos.ParceiroListarAgendamentos.rota) {
                 AgendamentoParceiro(
                     hiltViewModel(),
+                    navigateToSelectedAppointmentParceiro = {
+                        navController.navigate(
+                            route = RotasDestinos.ParceiroSelectedAppointmentManager.rota
+                        )
+                    }
                 )
-
             }
             // Tela de agendamentos para aceitar ou rejeitar ou terminar
-            composable(RotasDestinos.ParceiroAgendamentos.rota) {
-                AgendamentoParceiro(
+            composable(RotasDestinos.ParceiroSelectedAppointmentManager.rota) {
+                TelaSelectedAppointmentManagerParceiro(
                     hiltViewModel(),
                 )
             }
+            // A partir daqui são as telas para fazer o gerenciamento dos estabelecimentos
+//            composable(RotasDestinos.ParceiroManagerEstablishment.rota) {
+//                TelaUpdateEstablishmentParceiro(
+//                    hiltViewModel(),
+//                    navigateToUpdateService = {
+//                        navController.navigate(
+//                            route = RotasDestinos.ParceiroHome.rota
+//                        )
+//                    }
+//                )
+//            }
+
 
             /* ######################
              *   TELA DE AGENDAMENTOS

@@ -16,6 +16,5 @@ interface UserDataConfigManager {
         id: String,
         name: String,
         email: String,
-        cnpj: String
     )
 }

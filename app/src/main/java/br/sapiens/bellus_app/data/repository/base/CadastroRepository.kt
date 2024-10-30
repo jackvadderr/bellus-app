@@ -24,6 +24,6 @@ fun interface CadastroRepository {
         phone: String?,
         email: String?,
         genero: GeneroEnum?,
-        senha: String?
+        senha: String?,
     ): State<Cadastro>
 }

@@ -7,11 +7,7 @@ import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,13 +17,12 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
+import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.presentation.viewmodels.SplashViewModel
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import kotlinx.coroutines.delay
@@ -38,36 +33,42 @@ fun TelaSplash(
     viewModel: SplashViewModel,
     navigateToLogin: () -> Unit,
     navigateToHome: () -> Unit,
-    navigateToParceiroHome: () -> Unit
+    navigateToParceiroProfile: () -> Unit,
 ) {
     val isSplashShow by viewModel.isSplashShow.collectAsState()
 
-    val state by viewModel.uiState.collectAsState()
-
-    val authState = state.authState
+    val viewState by viewModel.uiState.collectAsState()
 
     if (!isSplashShow) {
-        if (authState == EstadoAutenticacao.AUTENTICADO) {
-            Log.d("TelaSplash", "Autenticado")
-            navigateToHome()
-        } else if (authState == EstadoAutenticacao.NAO_AUTENTICADO) {
-            Log.d("TelaSplash", "NÃO Autenticado")
-            navigateToLogin()
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(android.graphics.Color.parseColor("#1B2634"))),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                SplashArtAnimada()
+        when (val currentState = viewState) {
+            is SplashViewModel.ViewState.AuthState -> {
+                val currentAuthState: EstadoAutenticacao = currentState.authState
+                Log.d("TelaSplash", "currentAuthState: $currentAuthState")
+                if (currentAuthState == EstadoAutenticacao.AUTENTICADO) {
+                    //
+                } else if (currentAuthState == EstadoAutenticacao.NAO_AUTENTICADO) {
+                    Log.d("TelaSplash", "Navigating to Login")
+                    navigateToLogin()
+                }
+            }
+
+            is SplashViewModel.ViewState.ProfileType -> {
+                val currentProfileType = currentState.profileType
+                Log.d("TelaSplash", "currentProfileType: $currentProfileType")
+                if (currentProfileType == UserProfileType.CLIENT) {
+                    Log.d("TelaSplash", "Navigating to Home")
+                    navigateToHome()
+                } else if (currentProfileType == UserProfileType.PROFESSIONAL) {
+                    Log.d("TelaSplash", "Navigating to Parceiro Profile")
+                    navigateToParceiroProfile()
+                }
+            }
+
+            else -> {
+                Log.d("TelaSplash", "Unhandled state: $currentState")
             }
         }
     }
-
-
 }
 
 @OptIn(ExperimentalAnimationGraphicsApi::class)

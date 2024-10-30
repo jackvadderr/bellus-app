@@ -6,6 +6,7 @@ import br.sapiens.bellus_app.data.datasource.entity.CategoryNameDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoSummaryDTO
 import br.sapiens.bellus_app.data.datasource.entity.GetCategoryDTO
+import br.sapiens.bellus_app.data.datasource.entity.ProfessionalDTO
 import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
 import br.sapiens.bellus_app.data.datasource.entity.SearchDTO
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
@@ -14,6 +15,7 @@ import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSche
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategoryNameSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategorySchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishmentSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseProfessionalSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSearchSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseServiceSchema
 import br.sapiens.bellus_app.presentation.ui.component.sections.Category
@@ -53,8 +55,18 @@ fun EstabelecimentoDTO.toEstablishmentDetail(
         imageResource = this.imagem,
         portfolio = this.portfolio,
         horario_funcionamento = this.horario_funcionamento,
-        reviews_id = this.reviews_id,
         description = this.description,
+    )
+}
+
+fun ResponseProfessionalSchema.toProfessionalDTO(): ProfessionalDTO {
+    return ProfessionalDTO(
+        id = this.id,
+        userId = this.user_id,
+        linkedEstablishmentId = this.linked_establishment_id,
+        name = this.name,
+        profession = this.profession,
+        cpf = this.cpf,
     )
 }
 
@@ -63,16 +75,17 @@ fun ResponseEstablishmentSchema.toEstablishmentDTO(): EstabelecimentoDTO {
         id = this.id,
         nome = this.nome,
         cnpj = this.cnpj,
-        rating = this.average_rating,
+        average_rating = this.average_rating,
         endereco = this.endereco,
         telefone = this.telefone,
         horario_funcionamento = this.horario_funcionamento,
         imagem = this.imagem,
         portfolio = this.portfolio,
         description = this.description,
-        reviews_id = this.reviews_id,
         created_at = this.created_at,
         updated_at = this.updated_at,
+        profissionaisFiliados = this.profissionais_filiados,
+        profissionalDono = this.profissional_dono,
     )
 }
 
@@ -161,7 +174,7 @@ fun EstabelecimentoDTO.toAvailableEstablishment(): AvailableEstablishment {
         name = this.nome,
         address = this.endereco,
         imageResource = this.imagem.firstOrNull().toString(),
-        rating = this.rating
+        rating = this.average_rating
     )
 }
 

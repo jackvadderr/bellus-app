@@ -1,12 +1,14 @@
 package br.sapiens.bellus_app.di
 
 
+import br.sapiens.bellus_app.data.repository.base.GetAppointmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByEstablishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesByNumberRepository
 import br.sapiens.bellus_app.data.repository.base.GetCategoriesListNameRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetEstablishmentsSummaryRepository
+import br.sapiens.bellus_app.data.repository.base.GetProfessionalByUserIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsByEstalishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmentIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetSearchRepository
@@ -16,17 +18,21 @@ import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
-import br.sapiens.bellus_app.data.repository.base.PutAppointmentRepository
+import br.sapiens.bellus_app.data.repository.base.PostProfessionalRepository
+import br.sapiens.bellus_app.data.repository.base.PutAppointmentSideEstablishmentRepository
+import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByClientIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.appointment.PostAppointmentUseCase
-import br.sapiens.bellus_app.dominio.usecase.appointment.PutAppointmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.PutAppointmentSideEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesByNumberUseCase
 import br.sapiens.bellus_app.dominio.usecase.categories.GetCategoriesListNameUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentsSummariesUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.PostEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.login.LoginUseCase
+import br.sapiens.bellus_app.dominio.usecase.professional.GetProfessionalByUserIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.professional.PostProfessionalUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.search.GetSearchUseCase
@@ -131,12 +137,30 @@ class UseCaseModule {
     @ViewModelScoped
     @Provides
     fun providePutAppointmentUseCase(
-        repository: PutAppointmentRepository,
-    ) = PutAppointmentUseCase(repository)
+        repository: PutAppointmentSideEstablishmentRepository,
+    ) = PutAppointmentSideEstablishmentUseCase(repository)
 
     @ViewModelScoped
     @Provides
     fun provideGetAppointmentsByEstablishmentIdUseCase(
         repository: GetAppointmentsByEstablishmentIdRepository
     ) = GetAppointmentsByEstablishmentIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProfessionalByUserIdUseCase(
+        repository: GetProfessionalByUserIdRepository
+    ) = GetProfessionalByUserIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetAppointmentByIdUseCase(
+        repository: GetAppointmentByIdRepository
+    ) = GetAppointmentByIdUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun providePostProfessionalUseCase(
+        repository: PostProfessionalRepository
+    ) = PostProfessionalUseCase(repository)
 }
