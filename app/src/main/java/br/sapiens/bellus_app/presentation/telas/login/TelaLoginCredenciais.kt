@@ -36,6 +36,7 @@ import br.sapiens.bellus_app.presentation.viewmodels.LoginViewModel
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import android.content.Context
 
 
 @Composable

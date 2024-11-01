@@ -1,7 +1,7 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
-
-import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -25,11 +25,22 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val storeConfig: AuthStore,
-    private val storeUser: UserProfileStore,
-    context: Context
+    private val storeUser: UserProfileStore
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
-    val context = context
+    // Expor o estado como LiveData para que seja observável nos testes
+    private val _viewState = MutableLiveData<ViewState>()
+    val viewState: LiveData<ViewState> get() = _viewState
+
+    init {
+        _viewState.value = createInitialState()
+    }
+
+    // Atualizar o estado usando _viewState
+    private fun updateState(reducer: ViewState.() -> ViewState)
+    { _viewState.value = _viewState.value?.reducer() }
+
+    override fun createInitialState(): ViewState = ViewState()
 
     fun loginWithCredential(authCredential: AuthCredential) {
         setState { state.copy(isLoading = true) }
@@ -76,8 +87,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-    override fun createInitialState(): ViewState = ViewState()
 
     override fun triggerEvent(event: ViewEvent) {
         viewModelScope.launch {

@@ -71,10 +71,15 @@ dependencies {
     implementation(libs.androidx.camera.core)
     implementation(libs.googleid)
     implementation(libs.androidx.animation.graphics.android)
+    implementation("androidx.test.ext:junit-ktx:1.2.1")
 //    implementation(libs.volley)
 //    implementation(libs.androidx.tv.material)
     testImplementation("org.testng:testng:6.9.6")
     testImplementation("org.testng:testng:6.9.6")
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -165,6 +170,28 @@ dependencies {
     implementation("io.ktor:ktor-client-auth:$ktorVersion")
 
     // MOCKITO
+    // Test dependencies
+    testImplementation ("org.robolectric:robolectric:4.9")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.0")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    testImplementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    testImplementation("org.mockito:mockito-inline:3.11.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
+// Firebase Firestore
+
+    implementation ("com.google.firebase:firebase-firestore:24.0.0")
+    androidTestImplementation ("com.google.firebase:firebase-firestore-ktx:24.0.0")
+    androidTestImplementation ("com.google.firebase:firebase-core:20.0.0")
+    androidTestImplementation ("androidx.test:core:1.4.0")
+    androidTestImplementation ("androidx.test:runner:1.4.0")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation ("androidx.arch.core:core-testing:2.1.0")
+    androidTestImplementation ("org.robolectric:robolectric:4.7.3")
 
 //    testImplementation("org.mockito:mockito-core:5.13.0")
 //    testImplementation("org.mockito:mockito-inline:5.13.0")
