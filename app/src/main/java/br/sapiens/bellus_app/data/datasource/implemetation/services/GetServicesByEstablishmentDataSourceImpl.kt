@@ -6,6 +6,7 @@ import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
 import br.sapiens.bellus_app.dominio.sdk.network.appendPath
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseServiceSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.schemasErrors.GetErrorSchema
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toServiceDTO
 import io.ktor.client.request.get
@@ -21,7 +22,7 @@ class GetServicesByEstablishmentDataSourceImpl @Inject constructor(
         return if (provider.isTokenAvailable()) {
             try {
                 Log.d("GetServiceDataSourceImpl", "Token disponível")
-                Log.d("GetServiceDataSourceImpl", id)
+                Log.d("GetServiceDataSourceImpl", "ID do argumento get: $id")
 
                 val url = provider.getBaseUrl().appendPath("establishments/services/${id}")
                 Log.d("GetServiceDataSourceImpl", "URL: $url")
@@ -33,17 +34,27 @@ class GetServicesByEstablishmentDataSourceImpl @Inject constructor(
                 val responseBody = response.bodyAsText()
                 Log.d("GetServiceDataSourceImpl", "Corpo da resposta: $responseBody")
 
-                val responseServiceSchemas: List<ResponseServiceSchema> =
-                    Json.decodeFromString<List<ResponseServiceSchema>>(responseBody)
-                val services: List<ServiceDTO> = responseServiceSchemas.map { it.toServiceDTO() }
-                Log.d("GetServiceDataSourceImpl", "Serviços decodificados: $services")
-
-                State.Success(services)
+                return try {
+                    val responseServiceSchemas: List<ResponseServiceSchema> =
+                        Json.decodeFromString(responseBody)
+                    val services: List<ServiceDTO> =
+                        responseServiceSchemas.map { it.toServiceDTO() }
+                    Log.d("GetServiceDataSourceImpl", "Serviços decodificados: $services")
+                    State.Success(services)
+                } catch (e: Exception) {
+                    val errorSchema: GetErrorSchema = Json.decodeFromString(responseBody)
+                    Log.d("GetServiceDataSourceImpl", "Erro decodificado: ${errorSchema.detail}")
+                    val voidList: List<ServiceDTO> = emptyList<ServiceDTO>()
+                    State.Success(voidList)
+//                    State.Error(Exception(errorSchema.detail))
+                }
             } catch (exception: Exception) {
                 State.Error(exception)
             }
         } else {
             State.Error(Exception("Token não disponível"))
+//            val voidList: List<ServiceDTO> = emptyList<ServiceDTO>()
+//            State.Success(voidList)
         }
     }
 }

@@ -161,9 +161,9 @@ fun NavGraph(userProfileStore: UserProfileStore) {
                             route = RotasDestinos.Cadastro.rota,
                         ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true } }
                     },
-                    navigateToHome = {
+                    navigateToSplash = {
                         navController.navigate(
-                            route = RotasDestinos.Home.rota,
+                            route = RotasDestinos.Splash.rota,
                         ) { popUpTo(RotasDestinos.LoginCredencial.rota) { inclusive = true } }
                     },
                 )
@@ -204,9 +204,9 @@ fun NavGraph(userProfileStore: UserProfileStore) {
                             route = RotasDestinos.Home.rota
                         )
                     },
-                    navigateToSelectionProfissional = {
+                    navigateToCreateAppointment = {
                         navController.navigate(
-                            route = RotasDestinos.EscolherProfissionalAgendamento.rota
+                            route = RotasDestinos.CriarAgendamento.rota
                         )
                     }
                 )

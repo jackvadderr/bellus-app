@@ -14,4 +14,7 @@ data class EstablishmentDetail(
     val horario_funcionamento: HorarioFuncionamento,
     val description: String,
     val totalReviews: Int,
+    val cnjp: String,
+    val profissionais_filiados: List<String>,
+    val profisisonal_dono: String,
 )

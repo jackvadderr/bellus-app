@@ -5,8 +5,10 @@ import kotlinx.serialization.Serializable
 data class ServiceDetails(
     val id: String,
     val name: String,
+    val description: String,
     val duration: Duration,
     val preco: Float,
+    val establishmentId: String,
 )
 
 data class ServicePost(

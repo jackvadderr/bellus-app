@@ -138,8 +138,7 @@ fun AgendamentoParceiro(
             }
 
             is ParceiroAppointmentViewModel.ViewState.EstablishmentId -> {}
-            is ParceiroAppointmentViewModel.ViewState.LoadedAppointment -> TODO()
-//            is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> TODO()
+            is ParceiroAppointmentViewModel.ViewState.LoadedAppointment -> {}
         }
 
 

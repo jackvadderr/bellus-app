@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import br.sapiens.bellus_app.R
-import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.presentation.ui.component.profile.MenuItem
 import br.sapiens.bellus_app.presentation.viewmodels.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
@@ -66,24 +65,14 @@ fun Profile(
             subtitle = "Faça aqui o login do seu perfil de estabelecimento",
             onClick = {
                 coroutine.launch(Dispatchers.Main) {
-                    viewModel.getProfessionalInfo()
-                    when (viewState) {
-                        is ProfileViewModel.ViewState.LoadedProfessionalInfo -> {
-                            val professionalInfo =
-                                (viewState as ProfileViewModel.ViewState.LoadedProfessionalInfo).professionalInfo
-                            userStore.dispatch(
-                                UserProfileEvent.SetProfessionalProfile(
-                                    professionalInfo
-                                )
-                            )
+                    viewModel.getProfessionalInfo(
+                        onSuccess = {
                             navigateToSplash()
-                        }
-
-                        ProfileViewModel.ViewState.Loading -> {}
-                        is ProfileViewModel.ViewState.Error -> {
+                        },
+                        onError = {
                             navigateToCadastroParceiro()
                         }
-                    }
+                    )
                 }
             },
         )

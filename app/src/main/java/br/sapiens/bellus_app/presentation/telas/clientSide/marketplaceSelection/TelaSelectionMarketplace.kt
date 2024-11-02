@@ -43,7 +43,8 @@ import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceSelectionViewMod
 @Composable
 fun TelaSelectionMarketplace(
     viewModel: MarketplaceSelectionViewModel,
-    navigateToSelectionProfissional: () -> Unit,
+//    navigateToSelectionProfissional: () -> Unit,
+    navigateToCreateAppointment: () -> Unit,
     navigateToBack: () -> Unit
 ) {
     val viewState by viewModel.uiState.collectAsState()
@@ -125,7 +126,7 @@ fun TelaSelectionMarketplace(
                     when (selectedTabIndex) {
                         0 -> ServiceList(
                             itemsServiceDetails,
-                            navigateToSelectionProfissional,
+                            navigateToCreateAppointment,
                             store = viewModel.mkt,
                             coroutineScope = viewModel.scope,
                             theText = "Agendar"

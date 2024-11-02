@@ -20,7 +20,7 @@ data class MarketplaceState(
 
     val serviceDetails: List<ServiceDetails> = emptyList(),
     val currentServiceDetails: ServiceDetails? = null,
-
+    
     val createService: ServiceDetails? = null,
     val updateService: ServiceDetails? = null,
 

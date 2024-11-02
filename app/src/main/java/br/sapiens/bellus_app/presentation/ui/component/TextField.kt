@@ -130,12 +130,13 @@ fun SenhaTextField(
 fun GeralTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String
+    placeholder: String,
+    modifier: Modifier = Modifier
 ) {
     CustomTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier,
+        modifier = modifier,
         placeholder = placeholder
     )
 }
@@ -144,17 +145,18 @@ fun GeralTextField(
 fun CustomOutlinedTextField(
     selectedSpecialty: String,
     onSpecialtySelected: (String) -> Unit,
-    options: List<String>
+    options: List<String>,
+    placeholder: String,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-//    val options = listOf("Especialidade 1", "Especialidade 2", "Especialidade 3")
 
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = modifier) {
         OutlinedTextField(
             value = selectedSpecialty,
             onValueChange = {},
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Especialidade") },
+            label = { Text(placeholder) },
             readOnly = true,
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {

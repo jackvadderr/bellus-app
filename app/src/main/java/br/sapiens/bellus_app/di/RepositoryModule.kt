@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.di
 
 import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
+import br.sapiens.bellus_app.data.datasource.base.DeleteServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
@@ -20,9 +21,12 @@ import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostProfessionalDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutAppointmentSideEstablishmentDataSource
-import br.sapiens.bellus_app.data.datasource.implemetation.login.CadastroDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.base.PutEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PutServiceDataSource
 import br.sapiens.bellus_app.data.repository.base.CadastroRepository
+import br.sapiens.bellus_app.data.repository.base.DeleteServiceRepository
 import br.sapiens.bellus_app.data.repository.base.GetAllEstablishmentsRepository
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetAppointmentsByClientIdRepository
@@ -42,7 +46,10 @@ import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostProfessionalRepository
+import br.sapiens.bellus_app.data.repository.base.PostServiceRepository
 import br.sapiens.bellus_app.data.repository.base.PutAppointmentSideEstablishmentRepository
+import br.sapiens.bellus_app.data.repository.base.PutEstablishmentRepository
+import br.sapiens.bellus_app.data.repository.base.PutServiceRepository
 import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentsByClientIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.appointment.GetAppointmentsByEstablishmentIdRepositoryImpl
@@ -55,17 +62,19 @@ import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEsta
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentsSummariesRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetSearchRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.PostEstablishmentRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.establishment.PutEstablishmentRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.login.CadastroRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.login.LoginRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.professional.GetProfessionalByUserIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.professional.PostProfessionalRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsByEstablishmentIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsSummaryByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.services.DeleteServiceRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServiceByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServicesByEstablishmentsRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.services.PostServiceRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.services.PutServiceRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.user.GetUserRepositoryImpl
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,13 +90,6 @@ class RepositoryModule {
         loginDataSource: LoginDataSource,
     ): LoginRepository =
         LoginRepositoryImpl(loginDataSource)
-
-    @Provides
-    fun provideRegisterDataSource(
-        firebaseAuth: FirebaseAuth,
-        firebaseFirestore: FirebaseFirestore
-    ): CadastroDataSource =
-        CadastroDataSourceImpl(firebaseAuth, firebaseFirestore)
 
     @Provides
     fun provideRegisterRepository(
@@ -208,4 +210,28 @@ class RepositoryModule {
         data: PostProfessionalDataSource
     ): PostProfessionalRepository =
         PostProfessionalRepositoryImpl(data)
+
+    @Provides
+    fun providePutEstablishmentRepository(
+        data: PutEstablishmentDataSource
+    ): PutEstablishmentRepository =
+        PutEstablishmentRepositoryImpl(data)
+
+    @Provides
+    fun providePostServiceRepository(
+        data: PostServiceDataSource
+    ): PostServiceRepository =
+        PostServiceRepositoryImpl(data)
+
+    @Provides
+    fun providePutServiceRepository(
+        data: PutServiceDataSource
+    ): PutServiceRepository =
+        PutServiceRepositoryImpl(data)
+
+    @Provides
+    fun provideDeleteServiceRepository(
+        data: DeleteServiceDataSource
+    ): DeleteServiceRepository =
+        DeleteServiceRepositoryImpl(data)
 }

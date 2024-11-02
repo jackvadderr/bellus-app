@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import br.sapiens.bellus_app.presentation.ui.component.appointment.CalendarView
 import br.sapiens.bellus_app.presentation.ui.component.appointment.Footer
 import br.sapiens.bellus_app.presentation.ui.component.appointment.Header
-import br.sapiens.bellus_app.presentation.ui.component.appointment.ServiceSummary
 import br.sapiens.bellus_app.presentation.ui.component.appointment.TimeSlotSelector
 import br.sapiens.bellus_app.presentation.ui.model.Duration
 import br.sapiens.bellus_app.presentation.ui.model.ServicePost
@@ -47,7 +46,7 @@ fun TelaCreateAppointment(
         CalendarView { date -> selectedDate = date }
         TimeSlotSelector { timeSlot -> selectedTimeSlot = timeSlot }
 
-        ServiceSummary(servicePost)
+//        ServiceSummary(servicePost)
         Spacer(modifier = Modifier.weight(1f))
         Footer(
             onClick = {

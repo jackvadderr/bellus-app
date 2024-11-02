@@ -42,7 +42,7 @@ import com.google.firebase.auth.FirebaseAuth
 fun TelaLoginCredenciais(
     viewModel: LoginViewModel,
     navigateToRegister: () -> Unit,
-    navigateToHome: () -> Unit,
+    navigateToSplash: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -171,6 +171,6 @@ fun TelaLoginCredenciais(
         }
     }
     if (state.loginState == EstadoAutenticacao.AUTENTICADO) {
-        navigateToHome()
+        navigateToSplash()
     }
 }

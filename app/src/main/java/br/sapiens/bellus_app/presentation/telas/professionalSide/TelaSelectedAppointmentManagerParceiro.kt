@@ -31,22 +31,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.presentation.ui.component.WhyDontFuckingLoading
 import br.sapiens.bellus_app.presentation.viewmodels.ParceiroAppointmentViewModel
 
 @Composable
 fun TelaSelectedAppointmentManagerParceiro(
-    viewModel: ParceiroAppointmentViewModel
+    viewModel: ParceiroAppointmentViewModel,
+//    navigateToSelectedAppointment: () -> Unit,
 ) {
 
     val viewState by viewModel.uiState.collectAsState()
     val theAction = remember { mutableStateOf<String>("") }
 
     when (viewState) {
-        ParceiroAppointmentViewModel.ViewState.Error -> TODO()
-        is ParceiroAppointmentViewModel.ViewState.EstablishmentId -> TODO()
-        is ParceiroAppointmentViewModel.ViewState.LoadedAppointments -> TODO()
-        ParceiroAppointmentViewModel.ViewState.Loading -> TODO()
-        is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> TODO()
+        ParceiroAppointmentViewModel.ViewState.Error -> {}
+        is ParceiroAppointmentViewModel.ViewState.EstablishmentId -> {}
+        is ParceiroAppointmentViewModel.ViewState.LoadedAppointments -> {}
+        ParceiroAppointmentViewModel.ViewState.Loading -> {
+            WhyDontFuckingLoading()
+        }
+
+        is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> {}
         is ParceiroAppointmentViewModel.ViewState.LoadedAppointment -> {
             Column(
                 modifier = Modifier

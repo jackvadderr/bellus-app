@@ -15,11 +15,12 @@ import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
 @Composable
 fun CustomButton(
     onClick: () -> Unit,
-    texto: String
+    texto: String,
+    modifier: Modifier = Modifier
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(4.dp))
             .fillMaxWidth()
             .height(40.dp),

@@ -8,4 +8,5 @@ data class PostProfessionalSchema(
     val name: String,
     val profession: String,
     val linked_establishment_id: String,
+    val cpf: String,
 )

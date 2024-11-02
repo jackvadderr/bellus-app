@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -33,6 +34,9 @@ class ParceiroAppointmentViewModel @Inject constructor(
     private val userStore: UserProfileStore,
 ) : BaseViewModel<ParceiroAppointmentViewModel.ViewState, ParceiroAppointmentViewModel.ViewEvent>() {
 
+    var globalEstablishmentId = mutableStateOf<String>("")
+    var globalAppointmentId = mutableStateOf<String>("")
+
     init {
         Log.d("ParceiroAppointmentViewModel", "ViewModel initialized")
         triggerEvent(ViewEvent.Loading)
@@ -47,20 +51,24 @@ class ParceiroAppointmentViewModel @Inject constructor(
         Log.d("ParceiroAppointmentViewModel", "Triggering event: $event")
         when (event) {
             is ViewEvent.Loading -> {
-                getUserProfessionalEstablishmentId()
+                getEstablishmentId()
             }
 
             is ViewEvent.LoadAppointments -> {
-                loadAppointments(event.establishmentId)
+                loadAppointments(globalEstablishmentId.value)
             }
 
             is ViewEvent.UpdateAppointment -> {
                 updateAppointmentStatus(event.toString())
             }
+
+            ViewEvent.LoadCurrentAppointment -> {
+                
+            }
         }
     }
 
-    private fun getUserProfessionalEstablishmentId() {
+    private fun getEstablishmentId() {
         Log.d("ParceiroAppointmentViewModel", "Getting user professional establishment ID")
         viewModelScope.launch {
             val establishmentId = userStore.getEstablishmentId()
@@ -69,6 +77,8 @@ class ParceiroAppointmentViewModel @Inject constructor(
                 setState {
                     ViewState.EstablishmentId(establishmentId)
                 }
+                globalEstablishmentId.value = establishmentId
+                triggerEvent(ViewEvent.LoadAppointments)
             }
         }
     }
@@ -93,6 +103,24 @@ class ParceiroAppointmentViewModel @Inject constructor(
                         "ParceiroAppointmentViewModel",
                         "Error loading appointments: ${result.exception.message}"
                     )
+                    setState {
+                        ViewState.Error
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadAppointment(id: String) {
+        viewModelScope.launch {
+            when (val result = getAppointmentDetailsUseCase.invoke(id)) {
+                is State.Success -> {
+                    setState {
+                        ViewState.LoadedAppointment(result.data)
+                    }
+                }
+
+                is State.Error -> {
                     setState {
                         ViewState.Error
                     }
@@ -211,6 +239,7 @@ class ParceiroAppointmentViewModel @Inject constructor(
     sealed class ViewEvent : IViewEvent {
         data object Loading : ViewEvent()
         data object UpdateAppointment : ViewEvent()
-        data class LoadAppointments(val establishmentId: String) : ViewEvent()
+        data object LoadAppointments : ViewEvent()
+        data object LoadCurrentAppointment : ViewEvent()
     }
 }

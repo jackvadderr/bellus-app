@@ -6,7 +6,9 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.ProfessionalDTO
+import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
+import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.professional.GetProfessionalByUserIdUseCase
 import br.sapiens.bellus_app.utils.State
@@ -41,23 +43,26 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun getProfessionalInfo() {
-        Log.d("ProfileViewModel", "Getting professional info")
+    suspend fun getProfessionalInfo(
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         viewModelScope.launch {
+            Log.d("ProfileViewModel", "Fetching professional info")
             val userId = userStore.getCurrentUserId()
-            Log.d("ProfileViewModel", "User ID: $userId")
+            Log.d("ProfileViewModel", "Current user ID: $userId")
             when (val result: State<ProfessionalDTO> = professionalByUserIdUseCase.invoke(userId)) {
                 is State.Success -> {
                     val professional: ProfessionalDTO = result.data
-                    Log.d("ProfileViewModel", "Professional info retrieved: $professional")
-
-                    if (!professional.id.isNullOrEmpty() ||
-                        !professional.userId.isNullOrEmpty() ||
-                        !professional.linkedEstablishmentId.isNullOrEmpty() ||
-                        !professional.name.isNullOrEmpty() ||
-                        !professional.profession.isNullOrEmpty()
-                    ) {
-                        Log.d("ProfileViewModel", "Professional info is valid")
+                    Log.d(
+                        "ProfileViewModel",
+                        "Professional info fetched successfully: $professional"
+                    )
+                    if (professional.id.isNotEmpty()) {
+                        Log.d(
+                            "ProfileViewModel",
+                            "Professional ID is not empty: ${professional.id}"
+                        )
                         setState {
                             ViewState.LoadedProfessionalInfo(
                                 professionalInfo = ProfessionalInfo(
@@ -69,17 +74,46 @@ class ProfileViewModel @Inject constructor(
                                 )
                             )
                         }
+                        Log.d("ProfileViewModel", "State updated with professional info")
+                        userStore.dispatch(
+                            UserProfileEvent.SetProfessionalProfile(
+                                ProfessionalInfo(
+                                    id = professional.id,
+                                    userId = professional.userId,
+                                    establishmentId = professional.linkedEstablishmentId,
+                                    name = professional.name,
+                                    email = "Pegar do endpoint do usuario"
+                                )
+                            )
+                        ).also {
+                            Log.d("ProfileViewModel", "Dispatched SetProfessionalProfile event")
+                            // Verifica se o estado foi atualizado corretamente
+                            val updatedProfile = userStore.getActiveProfileType()
+                            if (updatedProfile == UserProfileType.PROFESSIONAL) {
+                                Log.d(
+                                    "ProfileViewModel",
+                                    "Profile PROFISSIONAL updated successfully"
+                                )
+                                onSuccess() // Chama o callback de sucesso para navegação
+                            } else {
+                                Log.e("ProfileViewModel", "Failed to update profile")
+                                onError() // Chama o callback de erro para navegação
+                            }
+                        }
+                        Log.d("ProfileViewModel", "Dispatched SetProfessionalProfile event")
+                        onSuccess() // Chama o callback de sucesso para navegação
+                        Log.d("ProfileViewModel", "onSuccess callback called")
                     }
                 }
 
                 is State.Error -> {
                     Log.e(
                         "ProfileViewModel",
-                        "Error retrieving professional info: ${result.exception.message}"
+                        "Error fetching professional info: ${result.exception}"
                     )
-                    setState {
-                        ViewState.Error("Erro ao obter informações do profissional")
-                    }
+                    setState { ViewState.Error("Erro ao obter informações do profissional") }
+                    onError() // Chama o callback de erro para navegação
+                    Log.d("ProfileViewModel", "onError callback called")
                 }
             }
         }

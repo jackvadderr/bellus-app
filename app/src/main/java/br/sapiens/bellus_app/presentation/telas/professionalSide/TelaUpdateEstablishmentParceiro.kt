@@ -15,7 +15,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -25,15 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import br.sapiens.bellus_app.presentation.ui.component.ImageSlider
+import br.sapiens.bellus_app.presentation.ui.component.ParceiroImageUpdateSlider
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.about.AboutTab
-import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTab
-import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.review.ReviewsTab
+import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTabParceiro
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.ServiceInfoSection
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.UpdateServiceListParceiro
-import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
-import br.sapiens.bellus_app.presentation.viewmodels.MarketplaceSelectionViewModel
 import br.sapiens.bellus_app.presentation.viewmodels.ParceiroUpdateEstablishmentViewModel
 
 @Composable
@@ -42,51 +38,36 @@ fun TelaUpdateEstablishmentParceiro(
     navigateToUpdateService: () -> Unit,
 ) {
     val viewState by viewModel.uiState.collectAsState()
-
-
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(Unit) {
-//        viewModel.triggerEvent(TelaManagerEstablishmentParceiro.ViewEvent.LoadUser)
-    }
-
-    when (viewState) {
-        is ParceiroUpdateEstablishmentViewModel.ViewState.Loading -> {
-            Log.d("TelaServiceSelection", "ViewState: Loading")
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center), color = MarronNaoSei)
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (viewState) {
+            is ParceiroUpdateEstablishmentViewModel.ViewState.Loading -> {
+                Log.d("TelaServiceSelection", "ViewState: Loading")
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        Modifier.align(Alignment.Center),
+                        color = MarronNaoSei
+                    )
+                }
             }
-        }
 
-        is ParceiroUpdateEstablishmentViewModel.ViewState.UserLoaded -> {
-            val currentEstablishmentDetails =
-                (viewState as MarketplaceSelectionViewModel.ViewState.UserLoaded).establishmentDetails
-            val itemsServiceDetails: List<ServiceDetails> =
-                (viewState as MarketplaceSelectionViewModel.ViewState.UserLoaded).serviceDetails
-            val itemsReviewsDetails =
-                (viewState as MarketplaceSelectionViewModel.ViewState.UserLoaded).reviewsDetails
+            is ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment -> {
+                Log.d("TelaUpdateEstablishmentParceiro", "ViewState: LoadedCurrentEstablishment")
+                val currentEstablishmentDetails =
+                    (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).currentEstablishment
+                val itemsServiceDetails =
+                    (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).services
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                ImageSlider(
+                ParceiroImageUpdateSlider(
                     urls = currentEstablishmentDetails.imageResource,
-                    contentDescription = "", // TODO: Database
+                    contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    onAddImageClick = { /*viewModel.triggerEvent(ParceiroUpdateEstablishmentViewModel.ViewEvent.AddImage)*/ }
                 )
-//                IconButton(
-//                    onClick = { navigateToBack() },
-//                    modifier = Modifier
-//                        .padding(16.dp)
-//                        .align(Alignment.TopStart)
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                        contentDescription = "Back",
-//                        tint = Color.White
-//                    )
-//                }
 
                 Column(
                     modifier = Modifier
@@ -102,7 +83,7 @@ fun TelaUpdateEstablishmentParceiro(
                         currentEstablishmentDetails.horario_funcionamento
                     )
 
-                    val tabTitles = listOf("Serviços", "Avaliações", "Portfólio", "Sobre")
+                    val tabTitles = listOf("Serviços", "Portfólio", "Sobre")
                     TabRow(
                         selectedTabIndex = selectedTabIndex,
                         modifier = Modifier.fillMaxWidth(),
@@ -122,17 +103,27 @@ fun TelaUpdateEstablishmentParceiro(
                             itemsServiceDetails,
                             coroutineScope = viewModel.scope,
                             store = viewModel.mkt,
-                            theText = ""
+                            theText = "Editar",
+                            onServiceUpdated = {
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateService(it)
+                                )
+                            },
+                            onServiceCreated = {
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.CreateService(it)
+                                )
+                            },
+                            onServiceDeleted = {
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.DeleteService(it)
+                                )
+                            }
                         )
 
-                        1 -> ReviewsTab(
-                            itemsReviewsDetails = itemsReviewsDetails,
-                            averagedReviewsDetails = currentEstablishmentDetails.rating,
-                            totalReviewsDetails = currentEstablishmentDetails.totalReviews
-                        )
 
-                        2 -> PortfolioTab(currentEstablishmentDetails.portfolio)
-                        3 -> AboutTab(
+                        1 -> PortfolioTabParceiro(currentEstablishmentDetails.portfolio)
+                        2 -> AboutTab(
                             currentEstablishmentDetails.description,
                             currentEstablishmentDetails.telefone,
                             currentEstablishmentDetails.horario_funcionamento
@@ -140,6 +131,9 @@ fun TelaUpdateEstablishmentParceiro(
                     }
                 }
             }
+
+            ParceiroUpdateEstablishmentViewModel.ViewState.EstablishmentUpdated -> {}
+            is ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishmentId -> {}
         }
     }
 }

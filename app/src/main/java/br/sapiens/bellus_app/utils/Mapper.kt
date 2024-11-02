@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.utils
 import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.data.datasource.entity.CadastroDTO
 import br.sapiens.bellus_app.data.datasource.entity.CategoryNameDTO
+import br.sapiens.bellus_app.data.datasource.entity.DeleteDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoSummaryDTO
 import br.sapiens.bellus_app.data.datasource.entity.GetCategoryDTO
@@ -11,7 +12,13 @@ import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
 import br.sapiens.bellus_app.data.datasource.entity.SearchDTO
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.data.repository.model.Cadastro
+import br.sapiens.bellus_app.data.repository.model.GeneroEnum
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.CadastroSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.DeleteSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PostServiceSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutServiceSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCadastroSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategoryNameSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategorySchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishmentSchema
@@ -41,6 +48,7 @@ fun EstabelecimentoSummaryDTO.toAvailableEstablishment(average_rating: Float): A
     )
 }
 
+
 fun EstabelecimentoDTO.toEstablishmentDetail(
     total: Int,
     average_rating: Float
@@ -56,7 +64,11 @@ fun EstabelecimentoDTO.toEstablishmentDetail(
         portfolio = this.portfolio,
         horario_funcionamento = this.horario_funcionamento,
         description = this.description,
-    )
+        cnjp = this.cnpj,
+        profissionais_filiados = this.profissionaisFiliados,
+        profisisonal_dono = this.profissionalDono,
+
+        )
 }
 
 fun ResponseProfessionalSchema.toProfessionalDTO(): ProfessionalDTO {
@@ -96,6 +108,8 @@ fun ServiceDTO.toServiceDetails(): ServiceDetails {
         name = this.name,
         duration = this.duration,
         preco = this.price,
+        description = this.description,
+        establishmentId = this.establishment_id,
     )
 }
 
@@ -183,3 +197,68 @@ fun ResponseSearchSchema.toSearchDTO(): SearchDTO {
         establishmentId = this.establishment_id,
     )
 }
+
+fun CadastroDTO.toCadastroSchema(senha: String): CadastroSchema {
+    return CadastroSchema(
+        name = this.name.toString(),
+        phone = this.phone.toString(),
+        email = this.email.toString(),
+        isProfessional = this.isProfessional ?: false,
+        genero = this.genero ?: GeneroEnum.MASCULINO,
+        idade = this.idade ?: 18,
+        senha = senha,
+    )
+}
+
+fun ResponseCadastroSchema.toCadastroDTO(): CadastroDTO {
+    return CadastroDTO(
+        name = this.name,
+        phone = this.phone,
+        genero = this.genero,
+        email = this.email,
+        isProfessional = this.isProfessional,
+        idade = this.idade,
+    )
+}
+
+fun ServiceDetails.toPostServiceSchema(): PostServiceSchema {
+    return PostServiceSchema(
+        name = this.name,
+        description = this.description,
+        price = this.preco,
+        duration = this.duration,
+        establishment_id = this.establishmentId,
+    )
+}
+
+fun ServiceDetails.toPostServiceSchema(establishmentId: String): PostServiceSchema {
+    return PostServiceSchema(
+        name = this.name,
+        description = this.description,
+        price = this.preco,
+        duration = this.duration,
+        establishment_id = establishmentId,
+    )
+}
+
+fun ServiceDetails.toPutServiceSchema(establishmentId: String): PutServiceSchema {
+    return PutServiceSchema(
+        name = this.name,
+        description = this.description,
+        price = this.preco,
+        duration = this.duration,
+        establishment_id = establishmentId,
+    )
+}
+
+fun DeleteSchema.toDeleteDTO(): DeleteDTO {
+    return DeleteDTO(
+        message = this.message
+    )
+}
+
+//val name: String,
+//val description: String,
+//val price: Float,
+//val duration: Duration,
+//val establishment_id: String,

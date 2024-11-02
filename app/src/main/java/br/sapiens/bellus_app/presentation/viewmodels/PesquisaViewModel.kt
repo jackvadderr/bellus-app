@@ -53,7 +53,7 @@ class PesquisaViewModel @Inject constructor(
             }
 
             is ViewEvent.Search -> {
-                
+
             }
         }
     }
@@ -67,7 +67,11 @@ class PesquisaViewModel @Inject constructor(
                     }
                 }
 
-                is State.Error -> {}
+                is State.Error -> {
+                    setState {
+                        ViewState.Error
+                    }
+                }
             }
         }
     }
@@ -141,6 +145,7 @@ class PesquisaViewModel @Inject constructor(
         data class LoadCategories(val categories: List<GetCategoryDTO>) : ViewState()
         data class LoadCategoriesList(val categories: List<CategoryNameDTO>) : ViewState()
         data class SearchResults(val results: List<EstabelecimentoDTO>) : ViewState()
+        data object Error : ViewState()
     }
 
     sealed class ViewEvent : IViewEvent {

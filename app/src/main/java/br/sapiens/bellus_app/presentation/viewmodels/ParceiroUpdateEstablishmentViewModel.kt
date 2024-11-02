@@ -5,22 +5,25 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
-import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
-import br.sapiens.bellus_app.data.datasource.entity.ReviewsSummary
-import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
-import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchemaEncapsulation
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutServiceSchemaEncapsulation
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.establishment.PutEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.DeleteServiceUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.PostServiceUseCase
+import br.sapiens.bellus_app.dominio.usecase.service.PutServiceUseCase
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
-import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toEstablishmentDetail
-import br.sapiens.bellus_app.utils.toReviewsDetails
+import br.sapiens.bellus_app.utils.toPostServiceSchema
+import br.sapiens.bellus_app.utils.toPutServiceSchema
 import br.sapiens.bellus_app.utils.toServiceDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -30,152 +33,259 @@ import javax.inject.Inject
 @HiltViewModel
 class ParceiroUpdateEstablishmentViewModel @Inject constructor(
     private val marketplaceStore: MarketplaceStore,
-    private val serviceUseCase: GetServicesByEstablishmentUseCase,
-    private val establishmentUseCase: GetEstablishmentByIdUseCase,
+    private val userStore: UserProfileStore,
+    private val getServicesUseCase: GetServicesByEstablishmentUseCase,
+    private val getEstablishmentUseCase: GetEstablishmentByIdUseCase,
+    private val updateEstablishmentUseCase: PutEstablishmentUseCase,
+    private val postServiceUseCase: PostServiceUseCase,
+    private val putServiceUseCase: PutServiceUseCase,
+    private val deleteServiceUseCase: DeleteServiceUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
     coroutineScope: CoroutineScope
 ) : BaseViewModel<ParceiroUpdateEstablishmentViewModel.ViewState, ParceiroUpdateEstablishmentViewModel.ViewEvent>() {
 
-    init {
-        Log.d("ParceiroAppointmentViewModel", "ViewModel initialized")
-//        triggerEvent(ViewEvent.Loading)
-    }
-
     val mkt = marketplaceStore
     val scope = coroutineScope
 
+    var supremeEstablishmentId: String? = null
+    var supremeListServices: List<ServiceDetails> = emptyList()
+
     init {
-        viewModelScope.launch {
-            loadUser()
-        }
-    }
-
-    private fun loadUser() {
-        viewModelScope.launch {
-            Log.d("ServiceSelectionVM", "Iniciando loadUser")
-            val currentEstablishment: EstablishmentDetail? =
-                marketplaceStore.getCurrentEstablishment()
-            Log.d("ServiceSelectionVM", currentEstablishment.toString())
-            val serviceDetails: List<ServiceDetails> = marketplaceStore.getServiceDetails()
-            val reviewsDetails: List<ReviewsDetails> = marketplaceStore.getReviews()
-
-            Log.d("ServiceSelectionVM", "EstablishmentDetails: $currentEstablishment")
-            Log.d("ServiceSelectionVM", "ServiceDetails: $serviceDetails")
-
-            if (currentEstablishment != null && serviceDetails.isNotEmpty() && reviewsDetails.isNotEmpty()) {
-                // O primeiro estado deles sempre vai ser null
-                setState {
-                    ViewState.UserLoaded(
-                        currentEstablishment,
-                        serviceDetails,
-                        reviewsDetails
-                    )
-                }
-            } else {
-                // Aqui começa o estabelecimento
-                Log.d("ServiceSelectionVM", "Else")
-                val establishmentId: String = marketplaceStore.getEstablishmentItemId().toString()
-                Log.d("ServiceSelectionVM", "EstablishmentId: $establishmentId")
-                val currentEstablishmentState: State<EstabelecimentoDTO> =
-                    establishmentUseCase.execute(establishmentId)
-
-                Log.d("ServiceSelectionVM", "EstablishingState: $currentEstablishmentState")
-
-                val currentEstablishmentDetails: EstablishmentDetail =
-                    when (currentEstablishmentState) {
-                        is State.Success -> {
-                            var totalReviews = 0
-                            var average_rating = 0.0F
-                            when (val totalReviewsState: State<ReviewsSummary> =
-                                reviewsSummaryUseCase.invoke(currentEstablishmentState.data.id)) {
-                                is State.Success -> {
-                                    totalReviews = totalReviewsState.data.total_reviews
-                                    average_rating = totalReviewsState.data.average_rating
-                                }
-
-                                is State.Error -> TODO("Pao de batata")
-                            }
-                            currentEstablishmentState.data.toEstablishmentDetail(
-                                totalReviews,
-                                average_rating
-                            )
-                        }
-
-                        is State.Error -> TODO("Error a vista! ServiceSelectionVM")
-                    }
-                marketplaceStore.dispatch(
-                    MarketplaceEvent.SuccessGetEstablishmentCurrent(
-                        currentEstablishmentDetails
-                    )
-                )
-                // Aqui começa a lista dos serviços
-                val servicesState: State<List<ServiceDTO>> =
-                    serviceUseCase.execute(
-                        GetServicesByEstablishmentUseCase.Input(establishmentId)
-                    )
-                Log.d("ServiceSelectionVM", "ServicesState: $servicesState")
-
-                val services: List<ServiceDTO> = when (servicesState) {
-                    is State.Success -> servicesState.data
-                    else -> emptyList()
-                }
-                Log.d("ServiceSelectionVM", "Services: $services")
-
-                val newServiceDetails: List<ServiceDetails> = services.map { it.toServiceDetails() }
-                Log.d("ServiceSelectionVM", "NewServiceDetails: $newServiceDetails")
-
-                marketplaceStore.dispatch(
-                    MarketplaceEvent.SuccessServiceDetails(
-                        newServiceDetails
-                    )
-                )
-                // Aqui começa a lista das avaliações
-                
-                val reviewsList: State<List<ReviewsDTO>> = reviewsUseCase.execute(establishmentId)
-                val reviewsState: List<ReviewsDetails> =
-                    when (reviewsList) {
-                        is State.Success -> reviewsList.data.map { it.toReviewsDetails() }
-                        is State.Error -> TODO("AAAAAAAAAAAAAAAAAAA")
-                    }
-                marketplaceStore.dispatch(
-                    MarketplaceEvent.SuccessGetReviews(
-                        reviewsState
-                    )
-                )
-
-                Log.d("ServiceSelectionVM", "Deu bom!")
-                setState {
-                    ViewState.UserLoaded(
-                        currentEstablishmentDetails,
-                        newServiceDetails,
-                        reviewsState
-                    )
-                }
-            }
-        }
+        Log.d("ParceiroUpdateEstablishmentViewModel", "ViewModel initialized")
+        triggerEvent(ViewEvent.Loading)
     }
 
     override fun createInitialState(): ViewState {
+        Log.d("ParceiroUpdateEstablishmentViewModel", "Creating initial state")
         return ViewState.Loading
     }
 
     override fun triggerEvent(event: ViewEvent) {
         when (event) {
-            is ViewEvent.LoadUser -> loadUser()
+            is ViewEvent.Loading -> getEstablishment()
+            is ViewEvent.LoadServices -> supremeEstablishmentId?.let { id ->
+                viewModelScope.launch { loadServices(id) }
+            }
+
+            is ViewEvent.UpdateEstablishment -> putEstablishment(event.updatedEstablishment)
+            is ViewEvent.CreateService -> {
+                createService(event.service)
+            }
+
+            is ViewEvent.UpdateService -> {
+                updateService(event.service)
+            }
+
+            is ViewEvent.DeleteService -> {
+                deleteService(event.service)
+            }
         }
     }
 
+    private fun deleteService(service: ServiceDetails) {
+        viewModelScope.launch {
+            when (deleteServiceUseCase.invoke(service.id)) {
+                is State.Success -> {
+                    Log.d("ParceiroUpdateEstablishmentViewModel", "Service deleted successfully")
+                    triggerEvent(ViewEvent.LoadServices)
+                }
+
+                is State.Error -> {
+                    Log.e("ParceiroUpdateEstablishmentViewModel", "Failed to delete service")
+                }
+            }
+        }
+    }
+
+    private fun updateService(service: ServiceDetails) {
+        viewModelScope.launch {
+            val serviceSchema =
+                service.toPutServiceSchema(establishmentId = supremeEstablishmentId!!)
+            val encapsulation: PutServiceSchemaEncapsulation = PutServiceSchemaEncapsulation(
+                id = service.id,
+                schema = serviceSchema
+            )
+            Log.d("ParceiroUpdateEstablishmentViewModel", "serviceSchema: $serviceSchema")
+            when (putServiceUseCase.invoke(encapsulation)) {
+                is State.Success -> {
+                    Log.d("ParceiroUpdateEstablishmentViewModel", "Service updated successfully")
+                    triggerEvent(ViewEvent.LoadServices)
+                }
+
+                is State.Error -> {
+                    Log.e("ParceiroUpdateEstablishmentViewModel", "Failed to update service")
+                }
+            }
+        }
+    }
+
+    private fun createService(service: ServiceDetails) {
+        viewModelScope.launch {
+            val serviceSchema =
+                service.toPostServiceSchema(establishmentId = supremeEstablishmentId!!)
+            Log.d("ParceiroUpdateEstablishmentViewModel", "serviceSchema: $serviceSchema")
+            when (postServiceUseCase.invoke(serviceSchema)) {
+                is State.Success -> {
+                    Log.d("ParceiroUpdateEstablishmentViewModel", "Service created successfully")
+                    triggerEvent(ViewEvent.LoadServices)
+                }
+
+                is State.Error -> {
+                    Log.e("ParceiroUpdateEstablishmentViewModel", "Failed to create service")
+                }
+            }
+        }
+    }
+
+    private fun getEstablishment() {
+        viewModelScope.launch {
+            val establishmentId = fetchEstablishmentId() ?: return@launch
+            loadEstablishmentData(establishmentId)
+        }
+    }
+
+    private fun fetchEstablishmentId(): String? {
+        userStore.getEstablishmentId()?.let { id ->
+            if (id.isNotEmpty()) {
+                supremeEstablishmentId = id
+                Log.d(
+                    "ParceiroUpdateEstablishmentViewModel",
+                    "Loaded establishment ID from userStore: $id"
+                )
+                setState { ViewState.LoadedCurrentEstablishmentId(id) }
+                return id
+            }
+        }
+        // Fallback para marketplaceStore
+        marketplaceStore.store.stateFlow.value.marketplaceState.currentEstablishmentItemId?.let { id ->
+            if (id.isNotEmpty()) {
+                supremeEstablishmentId = id
+                Log.d(
+                    "ParceiroUpdateEstablishmentViewModel",
+                    "Loaded establishment ID from marketplaceStore: $id"
+                )
+                setState { ViewState.LoadedCurrentEstablishmentId(id) }
+                return id
+            }
+        }
+        return null
+    }
+
+
+    private suspend fun loadEstablishmentData(establishmentId: String) {
+        if (establishmentId.isNotEmpty()) {
+            when (val result = getEstablishmentUseCase.execute(establishmentId)) {
+                is State.Success -> {
+                    setState {
+                        ViewState.LoadedCurrentEstablishment(
+                            currentEstablishment = result.data.toEstablishmentDetail(
+                                0,
+                                result.data.average_rating
+                            )
+                        )
+                    }
+                    triggerEvent(ViewEvent.LoadServices)
+                }
+
+                is State.Error -> {
+                    Log.e("ParceiroUpdateEstablishmentViewModel", "Error loading establishment")
+                }
+            }
+        }
+    }
+
+    private suspend fun loadServices(establishmentId: String) {
+        when (val result =
+            getServicesUseCase.execute(GetServicesByEstablishmentUseCase.Input(establishmentId))) {
+            is State.Success -> {
+                val serviceDetails = result.data.map { it.toServiceDetails() }
+                setState {
+                    val currentState = this
+                    if (currentState is ViewState.LoadedCurrentEstablishment) {
+                        currentState.copy(services = serviceDetails)
+                    } else currentState
+                }
+            }
+
+            is State.Error -> {
+                Log.e("ParceiroUpdateEstablishmentViewModel", "Error loading services")
+            }
+        }
+    }
+
+
+    private fun putEstablishment(updatedEstablishment: EstablishmentDetail) {
+        viewModelScope.launch {
+            val encap = PutEstablishmentSchemaEncapsulation(
+                id = updatedEstablishment.id,
+                PutEstablishmentSchema(
+                    cnpj = updatedEstablishment.cnjp,
+                    nome = updatedEstablishment.name,
+                    endereco = updatedEstablishment.address,
+                    telefone = updatedEstablishment.telefone,
+                    horario_funcionamento = updatedEstablishment.horario_funcionamento,
+                    imagem = updatedEstablishment.imageResource,
+                    portfolio = updatedEstablishment.portfolio,
+                    description = updatedEstablishment.description,
+                    profissionais_filiados = emptyList(),
+                    profissional_dono = updatedEstablishment.profisisonal_dono,
+                )
+
+            )
+            when (val result = updateEstablishmentUseCase.invoke(encap)) {
+                is State.Success -> {
+                    Log.d(
+                        "ParceiroUpdateEstablishmentViewModel",
+                        "Establishment updated successfully"
+                    )
+                    setState { ViewState.EstablishmentUpdated }
+                }
+
+                is State.Error -> {
+                    Log.e(
+                        "ParceiroUpdateEstablishmentViewModel",
+                        "Failed to update establishment",
+                        result.exception
+                    )
+//                    setState { ViewState.ErrorUpdatingEstablishment }
+                }
+            }
+        }
+    }
+
+
     sealed class ViewState : IViewState {
         data object Loading : ViewState()
-        data class UserLoaded(
-            val establishmentDetails: EstablishmentDetail,
-            val serviceDetails: List<ServiceDetails>,
-            val reviewsDetails: List<ReviewsDetails>
-        ) : ViewState()
+        data class LoadedCurrentEstablishmentId(val id: String) : ViewState()
+        data class LoadedCurrentEstablishment(
+            val currentEstablishment: EstablishmentDetail,
+            val services: List<ServiceDetails> = emptyList()
+        ) :
+            ViewState()
+
+        data object EstablishmentUpdated : ViewState()
+//        data object ErrorUpdatingEstablishment : ViewState()
+
+//        data class LoadedServices(val services: List<ServiceDetails>) : ViewState()
+
+//        data class UserLoaded( // Entendi, ele carregar a lista dos serviços e reviews. Que bosta :(
+//            val establishmentDetails: EstablishmentDetail,
+//            val serviceDetails: List<ServiceDetails>,
+//            val reviewsDetails: List<ReviewsDetails>
+//        ) : ViewState()
+
+//        data object ErrorServicesNotFound : ViewState()
     }
 
     sealed class ViewEvent : IViewEvent {
-        data object LoadUser : ViewEvent()
+        data object Loading : ViewEvent()
+        data object LoadServices : ViewEvent()
+        data class CreateService(val service: ServiceDetails) : ViewEvent()
+        data class UpdateService(val service: ServiceDetails) : ViewEvent()
+        data class DeleteService(val service: ServiceDetails) : ViewEvent()
+        data class UpdateEstablishment(val updatedEstablishment: EstablishmentDetail) : ViewEvent()
+
+
     }
 }

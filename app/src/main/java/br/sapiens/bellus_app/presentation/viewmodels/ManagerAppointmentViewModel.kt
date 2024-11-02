@@ -89,7 +89,9 @@ class ManagerAppointmentViewModel @Inject constructor(
                     )
                 }
 
-                is State.Error -> {}
+                is State.Error -> {
+
+                }
             }
             name
         }

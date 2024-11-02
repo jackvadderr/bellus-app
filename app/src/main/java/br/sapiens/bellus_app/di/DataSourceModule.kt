@@ -1,5 +1,7 @@
 package br.sapiens.bellus_app.di
 
+import br.sapiens.bellus_app.data.datasource.base.CadastroDataSource
+import br.sapiens.bellus_app.data.datasource.base.DeleteServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAllEstablishmentsDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetAppointmentsByClientIdDataSource
@@ -19,7 +21,10 @@ import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostProfessionalDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutAppointmentSideEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PutEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.PutServiceDataSource
 import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentsByClientIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.appointment.GetAppointmentsByEstablishmentIdDataSourceImpl
@@ -31,14 +36,19 @@ import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetAllE
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.GetEstablishmentSummariesDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.establishment.PostEstablishmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.establishment.PutEstablishmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.login.CadastroDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.login.LoginDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.professional.GetProfessionalByUserIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.professional.PostProfessionaldDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsSummaryByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.search.GetSearchDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.services.DeleteServiceDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServiceByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServicesByEstablishmentDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.services.PostServiceDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.services.PutServiceDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.user.GetUserDataSourceImpl
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
@@ -171,4 +181,34 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): PostProfessionalDataSource =
         PostProfessionaldDataSourceImpl(provider)
+
+    @Provides
+    fun providePutEstablishmentDataSource(
+        provder: KtorClientProvider
+    ): PutEstablishmentDataSource =
+        PutEstablishmentDataSourceImpl(provder)
+
+    @Provides
+    fun provideCadastroDataSource(
+        provider: KtorClientProvider,
+    ): CadastroDataSource =
+        CadastroDataSourceImpl(provider)
+
+    @Provides
+    fun providePostServiceDataSource(
+        provider: KtorClientProvider
+    ): PostServiceDataSource =
+        PostServiceDataSourceImpl(provider)
+
+    @Provides
+    fun providePutServiceDataSource(
+        provider: KtorClientProvider
+    ): PutServiceDataSource =
+        PutServiceDataSourceImpl(provider)
+
+    @Provides
+    fun provideDeleteServiceDataSource(
+        provider: KtorClientProvider
+    ): DeleteServiceDataSource =
+        DeleteServiceDataSourceImpl(provider)
 }

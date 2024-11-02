@@ -22,29 +22,40 @@ class GetEstablishmentByIdDataSourceImpl @Inject constructor(
             try {
                 Log.d("GetEstablishmentsByIdDataSourceImpl", "Token disponível")
 
-                val url = provider.getBaseUrl().appendPath("establishments/${id}")
+                val url = provider.getBaseUrl().appendPath("establishments/by/${id}")
                 Log.d("GetEstablishmentsByIdDataSourceImpl", "URL: $url")
 
                 val client = provider.client
                 val response = client.get(url)
                 Log.d("GetEstablishmentsByIdDataSourceImpl", "Resposta recebida")
 
-                val responseBody = response.bodyAsText()
+                val responseBody: String = response.bodyAsText()
+//                    .replace("[", "").replace("]", "")
                 Log.d("GetEstablishmentsByIdDataSourceImpl", "Corpo da resposta: $responseBody")
 
-                val establishments: ResponseEstablishmentSchema =
-                    Json.decodeFromString<ResponseEstablishmentSchema>(responseBody)
+                val establishment: ResponseEstablishmentSchema = Json.decodeFromString(responseBody)
 
-                // TODO: Lembrar fazer um Mapper XD
-                val establishmentDto: EstabelecimentoDTO = establishments.toEstablishmentDTO()
+                // Log the deserialized fields
+                Log.d("GetEstablishmentsByIdDataSourceImpl", "ID: ${establishment.id}")
                 Log.d(
                     "GetEstablishmentsByIdDataSourceImpl",
-                    "Estabelecimentos decodificados: $establishments"
+                    "CreateAt: ${establishment.created_at}"
                 )
+                Log.d(
+                    "GetEstablishmentsByIdDataSourceImpl",
+                    "UpdateAt: ${establishment.updated_at}"
+                )
+                // Add more fields as needed
 
+                val establishmentDto: EstabelecimentoDTO = establishment.toEstablishmentDTO()
+                Log.d(
+                    "GetEstablishmentsByIdDataSourceImpl",
+                    "Estabelecimentos decodificados: $establishment"
+                )
 
                 State.Success(establishmentDto)
             } catch (exception: Exception) {
+                Log.e("GetEstablishmentsByIdDataSourceImpl", "Erro ao decodificar JSON", exception)
                 State.Error(exception)
             }
         } else {

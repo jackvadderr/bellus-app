@@ -22,3 +22,5 @@ data class ResponseEstablishmentSchema(
     val profissionais_filiados: List<String>,
     val profissional_dono: String,
 )
+
+//data class Telefone

@@ -7,7 +7,6 @@ import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ClientInfo
-import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
 import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
@@ -90,14 +89,14 @@ class SplashViewModel @Inject constructor(
                     setState {
                         ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
                     }
-                    val professionalInfo = ProfessionalInfo(
-                        id = userId,
-                    )
-                    storeUser.dispatch(
-                        UserProfileEvent.SetProfessionalProfile(
-                            professionalInfo
-                        )
-                    )
+//                    val professionalInfo = ProfessionalInfo(
+//                        id = userId,
+//                    )
+//                    storeUser.dispatch(
+//                        UserProfileEvent.SetProfessionalProfile(
+//                            professionalInfo
+//                        )
+//                    )
                     setState {
                         ViewState.ProfileType(
                             userType
