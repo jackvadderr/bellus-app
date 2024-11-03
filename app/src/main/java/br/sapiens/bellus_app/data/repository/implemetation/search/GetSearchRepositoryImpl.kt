@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.data.repository.implemetation.establishment
+package br.sapiens.bellus_app.data.repository.implemetation.search
 
 import br.sapiens.bellus_app.data.datasource.base.GetSearchDataSource
 import br.sapiens.bellus_app.data.datasource.entity.SearchDTO

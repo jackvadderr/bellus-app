@@ -71,6 +71,12 @@ class MarketplaceStateUpdater @Inject constructor() {
                     updateService = event.updateService
                 )
             }
+
+            is MarketplaceEvent.SuccessGetCurrentAppointmentId -> {
+                currentState.marketplaceState.copy(
+                    currentAppointmentId = event.id
+                )
+            }
         }
         return currentState.copy(
             marketplaceState = newMarketplaceState

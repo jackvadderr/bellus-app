@@ -10,6 +10,8 @@ data class ClientUserSchema(
     val phone: String,
     val genero: String,
     val isProfessional: Boolean,
+    val isEmailVerified: Boolean,
+    val providerId: String,
 )
 
 @Serializable

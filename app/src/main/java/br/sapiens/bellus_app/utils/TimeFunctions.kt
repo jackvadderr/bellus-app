@@ -3,7 +3,9 @@ package br.sapiens.bellus_app.utils
 import android.annotation.SuppressLint
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Locale
@@ -42,6 +44,7 @@ fun calculateTimeDifference(startTime: String, endTime: String): String {
     }
 }
 
+
 fun formatTimeDifference(timeDifference: String): String {
     val parts = timeDifference.split(":")
     val hours = parts[0].toInt()
@@ -55,6 +58,13 @@ fun formatTimeDifference(timeDifference: String): String {
     return listOf(formattedHours, formattedMinutes, formattedSeconds)
         .filter { it.isNotEmpty() }
         .joinToString(", ")
+}
+
+fun formatIso8601ToDateTimeString(isoString: String): String {
+    val instant = Instant.parse(isoString)
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+        .withZone(ZoneId.systemDefault())
+    return formatter.format(instant)
 }
 
 fun getDayOfWeek(dateString: String): String {

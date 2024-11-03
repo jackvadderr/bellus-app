@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.data.datasource.entity.EstadoEnum
 import br.sapiens.bellus_app.presentation.ui.component.CustomOutlinedTextField
 import br.sapiens.bellus_app.presentation.ui.component.GeralTextField
-import br.sapiens.bellus_app.presentation.viewmodels.ParceiroCadastroViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroCadastroViewModel
 
 
 @Composable

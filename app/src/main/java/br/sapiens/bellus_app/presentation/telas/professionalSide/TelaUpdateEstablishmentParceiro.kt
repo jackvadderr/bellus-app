@@ -30,7 +30,7 @@ import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.por
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.ServiceInfoSection
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.UpdateServiceListParceiro
 import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
-import br.sapiens.bellus_app.presentation.viewmodels.ParceiroUpdateEstablishmentViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroUpdateEstablishmentViewModel
 
 @Composable
 fun TelaUpdateEstablishmentParceiro(

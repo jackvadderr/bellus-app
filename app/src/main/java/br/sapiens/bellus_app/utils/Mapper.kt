@@ -13,6 +13,7 @@ import br.sapiens.bellus_app.data.datasource.entity.SearchDTO
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.data.repository.model.Cadastro
 import br.sapiens.bellus_app.data.repository.model.GeneroEnum
+import br.sapiens.bellus_app.dominio.model.AppointmentDetail
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.CadastroSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.DeleteSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PostServiceSchema
@@ -273,8 +274,13 @@ fun DeleteSchema.toDeleteDTO(): DeleteDTO {
     )
 }
 
-//val name: String,
-//val description: String,
-//val price: Float,
-//val duration: Duration,
-//val establishment_id: String,
+fun AppointmentDTO.toAppointmentDetail(): AppointmentDetail {
+    return AppointmentDetail(
+        userId = this.userId,
+        establishmentId = this.establishmentId,
+        serviceId = this.serviceId,
+        date = this.scheduled_date,
+        time = this.scheduled_date,
+        statusRequest = this.statusRequest
+    )
+}

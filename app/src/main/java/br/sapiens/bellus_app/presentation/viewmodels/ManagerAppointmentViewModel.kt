@@ -97,17 +97,18 @@ class ManagerAppointmentViewModel @Inject constructor(
         }
     }
 
-    suspend fun getServicePrice(id: String): Float {
+    suspend fun getServicePrice(id: String): ServiceDTO? {
         return withContext(Dispatchers.IO) {
-            var price = 0f
+            var dto: ServiceDTO? = null
             when (val result: State<ServiceDTO> = getServiceUseCase.invoke(id)) {
                 is State.Success -> {
-                    price = result.data.price
+//                    price = result.data.price
+                    dto = result.data
                 }
 
                 is State.Error -> {}
             }
-            price
+            dto
         }
     }
 

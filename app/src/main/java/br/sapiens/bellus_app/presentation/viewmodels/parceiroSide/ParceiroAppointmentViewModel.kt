@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.presentation.viewmodels
+package br.sapiens.bellus_app.presentation.viewmodels.parceiroSide
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,8 @@ import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.data.datasource.entity.EstabelecimentoDTO
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
+import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchemeEncapsulation
@@ -32,6 +34,7 @@ class ParceiroAppointmentViewModel @Inject constructor(
     private val getEstablishmentDetailsUsecase: GetEstablishmentByIdUseCase,
     private val getServiceUseCase: GetServiceByIdUseCase,
     private val userStore: UserProfileStore,
+    private val marketplaceStore: MarketplaceStore
 ) : BaseViewModel<ParceiroAppointmentViewModel.ViewState, ParceiroAppointmentViewModel.ViewEvent>() {
 
     var globalEstablishmentId = mutableStateOf<String>("")
@@ -63,8 +66,14 @@ class ParceiroAppointmentViewModel @Inject constructor(
             }
 
             ViewEvent.LoadCurrentAppointment -> {
-                
+
             }
+        }
+    }
+
+    fun sendAppointmentIdToStore(id: String) {
+        viewModelScope.launch {
+            marketplaceStore.dispatch(MarketplaceEvent.SuccessGetCurrentAppointmentId(id))
         }
     }
 
@@ -206,13 +215,13 @@ class ParceiroAppointmentViewModel @Inject constructor(
         }
     }
 
-    suspend fun getServicePrice(id: String): Float {
+    suspend fun getServicePrice(id: String): ServiceDTO? {
         Log.d("ParceiroAppointmentViewModel", "Getting service price for ID: $id")
         return withContext(Dispatchers.IO) {
-            var price = 0f
+            var price: ServiceDTO? = null
             when (val result: State<ServiceDTO> = getServiceUseCase.invoke(id)) {
                 is State.Success -> {
-                    price = result.data.price
+                    price = result.data
                     Log.d("ParceiroAppointmentViewModel", "Service price: $price")
                 }
 

@@ -27,8 +27,8 @@ import br.sapiens.bellus_app.presentation.telas.clientSide.profile.Profile
 import br.sapiens.bellus_app.presentation.telas.login.TelaCadastro
 import br.sapiens.bellus_app.presentation.telas.login.TelaLoginCredenciais
 import br.sapiens.bellus_app.presentation.telas.login.TelaSocialLogin
-import br.sapiens.bellus_app.presentation.telas.professionalSide.AgendamentoParceiro
 import br.sapiens.bellus_app.presentation.telas.professionalSide.PerfilParceiro
+import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaAgendamentoParceiro
 import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaCadastroParceiro
 import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaSelectedAppointmentManagerParceiro
 import br.sapiens.bellus_app.presentation.telas.professionalSide.TelaUpdateEstablishmentParceiro
@@ -305,7 +305,7 @@ fun NavGraph(userProfileStore: UserProfileStore) {
                 )
             }
             composable(RotasDestinos.ParceiroListarAgendamentos.rota) {
-                AgendamentoParceiro(
+                TelaAgendamentoParceiro(
                     hiltViewModel(),
                     navigateToSelectedAppointmentParceiro = {
                         navController.navigate(
@@ -318,6 +318,11 @@ fun NavGraph(userProfileStore: UserProfileStore) {
             composable(RotasDestinos.ParceiroSelectedAppointmentManager.rota) {
                 TelaSelectedAppointmentManagerParceiro(
                     hiltViewModel(),
+                    navigateToBack = {
+                        navController.navigate(
+                            route = RotasDestinos.ParceiroListarAgendamentos.rota
+                        )
+                    }
                 )
             }
             // A partir daqui são as telas para fazer o gerenciamento dos estabelecimentos

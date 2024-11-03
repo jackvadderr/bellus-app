@@ -72,6 +72,12 @@ class MarketplaceReducer @Inject constructor() {
                         )
                     }
 
+                    is MarketplaceEvent.SuccessGetCurrentAppointmentId -> {
+                        currentState.marketplaceState.copy(
+                            currentAppointmentId = event.id
+                        )
+                    }
+
                     null -> currentState.marketplaceState
 
                 }

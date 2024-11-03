@@ -5,7 +5,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.profile.MenuItem
-import br.sapiens.bellus_app.presentation.viewmodels.ParceiroProfileViewModel
+import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroProfileViewModel
 
 
 @Composable

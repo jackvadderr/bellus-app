@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.presentation.viewmodels
+package br.sapiens.bellus_app.presentation.viewmodels.parceiroSide
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope

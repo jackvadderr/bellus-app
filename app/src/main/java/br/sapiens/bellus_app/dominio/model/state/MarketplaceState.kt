@@ -10,6 +10,7 @@ import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 data class MarketplaceState(
     val currentEvent: MarketplaceEvent? = null,
 
+    val currentAppointmentId: String? = null,
     val currentAppointment: AppointmentDetail? = null,
     val currentEstablishmentItemId: String? = null,
     val currentEstablishment: EstablishmentDetail? = null,
@@ -20,7 +21,7 @@ data class MarketplaceState(
 
     val serviceDetails: List<ServiceDetails> = emptyList(),
     val currentServiceDetails: ServiceDetails? = null,
-    
+
     val createService: ServiceDetails? = null,
     val updateService: ServiceDetails? = null,
 

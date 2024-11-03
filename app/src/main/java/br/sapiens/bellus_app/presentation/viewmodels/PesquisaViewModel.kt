@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -35,39 +36,45 @@ class PesquisaViewModel @Inject constructor(
     val scope = coroutineScope
 
     init {
+        Log.d("PesquisaViewModel", "Inicializando ViewModel")
         triggerEvent(ViewEvent.Loading)
     }
 
     override fun createInitialState(): ViewState {
+        Log.d("PesquisaViewModel", "Criando estado inicial")
         return ViewState.Loading
     }
 
     override fun triggerEvent(event: ViewEvent) {
+        Log.d("PesquisaViewModel", "Evento disparado: $event")
         when (event) {
             is ViewEvent.Loading -> {
                 loadCategoriesList()
             }
 
             ViewEvent.LoadCategories -> {
-
+                // Handle LoadCategories event
             }
 
             is ViewEvent.Search -> {
-
+                // Handle Search event
             }
         }
     }
 
     private fun loadCategoriesList() {
         viewModelScope.launch {
+            Log.d("PesquisaViewModel", "Carregando lista de categorias")
             when (val result: State<List<CategoryNameDTO>> = listCategoriesUseCase.invoke(null)) {
                 is State.Success -> {
+                    Log.d("PesquisaViewModel", "Categorias carregadas com sucesso: ${result.data}")
                     setState {
                         ViewState.LoadCategoriesList(result.data)
                     }
                 }
 
                 is State.Error -> {
+                    Log.e("PesquisaViewModel", "Erro ao carregar categorias", result.exception)
                     setState {
                         ViewState.Error
                     }
@@ -77,17 +84,24 @@ class PesquisaViewModel @Inject constructor(
     }
 
     suspend fun getEstablishment(query: String): List<EstabelecimentoDTO> {
+        Log.d("PesquisaViewModel", "Buscando estabelecimento com query: $query")
         return withContext(Dispatchers.IO) {
-            val establishmentsId = getSearch(query)
+            val establishmentsId: List<SearchDTO> = getSearch(query)
             val establishments = mutableListOf<EstabelecimentoDTO>()
             establishmentsId.mapNotNull { searchDTO ->
                 val id = searchDTO.establishmentId
                 when (val result: State<EstabelecimentoDTO> = establishmentByIdUseCase.invoke(id)) {
                     is State.Success -> {
+                        Log.d("PesquisaViewModel", "Estabelecimento encontrado: ${result.data}")
                         establishments.add(result.data)
                     }
 
                     is State.Error -> {
+                        Log.e(
+                            "PesquisaViewModel",
+                            "Erro ao buscar estabelecimento",
+                            result.exception
+                        )
                         null
                     }
                 }
@@ -100,14 +114,18 @@ class PesquisaViewModel @Inject constructor(
     }
 
     suspend fun getSearch(query: String): List<SearchDTO> {
+        Log.d("PesquisaViewModel", "Executando busca com query: $query")
         return withContext(Dispatchers.IO) {
             var searchResult = mutableListOf<SearchDTO>()
             when (val result: State<List<SearchDTO>> = searchUseCase.invoke(query)) {
                 is State.Success -> {
+                    Log.d("PesquisaViewModel", "Resultados da busca: ${result.data}")
                     searchResult = result.data.toMutableList()
                 }
 
-                is State.Error -> {}
+                is State.Error -> {
+                    Log.e("PesquisaViewModel", "Erro ao executar busca", result.exception)
+                }
             }
             searchResult
         }
@@ -115,6 +133,7 @@ class PesquisaViewModel @Inject constructor(
 
     private fun getCategories(inputs: List<Int>) {
         viewModelScope.launch {
+            Log.d("PesquisaViewModel", "Carregando categorias com inputs: $inputs")
             val allCategories = mutableListOf<GetCategoryDTO>()
             val uniqueCategories = mutableSetOf<String>()
 
@@ -124,12 +143,18 @@ class PesquisaViewModel @Inject constructor(
                     is State.Success -> {
                         result.data.forEach { category ->
                             if (uniqueCategories.add(category.nameCategory)) {
+                                Log.d(
+                                    "PesquisaViewModel",
+                                    "Categoria adicionada: ${category.nameCategory}"
+                                )
                                 allCategories.add(category)
                             }
                         }
                     }
 
-                    is State.Error -> {}
+                    is State.Error -> {
+                        Log.e("PesquisaViewModel", "Erro ao carregar categoria", result.exception)
+                    }
                 }
             }
 

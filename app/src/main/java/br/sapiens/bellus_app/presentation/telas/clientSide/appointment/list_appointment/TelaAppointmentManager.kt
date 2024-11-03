@@ -27,8 +27,9 @@ import br.sapiens.bellus_app.data.datasource.entity.AppointmentDTO
 import br.sapiens.bellus_app.presentation.ui.component.WhyDontFuckingLoading
 import br.sapiens.bellus_app.presentation.ui.component.appointment.AgendamentoCard
 import br.sapiens.bellus_app.presentation.ui.component.appointment.EmptyState
+import br.sapiens.bellus_app.presentation.ui.model.Duration
 import br.sapiens.bellus_app.presentation.viewmodels.ManagerAppointmentViewModel
-import br.sapiens.bellus_app.utils.calculateHourDifference
+import br.sapiens.bellus_app.utils.formatDuration
 import br.sapiens.bellus_app.utils.getDayOfMonth
 import br.sapiens.bellus_app.utils.getDayOfWeek
 import br.sapiens.bellus_app.utils.getMonth
@@ -41,7 +42,7 @@ fun TelaAppointmentManager(
     var qtdAppointment by remember { mutableIntStateOf(0) }
     val namesEstablishments = remember { mutableStateListOf<String>() }
     val servicePrices = remember { mutableStateListOf<Float>() }
-    val serviceTime = remember { mutableStateListOf<String>() }
+    val serviceDurations = remember { mutableStateListOf<Duration>() }
 
     Column(
         modifier = Modifier
@@ -81,11 +82,16 @@ fun TelaAppointmentManager(
                             val name = viewModel.getEstablishmentsName(appointment.establishmentId)
                             namesEstablishments.add(name)
 
-                            val price = viewModel.getServicePrice(appointment.serviceId)
-                            servicePrices.add(price)
+                            val dto = viewModel.getServicePrice(appointment.serviceId)
+                            val price = dto?.price
+                            servicePrices.add(price!!)
+                            serviceDurations.add(dto.duration)
                         }
                     }
-                    if (namesEstablishments.size == appointments.size && servicePrices.size == appointments.size) {
+                    if (namesEstablishments.size == appointments.size &&
+                        servicePrices.size == appointments.size &&
+                        servicePrices.size == serviceDurations.size
+                    ) {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -99,11 +105,7 @@ fun TelaAppointmentManager(
                                     weekDay = getDayOfWeek(appointment.scheduled_date),
                                     month = getMonth(appointment.scheduled_date),
                                     name = name,
-                                    time =
-                                    calculateHourDifference(
-                                        appointment.scheduled_date,
-                                        15
-                                    ),
+                                    time = formatDuration(serviceDurations[index]),
                                     price = price,
                                     status = appointment.statusRequest,
                                 )

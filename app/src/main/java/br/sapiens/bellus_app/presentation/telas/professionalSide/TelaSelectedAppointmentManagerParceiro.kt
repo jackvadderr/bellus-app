@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.telas.professionalSide
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,28 +33,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.dominio.model.AppointmentDetail
 import br.sapiens.bellus_app.presentation.ui.component.WhyDontFuckingLoading
-import br.sapiens.bellus_app.presentation.viewmodels.ParceiroAppointmentViewModel
+import br.sapiens.bellus_app.presentation.ui.model.Duration
+import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
+import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroSelectedAppointmentManagerViewModel
+import br.sapiens.bellus_app.utils.formatDuration
+import br.sapiens.bellus_app.utils.formatIso8601ToDateTimeString
 
 @Composable
 fun TelaSelectedAppointmentManagerParceiro(
-    viewModel: ParceiroAppointmentViewModel,
+    viewModel: ParceiroSelectedAppointmentManagerViewModel,
 //    navigateToSelectedAppointment: () -> Unit,
+    navigateToBack: () -> Unit,
 ) {
 
     val viewState by viewModel.uiState.collectAsState()
-    val theAction = remember { mutableStateOf<String>("") }
+    val serviceState = remember {
+        mutableStateOf<ServiceDetails?>(
+            ServiceDetails(
+                id = "",
+                name = "",
+                description = "",
+                duration = Duration(type = "Hour", value = 0.0f),
+                preco = 100f,
+                establishmentId = "id",
+            )
+        )
+    }
+    var name = remember { mutableStateOf("") }
+
 
     when (viewState) {
-        ParceiroAppointmentViewModel.ViewState.Error -> {}
-        is ParceiroAppointmentViewModel.ViewState.EstablishmentId -> {}
-        is ParceiroAppointmentViewModel.ViewState.LoadedAppointments -> {}
-        ParceiroAppointmentViewModel.ViewState.Loading -> {
+
+        ParceiroSelectedAppointmentManagerViewModel.ViewState.Loading -> {
             WhyDontFuckingLoading()
         }
 
-        is ParceiroAppointmentViewModel.ViewState.UpdateAppointment -> {}
-        is ParceiroAppointmentViewModel.ViewState.LoadedAppointment -> {
+        is ParceiroSelectedAppointmentManagerViewModel.ViewState.LoadedCurrentAppointment -> {
+            val appointment =
+                (viewState as ParceiroSelectedAppointmentManagerViewModel.ViewState.LoadedCurrentAppointment).appointment
+//            viewModel.triggerEvent(ParceiroSelectedAppointmentManagerViewModel.ViewEvent.LoadServices)
+            val serviceId: String = appointment.serviceId
+            LaunchedEffect(serviceId) {
+                serviceState.value = viewModel.getService(serviceId)
+                val theName = viewModel.getUserInfo()?.name
+                name.value = theName!!
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -60,25 +87,132 @@ fun TelaSelectedAppointmentManagerParceiro(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
-                    HeaderSection(name = "João Ricardo")
+//                    HeaderSection(name = "João Ricardo")
                     Spacer(modifier = Modifier.height(16.dp))
-                    AppointmentDetails(
-                        date = "Quarta-feira, 22 de Março de 2024 às 16:00.",
-                        duration = "Duração de 50 minutos."
+                    AppointmentDetailsSection(
+                        appointmentDetail = appointment,
+                        serviceDetail = serviceState.value!!,
+                        name = name.value,
+                        onBack = { navigateToBack() },
+                        onAccept = { /* Handle action "accepted" */ },
+                        onReject = { /* Handle action "rejected" */ },
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ActionButtonsSection(action = theAction.toString())
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SummarySection(service = "Corte + Barba", price = "R$ 50,00")
                 }
-                ConfirmationSection()
             }
+        }
+
+        else -> {
+            // Handle error state
         }
     }
 
 //    AppointmentScreen(action = "")
 }
 
+@Composable
+fun AppointmentDetailsSection(
+    appointmentDetail: AppointmentDetail,
+    serviceDetail: ServiceDetails,
+    name: String,
+    onBack: () -> Unit,
+    onAccept: () -> Unit,
+    onReject: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        IconButton(onClick = { onBack() }) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Surface(
+            modifier = Modifier.size(40.dp),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {
+            // Placeholder for Profile Image
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = name.take(1),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = name,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+    Column {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Appointment Details UI
+        Text(
+            text = formatIso8601ToDateTimeString(appointmentDetail.date),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Duração: ${formatDuration(serviceDetail.duration)}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Log.d(
+            "TelaSelectedAppointmentManagerParceiro",
+            "Service Duration: ${serviceDetail.duration}"
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Action Buttons Section
+        ActionButton(text = "Aceitar", onClick = onAccept)
+        ActionButton(text = "Recusar", onClick = onReject)
+//        ActionButton(text = "Completar", onClick = onComplete)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Summary Section
+        Text(
+            text = "Resumo",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Serviço: ${serviceDetail.name}\nR$ ${serviceDetail.preco}",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        // Confirmation Section
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Serviço finalizado?",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { /* TODO: Handle YES action */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+                ) {
+                    Text("SIM")
+                }
+                Button(
+                    onClick = { /* TODO: Handle NO action */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+                ) {
+                    Text("NÃO")
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun AppointmentScreen(
@@ -119,7 +253,7 @@ fun HeaderSection(name: String) {
 }
 
 @Composable
-fun AppointmentDetails(date: String, duration: String) {
+fun AppointmentDetailsUI(date: String, duration: String) {
     Column {
         Text(
             text = date,

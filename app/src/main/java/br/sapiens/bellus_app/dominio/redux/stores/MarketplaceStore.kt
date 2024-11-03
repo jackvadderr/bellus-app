@@ -37,6 +37,10 @@ class MarketplaceStore @Inject constructor(
         store.updateState(newMarketplaceState)
     }
 
+    fun getCurrentAppointmentId(): String? {
+        return store.stateFlow.value.marketplaceState.currentAppointmentId
+    }
+
     fun getEstablishmentsSummaries(): List<AvailableEstablishment> {
         return store.stateFlow.value.marketplaceState.establishmentSummaries
     }

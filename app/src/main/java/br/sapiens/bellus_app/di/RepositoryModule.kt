@@ -60,7 +60,6 @@ import br.sapiens.bellus_app.data.repository.implemetation.categories.GetCategor
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetAllEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetEstablishmentsSummariesRepositoryImpl
-import br.sapiens.bellus_app.data.repository.implemetation.establishment.GetSearchRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.PostEstablishmentRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.establishment.PutEstablishmentRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.login.CadastroRepositoryImpl
@@ -69,6 +68,7 @@ import br.sapiens.bellus_app.data.repository.implemetation.professional.GetProfe
 import br.sapiens.bellus_app.data.repository.implemetation.professional.PostProfessionalRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsByEstablishmentIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsSummaryByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.search.GetSearchRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.DeleteServiceRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServiceByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServicesByEstablishmentsRepositoryImpl

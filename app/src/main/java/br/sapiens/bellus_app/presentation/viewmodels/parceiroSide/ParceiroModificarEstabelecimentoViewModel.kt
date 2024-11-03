@@ -1,4 +1,4 @@
-package br.sapiens.bellus_app.presentation.viewmodels
+package br.sapiens.bellus_app.presentation.viewmodels.parceiroSide
 
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent

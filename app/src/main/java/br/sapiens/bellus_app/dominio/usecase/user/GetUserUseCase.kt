@@ -10,7 +10,7 @@ class GetUserUseCase @Inject constructor(
     private val getUserRepository: GetUserRepository
 ) : UseCase<Nothing, UserDTO>() {
 
-    override suspend fun invoke(input: Nothing?): State<UserDTO> {
+    public override suspend fun invoke(input: Nothing?): State<UserDTO> {
         return try {
             val userId = getUserRepository.getUserById()
             userId.let {

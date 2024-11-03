@@ -9,6 +9,7 @@ import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 
 sealed class MarketplaceEvent {
     data object Loading : MarketplaceEvent()
+    data class SuccessGetCurrentAppointmentId(val id: String) : MarketplaceEvent()
     data class SuccessGetEstablishmentSummary(val details: List<AvailableEstablishment>) :
         MarketplaceEvent()
 
