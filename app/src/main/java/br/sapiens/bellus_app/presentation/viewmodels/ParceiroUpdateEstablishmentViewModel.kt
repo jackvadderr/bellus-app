@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.dominio.model.event.PermissionEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.dominio.redux.stores.PermissionStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchemaEncapsulation
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutServiceSchemaEncapsulation
+import br.sapiens.bellus_app.dominio.sdk.storage.FirebaseStorageProvider
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.establishment.PutEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
@@ -42,11 +45,14 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
     private val deleteServiceUseCase: DeleteServiceUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
+    private val firebaseStorage: FirebaseStorageProvider,
+    val permissionStore: PermissionStore,
     coroutineScope: CoroutineScope
 ) : BaseViewModel<ParceiroUpdateEstablishmentViewModel.ViewState, ParceiroUpdateEstablishmentViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
     val scope = coroutineScope
+    val firebaseStorageProvider = firebaseStorage
 
     var supremeEstablishmentId: String? = null
     var supremeListServices: List<ServiceDetails> = emptyList()
@@ -80,6 +86,19 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
             is ViewEvent.DeleteService -> {
                 deleteService(event.service)
             }
+
+            ViewEvent.OpenGallery -> {
+                Log.d("ParceiroUpdateEstablishmentViewModel", "Triggering open gallery")
+                openGallery()
+            }
+        }
+    }
+
+    private fun openGallery() {
+        viewModelScope.launch {
+            Log.d("ParceiroUpdateEstablishmentViewModel", "OpenGallery function")
+            permissionStore.dispatch(PermissionEvent.RequestGalleryPermission(true))
+//            permissionStore.dispatch(PermissionEvent.OpenGallery(true))
         }
     }
 
@@ -285,6 +304,7 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         data class UpdateService(val service: ServiceDetails) : ViewEvent()
         data class DeleteService(val service: ServiceDetails) : ViewEvent()
         data class UpdateEstablishment(val updatedEstablishment: EstablishmentDetail) : ViewEvent()
+        data object OpenGallery : ViewEvent()
 
 
     }

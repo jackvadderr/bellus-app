@@ -1,6 +1,8 @@
 package br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio
 
 import CustomButton
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,8 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.data.datasource.entity.EnderecoPartialModel
+import br.sapiens.bellus_app.data.datasource.entity.EstadoEnum
+import br.sapiens.bellus_app.data.datasource.entity.Horario
+import br.sapiens.bellus_app.data.datasource.entity.HorarioFuncionamento
+import br.sapiens.bellus_app.dominio.sdk.storage.FirebaseStorageProvider
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
+import java.util.UUID
 
 @Composable
 fun PortfolioTab(images: List<String>) {
@@ -29,33 +39,97 @@ fun PortfolioTab(images: List<String>) {
 }
 
 @Composable
-fun PortfolioTabParceiro(images: List<String>) {
-// TODO: Aqui vai dá trabalhinho porque vamos ter que utilizar Firebase Storage para obter o link
+fun PortfolioTabParceiro(
+    images: List<String>,
+    onAddImageClick: (EstablishmentDetail) -> Unit,
+    firebaseStorageProvider: FirebaseStorageProvider,
+    openGallery: () -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    CreateNewImagePortfolio(
+        navigate = {
+            Log.d("PortfolioTabParceiro", "Botão de adicionar imagem clicado")
+            openGallery()
+        }
+    )
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-//        images.forEach { imageRes ->
-//            PortfolioImage(imageRes)
-//            Spacer(modifier = Modifier.height(16.dp))
-//        }
-        itemsIndexed(images) { index, imageRes ->
+        itemsIndexed(images) { _, imageRes ->
             PortfolioImage(imageRes)
             Spacer(modifier = Modifier.height(16.dp))
         }
-        item {
-            CreateNewImagePortfolio(
-                navigate = {
-//            currentService.value = null
-//            showDialog.value = true
-                }
-            )
-        }
-
     }
-    // TODO: Vamos redirecionar para uma nova tela e FDS
+}
 
+fun uploadImageToPortfolio(
+    imageUri: Uri,
+    firebaseStorageProvider: FirebaseStorageProvider,
+    onAddImageClick: (EstablishmentDetail) -> Unit
+) {
+    val storagePath = "portfolio/${UUID.randomUUID()}.jpg"
+    val result = firebaseStorageProvider.uploadFile(imageUri.toString())
+    result.observeForever { imageUrl ->
+        if (imageUrl != null) {
+            // Atualiza o EstablishmentDetail com o URL da imagem carregada
+            val updatedEstablishmentDetail = EstablishmentDetail(
+                id = "",
+                cnjp = "",
+                name = "",
+                address = EnderecoPartialModel(
+                    rua = "",
+                    numero = "",
+                    cidade = "",
+                    estado = EstadoEnum.RO,
+                    cep = ""
+                ),
+                telefone = emptyList(),
+                horario_funcionamento = HorarioFuncionamento(
+                    segunda_feira = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    terca_feira = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    quarta_feira = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    quinta_feira = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    sexta_feira = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    sabado = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    ),
+                    domingo = Horario(
+                        abertura = "",
+                        fechamento = ""
+                    )
+                ),
+                rating = 0.0f,
+                imageResource = listOf(imageUrl),
+                portfolio = listOf(imageUrl),
+                description = "",
+                profisisonal_dono = "",
+                profissionais_filiados = emptyList(),
+                totalReviews = 0,
+            )
+            onAddImageClick(updatedEstablishmentDetail)
+        } else {
+            // Trate o erro de upload
+        }
+    }
 }
 
 @Composable

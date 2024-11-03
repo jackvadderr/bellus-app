@@ -122,7 +122,17 @@ fun TelaUpdateEstablishmentParceiro(
                         )
 
 
-                        1 -> PortfolioTabParceiro(currentEstablishmentDetails.portfolio)
+                        1 -> PortfolioTabParceiro(
+                            currentEstablishmentDetails.portfolio,
+                            onAddImageClick = { /*viewModel.triggerEvent(ParceiroUpdateEstablishmentViewModel.ViewEvent.AddImage)*/ },
+                            firebaseStorageProvider = viewModel.firebaseStorageProvider,
+                            openGallery = {
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery
+                                )
+                            }
+                        )
+
                         2 -> AboutTab(
                             currentEstablishmentDetails.description,
                             currentEstablishmentDetails.telefone,
