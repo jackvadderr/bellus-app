@@ -26,6 +26,7 @@ import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toEstablishmentDetail
 import br.sapiens.bellus_app.utils.toPostServiceSchema
+import br.sapiens.bellus_app.utils.toPutEstablishmentSchema
 import br.sapiens.bellus_app.utils.toPutServiceSchema
 import br.sapiens.bellus_app.utils.toServiceDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +40,7 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
     private val userStore: UserProfileStore,
     private val getServicesUseCase: GetServicesByEstablishmentUseCase,
     private val getEstablishmentUseCase: GetEstablishmentByIdUseCase,
+    private val putEstablishmentUseCase: PutEstablishmentUseCase,
     private val updateEstablishmentUseCase: PutEstablishmentUseCase,
     private val postServiceUseCase: PostServiceUseCase,
     private val putServiceUseCase: PutServiceUseCase,
@@ -90,6 +92,10 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
             ViewEvent.OpenGallery -> {
                 Log.d("ParceiroUpdateEstablishmentViewModel", "Triggering open gallery")
                 openGallery()
+            }
+
+            is ViewEvent.UpdateAboutEstablihsment -> {
+                updateEstablishment(event.updatedEstablishment)
             }
         }
     }
@@ -161,6 +167,20 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         viewModelScope.launch {
             val establishmentId = fetchEstablishmentId() ?: return@launch
             loadEstablishmentData(establishmentId)
+        }
+    }
+
+    private fun updateEstablishment(updated: EstablishmentDetail) {
+        viewModelScope.launch {
+            val schema = updated.toPutEstablishmentSchema()
+            val encapulation = PutEstablishmentSchemaEncapsulation(
+                id = supremeEstablishmentId.toString(),
+                schema = schema
+            )
+            when (putEstablishmentUseCase.invoke(encapulation)) {
+                is State.Success -> {}
+                is State.Error -> {}
+            }
         }
     }
 
@@ -304,6 +324,9 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         data class UpdateService(val service: ServiceDetails) : ViewEvent()
         data class DeleteService(val service: ServiceDetails) : ViewEvent()
         data class UpdateEstablishment(val updatedEstablishment: EstablishmentDetail) : ViewEvent()
+        data class UpdateAboutEstablihsment(val updatedEstablishment: EstablishmentDetail) :
+            ViewEvent()
+
         data object OpenGallery : ViewEvent()
 
 

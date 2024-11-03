@@ -33,6 +33,28 @@ fun WorkingHoursSection(horarioFuncionamento: HorarioFuncionamento) {
     }
 }
 
+//@Composable
+//fun WorkingHoursSectionParceiro(horarioFuncionamento: HorarioFuncionamento) {
+//    Column(modifier = Modifier.fillMaxWidth()) {
+//        Text(
+//            text = "Horário de Funcionamento",
+//            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+//            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+//        )
+//
+//        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+//            HorarioDiaSemana("Segunda-feira", horarioFuncionamento.segunda_feira)
+//            HorarioDiaSemana("Terça-feira", horarioFuncionamento.terca_feira)
+//            HorarioDiaSemana("Quarta-feira", horarioFuncionamento.quarta_feira)
+//            HorarioDiaSemana("Quinta-feira", horarioFuncionamento.quinta_feira)
+//            HorarioDiaSemana("Sexta-feira", horarioFuncionamento.sexta_feira)
+//            HorarioDiaSemana("Sábado", horarioFuncionamento.sabado)
+//            HorarioDiaSemana("Domingo", horarioFuncionamento.domingo)
+//        }
+//    }
+//}
+
+
 @Composable
 fun HorarioDiaSemana(dia: String, horario: Horario?) {
     val textoHorario = if (horario != null) {

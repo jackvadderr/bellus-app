@@ -16,6 +16,7 @@ import br.sapiens.bellus_app.data.repository.model.GeneroEnum
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.CadastroSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.DeleteSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PostServiceSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutServiceSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCadastroSchema
@@ -69,6 +70,21 @@ fun EstabelecimentoDTO.toEstablishmentDetail(
         profisisonal_dono = this.profissionalDono,
 
         )
+}
+
+fun EstablishmentDetail.toPutEstablishmentSchema(): PutEstablishmentSchema {
+    return PutEstablishmentSchema(
+        cnpj = this.cnjp,
+        nome = this.name,
+        endereco = this.address,
+        telefone = this.telefone,
+        horario_funcionamento = this.horario_funcionamento,
+        imagem = this.imageResource,
+        portfolio = this.portfolio,
+        description = this.description,
+        profissionais_filiados = this.profissionais_filiados,
+        profissional_dono = this.profisisonal_dono,
+    )
 }
 
 fun ResponseProfessionalSchema.toProfessionalDTO(): ProfessionalDTO {

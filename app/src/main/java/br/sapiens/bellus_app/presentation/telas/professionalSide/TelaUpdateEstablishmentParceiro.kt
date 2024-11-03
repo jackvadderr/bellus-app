@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.ParceiroImageUpdateSlider
-import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.about.AboutTab
+import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.about.AboutTabParceiro
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTabParceiro
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.ServiceInfoSection
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.UpdateServiceListParceiro
@@ -133,10 +133,18 @@ fun TelaUpdateEstablishmentParceiro(
                             }
                         )
 
-                        2 -> AboutTab(
-                            currentEstablishmentDetails.description,
-                            currentEstablishmentDetails.telefone,
-                            currentEstablishmentDetails.horario_funcionamento
+                        2 -> AboutTabParceiro(
+//                            currentEstablishmentDetails.description,
+//                            currentEstablishmentDetails.telefone,
+//                            currentEstablishmentDetails.horario_funcionamento
+                            currentEstablishmentDetails,
+                            onSaveClick = {
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateAboutEstablihsment(
+                                        it
+                                    )
+                                )
+                            }
                         )
                     }
                 }
