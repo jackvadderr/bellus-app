@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.utils
 import android.annotation.SuppressLint
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -129,4 +130,10 @@ fun formatDuration(duration: br.sapiens.bellus_app.presentation.ui.model.Duratio
         minutes > 0 -> "${minutes}m"
         else -> "0m"
     }
+}
+
+fun getCurrentDateTimeIso8601(): String {
+    val currentDateTime = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    return currentDateTime.format(formatter)
 }

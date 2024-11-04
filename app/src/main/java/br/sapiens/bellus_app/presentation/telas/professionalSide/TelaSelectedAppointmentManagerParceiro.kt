@@ -40,6 +40,7 @@ import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroSelectedAppointmentManagerViewModel
 import br.sapiens.bellus_app.utils.formatDuration
 import br.sapiens.bellus_app.utils.formatIso8601ToDateTimeString
+import br.sapiens.bellus_app.utils.getCurrentDateTimeIso8601
 
 @Composable
 fun TelaSelectedAppointmentManagerParceiro(
@@ -94,8 +95,42 @@ fun TelaSelectedAppointmentManagerParceiro(
                         serviceDetail = serviceState.value!!,
                         name = name.value,
                         onBack = { navigateToBack() },
-                        onAccept = { /* Handle action "accepted" */ },
-                        onReject = { /* Handle action "rejected" */ },
+                        onAccept = {
+                            viewModel.triggerEvent(
+                                ParceiroSelectedAppointmentManagerViewModel.ViewEvent.UpdateAppointment(
+                                    newStatus = "Aceito",
+                                    completionData = ""
+                                )
+                            )
+                            navigateToBack()
+                        },
+                        onReject = {
+                            viewModel.triggerEvent(
+                                ParceiroSelectedAppointmentManagerViewModel.ViewEvent.UpdateAppointment(
+                                    newStatus = "Rejeitado",
+                                    completionData = ""
+                                )
+                            )
+                            navigateToBack()
+                        },
+                        onCancel = {
+                            viewModel.triggerEvent(
+                                ParceiroSelectedAppointmentManagerViewModel.ViewEvent.UpdateAppointment(
+                                    newStatus = "Cancelado",
+                                    completionData = ""
+                                )
+                            )
+                            navigateToBack()
+                        },
+                        onComplete = {
+                            viewModel.triggerEvent(
+                                ParceiroSelectedAppointmentManagerViewModel.ViewEvent.UpdateAppointment(
+                                    newStatus = "Concluído",
+                                    completionData = getCurrentDateTimeIso8601()
+                                )
+                            )
+                            navigateToBack()
+                        }
                     )
                 }
             }
@@ -117,6 +152,8 @@ fun AppointmentDetailsSection(
     onBack: () -> Unit,
     onAccept: () -> Unit,
     onReject: () -> Unit,
+    onCancel: () -> Unit,
+    onComplete: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -168,7 +205,7 @@ fun AppointmentDetailsSection(
         // Action Buttons Section
         ActionButton(text = "Aceitar", onClick = onAccept)
         ActionButton(text = "Recusar", onClick = onReject)
-//        ActionButton(text = "Completar", onClick = onComplete)
+//        ActionButton(text = "Cancelar", onClick = onCancel)
         Spacer(modifier = Modifier.height(16.dp))
 
         // Summary Section
@@ -198,13 +235,13 @@ fun AppointmentDetailsSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(
-                    onClick = { /* TODO: Handle YES action */ },
+                    onClick = { onComplete() },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
                 ) {
                     Text("SIM")
                 }
                 Button(
-                    onClick = { /* TODO: Handle NO action */ },
+                    onClick = { /*Simplesmente não faz nada*/ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
                 ) {
                     Text("NÃO")

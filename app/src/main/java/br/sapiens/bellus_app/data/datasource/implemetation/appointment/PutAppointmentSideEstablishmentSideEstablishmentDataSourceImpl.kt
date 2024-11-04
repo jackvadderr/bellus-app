@@ -9,7 +9,7 @@ import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchemeEnc
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toAppointmentDTO
-import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -26,12 +26,13 @@ class PutAppointmentSideEstablishmentSideEstablishmentDataSourceImpl @Inject con
             try {
                 Log.d("PutAppointmentDataSourceImpl", "Token disponível")
 
-                val url = provider.getBaseUrl().appendPath("appointments/${schema.id}")
+                val url =
+                    provider.getBaseUrl().appendPath("appointments/establishment/${schema.id}")
                 Log.d("PutAppointmentDataSourceImpl", "URL: $url")
 
                 val client = provider.client
-                Log.d("PutAppointmentDataSourceImpl", "Método: POST")
-                val response = client.post(url) {
+                Log.d("PutAppointmentDataSourceImpl", "Método: PUT")
+                val response = client.put(url) {
                     contentType(ContentType.Application.Json)
                     setBody(schema.schema)
                 }

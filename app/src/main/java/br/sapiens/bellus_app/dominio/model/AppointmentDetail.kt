@@ -6,5 +6,6 @@ data class AppointmentDetail(
     val serviceId: String,
     val date: String,
     val time: String,
-    val statusRequest: String = "Pendente"
+    val statusRequest: String = "Pendente",
+    val completionDate: String = "",
 )

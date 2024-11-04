@@ -17,6 +17,7 @@ import br.sapiens.bellus_app.dominio.model.AppointmentDetail
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.CadastroSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.DeleteSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PostServiceSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutEstablishmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutServiceSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseAppointmentSchema
@@ -282,5 +283,24 @@ fun AppointmentDTO.toAppointmentDetail(): AppointmentDetail {
         date = this.scheduled_date,
         time = this.scheduled_date,
         statusRequest = this.statusRequest
+    )
+}
+
+fun AppointmentDetail.toAppointmentDTO(id: String): AppointmentDTO {
+    return AppointmentDTO(
+        id = id,
+        userId = this.userId,
+        establishmentId = this.establishmentId,
+        serviceId = this.serviceId,
+        scheduled_date = this.date,
+        statusRequest = this.statusRequest,
+        completionDate = this.completionDate,
+    )
+}
+
+fun AppointmentDetail.toPutAppointmentSchema(): PutAppointmentSchema {
+    return PutAppointmentSchema(
+        status_request = this.statusRequest,
+        completion_date = this.completionDate,
     )
 }

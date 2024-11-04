@@ -10,7 +10,10 @@ import br.sapiens.bellus_app.data.datasource.entity.UserDTO
 import br.sapiens.bellus_app.dominio.model.AppointmentDetail
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchemeEncapsulation
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentByIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.appointment.PutAppointmentSideEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.user.GetUserUseCase
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
@@ -26,10 +29,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ParceiroSelectedAppointmentManagerViewModel @Inject constructor(
     private val getAppointmentByIdUseCase: GetAppointmentByIdUseCase,
-    private val userStore: UserProfileStore,
+    private val putAppointment: PutAppointmentSideEstablishmentUseCase,
     private val getServiceById: GetServiceByIdUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val marketplaceStore: MarketplaceStore,
+    private val userStore: UserProfileStore,
 ) : BaseViewModel<ParceiroSelectedAppointmentManagerViewModel.ViewState, ParceiroSelectedAppointmentManagerViewModel.ViewEvent>() {
 
     private val _serviceList = mutableListOf<ServiceDTO>()
@@ -67,17 +71,41 @@ class ParceiroSelectedAppointmentManagerViewModel @Inject constructor(
                 }
             }
 
-//            ViewEvent.LoadServices -> {
-//                supremeServiceId?.let { id ->
-//                    if (id.isNotEmpty()) {
-//                        Log.d(
-//                            "ParceiroSelectedAppointmentManagerViewModel",
-//                            "Fetching service details for ID: $id"
-//                        )
-//
-//                    }
-//                }
-//            }
+            is ViewEvent.UpdateAppointment -> {
+                supremeAppointmentId?.let { id ->
+                    if (id.isNotEmpty()) {
+                        updateAppointment(
+                            id = id,
+                            newStatus = event.newStatus,
+                            completionData = event.completionData
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun updateAppointment(id: String, newStatus: String, completionData: String) {
+        viewModelScope.launch {
+            val schema = PutAppointmentSchema(
+                status_request = newStatus,
+                completion_date = completionData
+            )
+            val encapsulation = PutAppointmentSchemeEncapsulation(
+                id = id,
+                schema = schema,
+            )
+            when (putAppointment.invoke(encapsulation)) {
+                is State.Success -> {
+                    Log.d(
+                        "ParceiroSelectedAppointmentManagerViewModel",
+                        "Appointment updated successfully"
+                    )
+                }
+
+                is State.Error -> {}
+            }
         }
     }
 
@@ -195,6 +223,10 @@ class ParceiroSelectedAppointmentManagerViewModel @Inject constructor(
 
     sealed class ViewEvent : IViewEvent {
         data object Loading : ViewEvent()
+        data class UpdateAppointment(
+            val newStatus: String,
+            val completionData: String
+        ) : ViewEvent()
 
     }
 }
