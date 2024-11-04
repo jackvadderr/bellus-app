@@ -135,7 +135,14 @@ fun TelaSelectionMarketplace(
                         1 -> ReviewsTab(
                             itemsReviewsDetails = itemsReviewsDetails,
                             averagedReviewsDetails = currentEstablishmentDetails.rating,
-                            totalReviewsDetails = currentEstablishmentDetails.totalReviews
+                            totalReviewsDetails = currentEstablishmentDetails.totalReviews,
+                            onSubmitReview = { comment, rating ->
+                                viewModel.submitReview(
+                                    comment,
+                                    rating
+                                )
+                                navigateToBack()
+                            }
                         )
 
                         2 -> PortfolioTab(currentEstablishmentDetails.portfolio)

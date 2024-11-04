@@ -26,6 +26,7 @@ import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategoryNameSch
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseCategorySchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseEstablishmentSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseProfessionalSchema
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseReviewsSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseSearchSchema
 import br.sapiens.bellus_app.dominio.sdk.network.schemas.ResponseServiceSchema
 import br.sapiens.bellus_app.presentation.ui.component.sections.Category
@@ -302,5 +303,18 @@ fun AppointmentDetail.toPutAppointmentSchema(): PutAppointmentSchema {
     return PutAppointmentSchema(
         status_request = this.statusRequest,
         completion_date = this.completionDate,
+    )
+}
+
+fun ResponseReviewsSchema.toReviewsDTO(): ReviewsDTO {
+    return ReviewsDTO(
+        id = this.id,
+        name = this.name,
+        comment = this.comment,
+        rating = this.rating,
+        updated_at = this.updated_at,
+        user_id = this.user_id,
+        establishment_id = this.establishment_id,
+        created_at = this.created_at,
     )
 }

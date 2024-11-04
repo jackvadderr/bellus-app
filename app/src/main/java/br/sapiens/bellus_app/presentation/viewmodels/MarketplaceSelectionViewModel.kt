@@ -11,9 +11,12 @@ import br.sapiens.bellus_app.data.datasource.entity.ReviewsSummary
 import br.sapiens.bellus_app.data.datasource.entity.ServiceDTO
 import br.sapiens.bellus_app.dominio.model.event.MarketplaceEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
+import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
+import br.sapiens.bellus_app.dominio.sdk.network.schemas.PostReviewsSchema
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.PostReviewsUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentUseCase
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
@@ -29,11 +32,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarketplaceSelectionViewModel @Inject constructor(
-    private val marketplaceStore: MarketplaceStore,
     private val serviceUseCase: GetServicesByEstablishmentUseCase,
     private val establishmentUseCase: GetEstablishmentByIdUseCase,
     private val reviewsUseCase: GetReviewsByEstablishmentIdUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
+    private val postReviewsUseCase: PostReviewsUseCase,
+    private val marketplaceStore: MarketplaceStore,
+    private val userStore: UserProfileStore,
     coroutineScope: CoroutineScope
 ) : BaseViewModel<MarketplaceSelectionViewModel.ViewState, MarketplaceSelectionViewModel.ViewEvent>() {
 
@@ -43,6 +48,32 @@ class MarketplaceSelectionViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             loadUser()
+        }
+    }
+
+
+    fun submitReview(comment: String, rating: Float) {
+        viewModelScope.launch {
+            val currentEstablishmentId = marketplaceStore.getCurrentEstablishment()?.id
+            val userId = userStore.getCurrentUserId()
+
+            if (!currentEstablishmentId.isNullOrEmpty() && !userId.isNullOrEmpty()) {
+                val schema = PostReviewsSchema(
+                    establishment_id = currentEstablishmentId,
+                    user_id = userId,
+                    rating = rating,
+                    comment = comment
+                )
+                when (val result = postReviewsUseCase.invoke(schema)) {
+                    is State.Success -> {
+
+                    }
+
+                    is State.Error -> {
+                        
+                    }
+                }
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostProfessionalDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostReviewsDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutAppointmentSideEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutEstablishmentDataSource
@@ -43,6 +44,7 @@ import br.sapiens.bellus_app.data.datasource.implemetation.professional.GetProfe
 import br.sapiens.bellus_app.data.datasource.implemetation.professional.PostProfessionaldDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsByEstablishmentIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.review.GetReviewsSummaryByEstablishmentIdDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.review.PostReviewsDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.search.GetSearchDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.DeleteServiceDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServiceByIdDataSourceImpl
@@ -211,4 +213,10 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): DeleteServiceDataSource =
         DeleteServiceDataSourceImpl(provider)
+
+    @Provides
+    fun providePostReviewsDataSource(
+        provider: KtorClientProvider
+    ): PostReviewsDataSource =
+        PostReviewsDataSourceImpl(provider)
 }

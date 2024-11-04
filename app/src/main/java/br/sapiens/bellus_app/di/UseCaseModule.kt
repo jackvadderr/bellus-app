@@ -21,6 +21,7 @@ import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostProfessionalRepository
+import br.sapiens.bellus_app.data.repository.base.PostReviewsRepository
 import br.sapiens.bellus_app.data.repository.base.PostServiceRepository
 import br.sapiens.bellus_app.data.repository.base.PutAppointmentSideEstablishmentRepository
 import br.sapiens.bellus_app.data.repository.base.PutEstablishmentRepository
@@ -42,6 +43,7 @@ import br.sapiens.bellus_app.dominio.usecase.professional.GetProfessionalByUserI
 import br.sapiens.bellus_app.dominio.usecase.professional.PostProfessionalUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsByEstablishmentIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.review.PostReviewsUseCase
 import br.sapiens.bellus_app.dominio.usecase.search.GetSearchUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.DeleteServiceUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
@@ -203,4 +205,10 @@ class UseCaseModule {
     fun provideDeleteServiceUseCase(
         repository: DeleteServiceRepository
     ) = DeleteServiceUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun providePostReviewsUseCasse(
+        repository: PostReviewsRepository
+    ) = PostReviewsUseCase(repository)
 }

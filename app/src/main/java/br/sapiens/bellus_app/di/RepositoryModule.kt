@@ -21,6 +21,7 @@ import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostProfessionalDataSource
+import br.sapiens.bellus_app.data.datasource.base.PostReviewsDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostServiceDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutAppointmentSideEstablishmentDataSource
 import br.sapiens.bellus_app.data.datasource.base.PutEstablishmentDataSource
@@ -46,6 +47,7 @@ import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostEstablishmentRepository
 import br.sapiens.bellus_app.data.repository.base.PostProfessionalRepository
+import br.sapiens.bellus_app.data.repository.base.PostReviewsRepository
 import br.sapiens.bellus_app.data.repository.base.PostServiceRepository
 import br.sapiens.bellus_app.data.repository.base.PutAppointmentSideEstablishmentRepository
 import br.sapiens.bellus_app.data.repository.base.PutEstablishmentRepository
@@ -68,6 +70,7 @@ import br.sapiens.bellus_app.data.repository.implemetation.professional.GetProfe
 import br.sapiens.bellus_app.data.repository.implemetation.professional.PostProfessionalRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsByEstablishmentIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.review.GetReviewsSummaryByEstablishmentIdRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.review.PostReviewsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.search.GetSearchRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.DeleteServiceRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServiceByIdRepositoryImpl
@@ -234,4 +237,10 @@ class RepositoryModule {
         data: DeleteServiceDataSource
     ): DeleteServiceRepository =
         DeleteServiceRepositoryImpl(data)
+
+    @Provides
+    fun providePostReviewsRepository(
+        data: PostReviewsDataSource
+    ): PostReviewsRepository =
+        PostReviewsRepositoryImpl(data)
 }
