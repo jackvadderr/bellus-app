@@ -16,6 +16,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishme
 import br.sapiens.bellus_app.data.datasource.base.GetSearchDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServiceByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetUserByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
@@ -42,6 +43,7 @@ import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmen
 import br.sapiens.bellus_app.data.repository.base.GetSearchRepository
 import br.sapiens.bellus_app.data.repository.base.GetServiceByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
+import br.sapiens.bellus_app.data.repository.base.GetUserByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
@@ -77,6 +79,7 @@ import br.sapiens.bellus_app.data.repository.implemetation.services.GetServiceBy
 import br.sapiens.bellus_app.data.repository.implemetation.services.GetServicesByEstablishmentsRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.PostServiceRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.services.PutServiceRepositoryImpl
+import br.sapiens.bellus_app.data.repository.implemetation.user.GetUserByIdRepositoryImpl
 import br.sapiens.bellus_app.data.repository.implemetation.user.GetUserRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -243,4 +246,10 @@ class RepositoryModule {
         data: PostReviewsDataSource
     ): PostReviewsRepository =
         PostReviewsRepositoryImpl(data)
+
+    @Provides
+    fun provideGetUserByIdRepository(
+        data: GetUserByIdDataSource
+    ): GetUserByIdRepository =
+        GetUserByIdRepositoryImpl(data)
 }

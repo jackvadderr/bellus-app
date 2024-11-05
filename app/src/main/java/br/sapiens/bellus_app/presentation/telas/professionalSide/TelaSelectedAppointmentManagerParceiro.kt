@@ -74,11 +74,10 @@ fun TelaSelectedAppointmentManagerParceiro(
         is ParceiroSelectedAppointmentManagerViewModel.ViewState.LoadedCurrentAppointment -> {
             val appointment =
                 (viewState as ParceiroSelectedAppointmentManagerViewModel.ViewState.LoadedCurrentAppointment).appointment
-//            viewModel.triggerEvent(ParceiroSelectedAppointmentManagerViewModel.ViewEvent.LoadServices)
             val serviceId: String = appointment.serviceId
             LaunchedEffect(serviceId) {
                 serviceState.value = viewModel.getService(serviceId)
-                val theName = viewModel.getUserInfo()?.name
+                val theName = viewModel.getUserInfo(appointment.userId)?.name
                 name.value = theName!!
             }
             Column(

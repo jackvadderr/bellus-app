@@ -16,6 +16,7 @@ import br.sapiens.bellus_app.data.datasource.base.GetReviewsSummaryByEstablishme
 import br.sapiens.bellus_app.data.datasource.base.GetSearchDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServiceByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetServicesByEstablishmentDataSource
+import br.sapiens.bellus_app.data.datasource.base.GetUserByIdDataSource
 import br.sapiens.bellus_app.data.datasource.base.GetUserDataSource
 import br.sapiens.bellus_app.data.datasource.base.LoginDataSource
 import br.sapiens.bellus_app.data.datasource.base.PostAppointmentDataSource
@@ -51,6 +52,7 @@ import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServiceBy
 import br.sapiens.bellus_app.data.datasource.implemetation.services.GetServicesByEstablishmentDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.PostServiceDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.services.PutServiceDataSourceImpl
+import br.sapiens.bellus_app.data.datasource.implemetation.user.GetUserByIdDataSourceImpl
 import br.sapiens.bellus_app.data.datasource.implemetation.user.GetUserDataSourceImpl
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.sdk.network.KtorClientProvider
@@ -219,4 +221,10 @@ class DataSourceModule {
         provider: KtorClientProvider
     ): PostReviewsDataSource =
         PostReviewsDataSourceImpl(provider)
+
+    @Provides
+    fun provideGetUserByIdDataSource(
+        provider: KtorClientProvider
+    ): GetUserByIdDataSource =
+        GetUserByIdDataSourceImpl(provider)
 }

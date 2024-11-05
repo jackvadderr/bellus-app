@@ -15,7 +15,7 @@ import br.sapiens.bellus_app.dominio.sdk.network.schemas.PutAppointmentSchemeEnc
 import br.sapiens.bellus_app.dominio.usecase.appointment.GetAppointmentByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.appointment.PutAppointmentSideEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
-import br.sapiens.bellus_app.dominio.usecase.user.GetUserUseCase
+import br.sapiens.bellus_app.dominio.usecase.user.GetUserByIdUseCase
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toAppointmentDetail
@@ -31,7 +31,8 @@ class ParceiroSelectedAppointmentManagerViewModel @Inject constructor(
     private val getAppointmentByIdUseCase: GetAppointmentByIdUseCase,
     private val putAppointment: PutAppointmentSideEstablishmentUseCase,
     private val getServiceById: GetServiceByIdUseCase,
-    private val getUserUseCase: GetUserUseCase,
+//    private val getUserUseCase: GetUserUseCase,
+    private val getUserByIdUseCase: GetUserByIdUseCase,
     private val marketplaceStore: MarketplaceStore,
     private val userStore: UserProfileStore,
 ) : BaseViewModel<ParceiroSelectedAppointmentManagerViewModel.ViewState, ParceiroSelectedAppointmentManagerViewModel.ViewEvent>() {
@@ -189,10 +190,10 @@ class ParceiroSelectedAppointmentManagerViewModel @Inject constructor(
         }
     }
 
-    suspend fun getUserInfo(): UserDTO? {
+    suspend fun getUserInfo(id: String): UserDTO? {
         return withContext(Dispatchers.IO) {
             var user: UserDTO? = null
-            when (val result = getUserUseCase.invoke(null)) {
+            when (val result = getUserByIdUseCase.invoke(id)) {
                 is State.Success -> {
                     Log.d(
                         "ParceiroSelectedAppointmentManagerViewModel",

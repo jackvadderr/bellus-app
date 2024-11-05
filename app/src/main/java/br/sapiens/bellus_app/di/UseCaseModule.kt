@@ -16,6 +16,7 @@ import br.sapiens.bellus_app.data.repository.base.GetReviewsSummaryByEstalishmen
 import br.sapiens.bellus_app.data.repository.base.GetSearchRepository
 import br.sapiens.bellus_app.data.repository.base.GetServiceByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetServicesByEstablishmentsRepository
+import br.sapiens.bellus_app.data.repository.base.GetUserByIdRepository
 import br.sapiens.bellus_app.data.repository.base.GetUserRepository
 import br.sapiens.bellus_app.data.repository.base.LoginRepository
 import br.sapiens.bellus_app.data.repository.base.PostAppointmentRepository
@@ -50,6 +51,7 @@ import br.sapiens.bellus_app.dominio.usecase.service.GetServiceByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.PostServiceUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.PutServiceUseCase
+import br.sapiens.bellus_app.dominio.usecase.user.GetUserByIdUseCase
 import br.sapiens.bellus_app.dominio.usecase.user.GetUserUseCase
 import dagger.Module
 import dagger.Provides
@@ -211,4 +213,10 @@ class UseCaseModule {
     fun providePostReviewsUseCasse(
         repository: PostReviewsRepository
     ) = PostReviewsUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetUserByIdUseCase(
+        repository: GetUserByIdRepository
+    ) = GetUserByIdUseCase(repository)
 }
