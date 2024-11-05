@@ -186,6 +186,9 @@ dependencies {
     // https://mvnrepository.com/artifact/androidx.compose.ui/ui-viewbinding
     runtimeOnly("androidx.compose.ui:ui-viewbinding:1.7.2")
 
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
+
 }
 
 kapt {

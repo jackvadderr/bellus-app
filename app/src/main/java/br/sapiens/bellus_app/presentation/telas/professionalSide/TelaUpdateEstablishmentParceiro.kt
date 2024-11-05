@@ -1,6 +1,10 @@
 package br.sapiens.bellus_app.presentation.telas.professionalSide
 
+import android.Manifest
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +43,47 @@ fun TelaUpdateEstablishmentParceiro(
 ) {
     val viewState by viewModel.uiState.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d("TelaUpdateEstablishmentParceiro", "Camera permission granted")
+        } else {
+            Log.d("TelaUpdateEstablishmentParceiro", "Camera permission denied")
+        }
+    }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            Log.d("TelaUpdateEstablishmentParceiro", "Selected image URI: $uri")
+        }
+    }
+
+    val galleryPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            Log.d("TelaUpdateEstablishmentParceiro", "Gallery permission denied")
+        }
+    }
+
+//    LaunchedEffect(viewModel) {
+////        viewModel.checkAndRequestCameraPermission(
+////            context = viewModel.myContext,
+////            permission = Manifest.permission.CAMERA,
+////            launcher = cameraPermissionLauncher
+////        )
+//        viewModel.checkAndRequestGalleryPermission(
+//            context = viewModel.myContext,
+//            permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+//            launcher = galleryPermissionLauncher
+//        )
+//    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (viewState) {
@@ -127,8 +172,17 @@ fun TelaUpdateEstablishmentParceiro(
                             onAddImageClick = { /*viewModel.triggerEvent(ParceiroUpdateEstablishmentViewModel.ViewEvent.AddImage)*/ },
                             firebaseStorageProvider = viewModel.firebaseStorageProvider,
                             openGallery = {
+//                                viewModel.checkAndRequestGalleryPermission(
+//                                    context = viewModel.myContext,
+//                                    permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                    launcher = galleryPermissionLauncher
+//                                )
                                 viewModel.triggerEvent(
-                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery(
+                                        context = viewModel.myContext,
+                                        permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        launcher = galleryPermissionLauncher
+                                    )
                                 )
                             }
                         )

@@ -1,11 +1,14 @@
 package br.sapiens.bellus_app.presentation.viewmodels.parceiroSide
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
-import br.sapiens.bellus_app.dominio.model.event.PermissionEvent
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.PermissionStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
@@ -49,12 +52,14 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
     private val firebaseStorage: FirebaseStorageProvider,
     val permissionStore: PermissionStore,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    context: Context,
 ) : BaseViewModel<ParceiroUpdateEstablishmentViewModel.ViewState, ParceiroUpdateEstablishmentViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
     val scope = coroutineScope
     val firebaseStorageProvider = firebaseStorage
+    val myContext = context
 
     var supremeEstablishmentId: String? = null
     var supremeListServices: List<ServiceDetails> = emptyList()
@@ -89,9 +94,16 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
                 deleteService(event.service)
             }
 
-            ViewEvent.OpenGallery -> {
+            is ViewEvent.OpenGallery -> {
                 Log.d("ParceiroUpdateEstablishmentViewModel", "Triggering open gallery")
-                openGallery()
+                checkAndRequestGalleryPermission(
+                    event.context,
+                    event.permission,
+                    event.launcher
+                )
+//                context: Context,
+//                val permission: String,
+//                val launcher:
             }
 
             is ViewEvent.UpdateAboutEstablihsment -> {
@@ -100,11 +112,33 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         }
     }
 
-    private fun openGallery() {
-        viewModelScope.launch {
-            Log.d("ParceiroUpdateEstablishmentViewModel", "OpenGallery function")
-            permissionStore.dispatch(PermissionEvent.RequestGalleryPermission(true))
-//            permissionStore.dispatch(PermissionEvent.OpenGallery(true))
+    fun checkAndRequestGalleryPermission(
+        context: Context,
+        permission: String,
+        launcher: ManagedActivityResultLauncher<String, Boolean>
+    ) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(context, permission)
+        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            // Open gallery because permission is already granted
+            launcher.launch(permission)
+            launcher.launch("image/*")
+        } else {
+            // Request a permission
+            launcher.launch(permission)
+        }
+    }
+
+    fun checkAndRequestCameraPermission(
+        context: Context,
+        permission: String,
+        launcher: ManagedActivityResultLauncher<String, Boolean>
+    ) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(context, permission)
+        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            // Open camera because permission is already granted
+        } else {
+            // Request a permission
+            launcher.launch(permission)
         }
     }
 
@@ -327,7 +361,11 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         data class UpdateAboutEstablihsment(val updatedEstablishment: EstablishmentDetail) :
             ViewEvent()
 
-        data object OpenGallery : ViewEvent()
+        data class OpenGallery(
+            val context: Context,
+            val permission: String,
+            val launcher: ManagedActivityResultLauncher<String, Boolean>
+        ) : ViewEvent()
 
 
     }
