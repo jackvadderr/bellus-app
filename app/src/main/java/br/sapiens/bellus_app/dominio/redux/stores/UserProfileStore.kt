@@ -2,6 +2,7 @@ package br.sapiens.bellus_app.dominio.redux.stores
 
 import android.content.Context
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
+import br.sapiens.bellus_app.dominio.model.state.ClientInfo
 import br.sapiens.bellus_app.dominio.model.state.UserProfileType
 import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.reducer.UserProfileReducer
@@ -45,7 +46,11 @@ class UserProfileStore @Inject constructor(
         return store.stateFlow.value.userProfileState.professionalInfo?.establishmentId
     }
 
-    fun getClientInfo(): String? {
+    fun getCurrentClientInfo(): ClientInfo? {
+        return store.stateFlow.value.userProfileState.clientInfo
+    }
+
+    fun getCurrentClientInfoName(): String? {
         return store.stateFlow.value.userProfileState.clientInfo?.name
     }
 
@@ -55,5 +60,12 @@ class UserProfileStore @Inject constructor(
 
     fun getCurrentUserId(): String? {
         return store.stateFlow.value.userProfileState.clientInfo?.id
+    }
+
+    suspend fun setNameClientInfo(name: String) {
+        val currentState: ApplicationState = store.stateFlow.value
+        val newClientInfo = currentState.userProfileState.clientInfo?.copy(name = name)
+        val newUserProfileState = currentState.userProfileState.copy(clientInfo = newClientInfo)
+        store.updateState(currentState.copy(userProfileState = newUserProfileState))
     }
 }

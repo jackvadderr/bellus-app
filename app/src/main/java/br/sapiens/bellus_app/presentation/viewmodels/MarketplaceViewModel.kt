@@ -1,6 +1,7 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -11,6 +12,7 @@ import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.establishment.GetEstablishmentsSummariesUseCase
 import br.sapiens.bellus_app.dominio.usecase.review.GetReviewsSummaryByEstablishmentIdUseCase
+import br.sapiens.bellus_app.dominio.usecase.user.GetUserUseCase
 import br.sapiens.bellus_app.presentation.ui.model.AvailableEstablishment
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toAvailableEstablishment
@@ -22,11 +24,15 @@ import javax.inject.Inject
 class MarketplaceViewModel @Inject constructor(
     private val establishmentSummariesUseCase: GetEstablishmentsSummariesUseCase,
     private val reviewsSummaryUseCase: GetReviewsSummaryByEstablishmentIdUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val marketplaceStore: MarketplaceStore,
     private val userDataStore: UserProfileStore
 ) : BaseViewModel<MarketplaceViewModel.ViewState, MarketplaceViewModel.ViewEvent>() {
 
     val mkt = marketplaceStore
+
+    //    var username: String? = null
+    var username = mutableStateOf("")
 
     init {
         triggerEvent(ViewEvent.AvailableEstablishmentsLoad)
@@ -42,7 +48,7 @@ class MarketplaceViewModel @Inject constructor(
         Log.d("MarketplaceViewModel", "Triggering event: $event")
         when (event) {
             is ViewEvent.AvailableEstablishmentsLoad -> loadUser()
-            is ViewEvent.UserLoad -> {
+            is ViewEvent.LoadUserName -> {
                 getUserName()
             }
         }
@@ -50,11 +56,23 @@ class MarketplaceViewModel @Inject constructor(
 
     private fun getUserName() {
         viewModelScope.launch {
-            val username = userDataStore.getClientInfo()
-            if (username != null) {
-                setState { ViewState.UserLoaded(username) }
+            val clientInfoName = userDataStore.getCurrentClientInfoName()
+            if (!clientInfoName.isNullOrEmpty()) {
+                setState { ViewState.UserLoaded(clientInfoName) }
+                username.value = clientInfoName
             } else {
-                Log.e("MarketplaceViewModel", "User not logged in")
+                when (val result = getUserUseCase.invoke(null)) {
+                    is State.Success -> {
+                        userDataStore.setNameClientInfo(result.data.name)
+                        Log.d("MarketplaceViewModel", "User Profile name: ${result.data.name}")
+                        setState { ViewState.UserLoaded(result.data.name) }
+                        username.value = result.data.name
+                    }
+
+                    is State.Error -> {
+
+                    }
+                }
             }
         }
     }
@@ -112,6 +130,6 @@ class MarketplaceViewModel @Inject constructor(
 
     sealed class ViewEvent : IViewEvent {
         data object AvailableEstablishmentsLoad : ViewEvent()
-        data class UserLoad(val name: String) : ViewEvent()
+        data object LoadUserName : ViewEvent()
     }
 }

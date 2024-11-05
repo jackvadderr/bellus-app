@@ -39,9 +39,13 @@ fun TelaMarketplace(
 ) {
     val scrollState = rememberScrollState()
     val viewState by viewModel.uiState.collectAsState()
-    var user by remember { mutableStateOf<String>("Usuário") }
+    var user by remember { mutableStateOf("") }
+    val username = viewModel.username
 
     LaunchedEffect(Unit) {
+        Log.d("TelaMarketplace", "LAUNCHED EFFECT ESTÁ SENDO EXECUTADO")
+        viewModel.triggerEvent(MarketplaceViewModel.ViewEvent.LoadUserName)
+//        user = (viewState as MarketplaceViewModel.ViewState.UserLoaded).name
         viewModel.triggerEvent(MarketplaceViewModel.ViewEvent.AvailableEstablishmentsLoad)
     }
     when (viewState) {
@@ -53,7 +57,7 @@ fun TelaMarketplace(
         }
 
         is MarketplaceViewModel.ViewState.UserLoaded -> {
-            user = (viewState as MarketplaceViewModel.ViewState.UserLoaded).name
+
         }
 
         is MarketplaceViewModel.ViewState.availableEstablishmentsLoad -> {
@@ -68,7 +72,7 @@ fun TelaMarketplace(
                     .background(Color.White)
             ) {
                 Text(
-                    text = "Olá, $user",
+                    text = "Olá, ${username.value}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White,
                     modifier = Modifier
