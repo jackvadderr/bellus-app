@@ -1,5 +1,6 @@
 package br.sapiens.bellus_app.presentation.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -178,19 +179,18 @@ fun ParceiroImageUpdateSlider(
 
     LaunchedEffect(urls) {
         withContext(Dispatchers.IO) {
-            if (urls.size > 1) {
-                val loaded = urls.map { url ->
-                    val request = ImageRequest.Builder(context)
-                        .data(url)
-                        .build()
-                    val result = (imageLoader.execute(request) as SuccessResult).drawable
-                    url
-                }
-                loadedUrls = loaded
+            val loaded = urls.map { url ->
+                val request = ImageRequest.Builder(context)
+                    .data(url)
+                    .build()
+                val result = (imageLoader.execute(request) as SuccessResult).drawable
+                url
             }
+            loadedUrls = loaded
         }
     }
-    if (loadedUrls?.isEmpty() == true) {
+
+    if (loadedUrls.isNullOrEmpty()) {
         // Fazer nada
     } else {
         val pagerState =
@@ -219,7 +219,10 @@ fun ParceiroImageUpdateSlider(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .clickable { onAddImageClick() },
+                            .clickable {
+                                Log.d("ParceiroImageUpdateSlider", "Adicionar imagem clicado!")
+                                onAddImageClick()
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text("Adicionar Imagem", color = Color.White)

@@ -48,6 +48,7 @@ fun TelaUpdateEstablishmentParceiro(
     val viewState by viewModel.uiState.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val imageUrlToDownload = remember { mutableStateOf<String?>("") }
+    val isPortfolio = remember { mutableStateOf<Boolean>(false) }
 
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
@@ -113,31 +114,61 @@ fun TelaUpdateEstablishmentParceiro(
 
                 // Dentro do seu Composable
                 LaunchedEffect(imageUrlToDownload.value) {
+
                     if (imageUrlToDownload.value?.isNotEmpty() == true) {
-                        Log.d(
-                            "TelaUpdateEstablishmentParceiro",
-                            "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
-                        )
-                        val updatedEstablishmentDetail = EstablishmentDetail(
-                            id = currentEstablishmentDetails.id,
-                            cnjp = currentEstablishmentDetails.cnjp,
-                            name = currentEstablishmentDetails.name,
-                            address = currentEstablishmentDetails.address,
-                            telefone = currentEstablishmentDetails.telefone,
-                            horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
-                            rating = currentEstablishmentDetails.rating,
-                            imageResource = listOf(imageUrlToDownload.value.toString()),
-                            portfolio = listOf(imageUrlToDownload.value.toString()),
-                            description = currentEstablishmentDetails.description,
-                            profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
-                            profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
-                            totalReviews = 0,
-                        )
-                        viewModel.triggerEvent(
-                            ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
-                                updatedEstablishmentDetail
+                        if (isPortfolio.value == false) {
+                            Log.d(
+                                "TelaUpdateEstablishmentParceiro",
+                                "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
                             )
-                        )
+                            val updatedEstablishmentDetail = EstablishmentDetail(
+                                id = currentEstablishmentDetails.id,
+                                cnjp = currentEstablishmentDetails.cnjp,
+                                name = currentEstablishmentDetails.name,
+                                address = currentEstablishmentDetails.address,
+                                telefone = currentEstablishmentDetails.telefone,
+                                horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
+                                rating = currentEstablishmentDetails.rating,
+                                imageResource = listOf(imageUrlToDownload.value.toString()),
+                                portfolio = currentEstablishmentDetails.portfolio,
+                                description = currentEstablishmentDetails.description,
+                                profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
+                                profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
+                                totalReviews = 0,
+                            )
+                            viewModel.triggerEvent(
+                                ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+                                    updatedEstablishmentDetail
+                                )
+                            )
+                        } else if (isPortfolio.value == true) {
+                            Log.d(
+                                "TelaUpdateEstablishmentParceiro",
+                                "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
+                            )
+                            val updatedEstablishmentDetail = EstablishmentDetail(
+                                id = currentEstablishmentDetails.id,
+                                cnjp = currentEstablishmentDetails.cnjp,
+                                name = currentEstablishmentDetails.name,
+                                address = currentEstablishmentDetails.address,
+                                telefone = currentEstablishmentDetails.telefone,
+                                horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
+                                rating = currentEstablishmentDetails.rating,
+                                imageResource = currentEstablishmentDetails.imageResource,
+                                portfolio = listOf(imageUrlToDownload.value.toString()),
+                                description = currentEstablishmentDetails.description,
+                                profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
+                                profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
+                                totalReviews = 0,
+                            )
+                            viewModel.triggerEvent(
+                                ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+                                    updatedEstablishmentDetail
+                                )
+                            )
+                        }
+
+
                     } else {
                         Log.d("TelaUpdateEstablishmentParceiro", "NÃO DEU BOM?")
                     }
@@ -150,7 +181,16 @@ fun TelaUpdateEstablishmentParceiro(
                         .fillMaxWidth()
                         .height(250.dp),
                     contentScale = ContentScale.Crop,
-                    onAddImageClick = { /*viewModel.triggerEvent(ParceiroUpdateEstablishmentViewModel.ViewEvent.AddImage)*/ }
+                    onAddImageClick = {
+                        isPortfolio.value = false
+                        viewModel.triggerEvent(
+                            ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery(
+                                context = viewModel.myContext,
+                                permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+                                launcher = galleryPermissionLauncher
+                            )
+                        )
+                    }
                 )
 
                 Column(
@@ -209,6 +249,7 @@ fun TelaUpdateEstablishmentParceiro(
                         1 -> PortfolioTabParceiro(
                             establishments = currentEstablishmentDetails,
                             openGallery = {
+                                isPortfolio.value = true
                                 viewModel.triggerEvent(
                                     ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery(
                                         context = viewModel.myContext,
@@ -218,35 +259,6 @@ fun TelaUpdateEstablishmentParceiro(
                                 )
 
                             },
-//                            toUpdate = {
-//                                if (imageUrlToDownload.value.toString().isNotEmpty()) {
-//                                    Log.d(
-//                                        "TelaUpdateEstablishmentParceiro",
-//                                        "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
-//                                    )
-//                                    val updatedEstablishmentDetail = EstablishmentDetail(
-//                                        id = currentEstablishmentDetails.id,
-//                                        cnjp = currentEstablishmentDetails.cnjp,
-//                                        name = currentEstablishmentDetails.name,
-//                                        address = currentEstablishmentDetails.address,
-//                                        telefone = currentEstablishmentDetails.telefone,
-//                                        horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
-//                                        rating = currentEstablishmentDetails.rating,
-//                                        imageResource = listOf(imageUrlToDownload.value.toString()),
-//                                        portfolio = listOf(imageUrlToDownload.value.toString()),
-//                                        description = currentEstablishmentDetails.description,
-//                                        profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
-//                                        profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
-//                                        totalReviews = 0,
-//                                    )
-//                                    viewModel.triggerEvent(
-//                                        ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
-//                                            updatedEstablishmentDetail
-//                                        )
-//                                    )
-//                                } else {
-//                                    Log.d("TelaUpdateEstablishmentParceiro", "NÃO DEU BOM?")
-//                                }
                         )
 
                         2 -> AboutTabParceiro(

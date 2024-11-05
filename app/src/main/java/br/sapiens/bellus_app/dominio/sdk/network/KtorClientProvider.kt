@@ -3,16 +3,15 @@ package br.sapiens.bellus_app.dominio.sdk.network
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
-
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -21,7 +20,10 @@ import javax.inject.Singleton
 @Singleton
 class KtorClientProvider @Inject constructor() {
     private val logger = LoggerFactory.getLogger(KtorClientProvider::class.java)
-    private val baseUrl = "http://192.168.0.22:8080/api/v1"
+
+    //    private val baseUrl = "http://192.168.0.22:8080/api/v1"
+    //    https://active-lively-pika.ngrok-free.app/api/v1/hello/
+    private val baseUrl = "http://active-lively-pika.ngrok-free.app/api/v1"
     private var bearerTokenPrimary: String? = null
     private var bearerTokenSecondary: String? = null
 
@@ -49,7 +51,7 @@ class KtorClientProvider @Inject constructor() {
             bearer {
                 loadTokens {
                     logger.info("Loading bearer tokens")
-                    BearerTokens(bearerTokenPrimary?:"", bearerTokenSecondary?:"")
+                    BearerTokens(bearerTokenPrimary ?: "", bearerTokenSecondary ?: "")
                 }
                 sendWithoutRequest { request ->
                     !noAuthUrls.contains(request.url.toString())
