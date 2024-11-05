@@ -19,6 +19,36 @@ class FirebaseStorageProvider @Inject constructor() {
     private val storageReference = FirebaseStorage.getInstance().reference
 
     /**
+     * Uploads an image to Firebase Storage and returns the download URL.
+     *
+     * @param imageUri The Uri of the image to be uploaded.
+     * @param filePath The path where the image will be stored in Firebase Storage.
+     * @return A LiveData that emits the download URL of the uploaded image.
+     */
+    fun uploadImageAndGetUrl(imageUri: Uri, filePath: String): MutableLiveData<String?> {
+        Log.d("FirebaseStorageProvider", "uploadImageAndGetUrl: Start uploading image: $filePath")
+        val result = MutableLiveData<String?>()
+        storageReference.child(filePath).putFile(imageUri)
+            .addOnSuccessListener { taskSnapshot ->
+                taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
+                    Log.d(
+                        "FirebaseStorageProvider",
+                        "uploadImageAndGetUrl: Image uploaded successfully: $uri"
+                    )
+                    result.postValue(uri.toString())
+                }
+            }.addOnFailureListener { exception ->
+                Log.e(
+                    "FirebaseStorageProvider",
+                    "uploadImageAndGetUrl: Failed to upload image",
+                    exception
+                )
+                result.postValue(null)
+            }
+        return result
+    }
+
+    /**
      * Uploads a file to Firebase Storage.
      *
      * @param filePath The path where the file will be stored in Firebase Storage.

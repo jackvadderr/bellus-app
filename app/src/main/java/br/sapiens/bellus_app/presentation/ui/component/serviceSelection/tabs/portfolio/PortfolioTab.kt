@@ -1,7 +1,6 @@
 package br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio
 
 import CustomButton
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import br.sapiens.bellus_app.data.datasource.entity.EnderecoPartialModel
 import br.sapiens.bellus_app.data.datasource.entity.EstadoEnum
 import br.sapiens.bellus_app.data.datasource.entity.Horario
 import br.sapiens.bellus_app.data.datasource.entity.HorarioFuncionamento
-import br.sapiens.bellus_app.dominio.sdk.storage.FirebaseStorageProvider
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import java.util.UUID
 
@@ -40,17 +38,18 @@ fun PortfolioTab(images: List<String>) {
 
 @Composable
 fun PortfolioTabParceiro(
-    images: List<String>,
-    onAddImageClick: (EstablishmentDetail) -> Unit,
-    firebaseStorageProvider: FirebaseStorageProvider,
-    openGallery: () -> Unit
+    establishments: EstablishmentDetail,
+    openGallery: () -> Unit,
+//    toUpdate: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val images = establishments.portfolio
 
     CreateNewImagePortfolio(
         navigate = {
             Log.d("PortfolioTabParceiro", "Botão de adicionar imagem clicado")
             openGallery()
+//            toUpdate()
         }
     )
     LazyColumn(
@@ -65,71 +64,64 @@ fun PortfolioTabParceiro(
     }
 }
 
+
 fun uploadImageToPortfolio(
-    imageUri: Uri,
-    firebaseStorageProvider: FirebaseStorageProvider,
+    imageUri: String,
     onAddImageClick: (EstablishmentDetail) -> Unit
 ) {
     val storagePath = "portfolio/${UUID.randomUUID()}.jpg"
-    val result = firebaseStorageProvider.uploadFile(imageUri.toString())
-    result.observeForever { imageUrl ->
-        if (imageUrl != null) {
-            // Atualiza o EstablishmentDetail com o URL da imagem carregada
-            val updatedEstablishmentDetail = EstablishmentDetail(
-                id = "",
-                cnjp = "",
-                name = "",
-                address = EnderecoPartialModel(
-                    rua = "",
-                    numero = "",
-                    cidade = "",
-                    estado = EstadoEnum.RO,
-                    cep = ""
-                ),
-                telefone = emptyList(),
-                horario_funcionamento = HorarioFuncionamento(
-                    segunda_feira = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    terca_feira = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    quarta_feira = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    quinta_feira = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    sexta_feira = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    sabado = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    ),
-                    domingo = Horario(
-                        abertura = "",
-                        fechamento = ""
-                    )
-                ),
-                rating = 0.0f,
-                imageResource = listOf(imageUrl),
-                portfolio = listOf(imageUrl),
-                description = "",
-                profisisonal_dono = "",
-                profissionais_filiados = emptyList(),
-                totalReviews = 0,
+    // Atualiza o EstablishmentDetail com o URL da imagem carregada
+    val updatedEstablishmentDetail = EstablishmentDetail(
+        id = "",
+        cnjp = "",
+        name = "",
+        address = EnderecoPartialModel(
+            rua = "",
+            numero = "",
+            cidade = "",
+            estado = EstadoEnum.RO,
+            cep = ""
+        ),
+        telefone = emptyList(),
+        horario_funcionamento = HorarioFuncionamento(
+            segunda_feira = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            terca_feira = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            quarta_feira = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            quinta_feira = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            sexta_feira = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            sabado = Horario(
+                abertura = "",
+                fechamento = ""
+            ),
+            domingo = Horario(
+                abertura = "",
+                fechamento = ""
             )
-            onAddImageClick(updatedEstablishmentDetail)
-        } else {
-            // Trate o erro de upload
-        }
-    }
+        ),
+        rating = 0.0f,
+        imageResource = listOf(imageUri),
+        portfolio = listOf(imageUri),
+        description = "",
+        profisisonal_dono = "",
+        profissionais_filiados = emptyList(),
+        totalReviews = 0,
+    )
+    onAddImageClick(updatedEstablishmentDetail)
 }
 
 @Composable

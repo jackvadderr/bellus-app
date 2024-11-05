@@ -81,7 +81,11 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
                 viewModelScope.launch { loadServices(id) }
             }
 
-            is ViewEvent.UpdateEstablishment -> putEstablishment(event.updatedEstablishment)
+            is ViewEvent.UpdateEstablishment -> {
+                Log.d("ParceiroUpdateEstablishmentViewModel", "Triggering update establishment!")
+                putEstablishment(event.updatedEstablishment)
+            }
+
             is ViewEvent.CreateService -> {
                 createService(event.service)
             }
@@ -101,9 +105,6 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
                     event.permission,
                     event.launcher
                 )
-//                context: Context,
-//                val permission: String,
-//                val launcher:
             }
 
             is ViewEvent.UpdateAboutEstablihsment -> {
@@ -204,7 +205,7 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         }
     }
 
-    private fun updateEstablishment(updated: EstablishmentDetail) {
+    fun updateEstablishment(updated: EstablishmentDetail) {
         viewModelScope.launch {
             val schema = updated.toPutEstablishmentSchema()
             val encapulation = PutEstablishmentSchemaEncapsulation(
@@ -304,8 +305,8 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
                     profissionais_filiados = emptyList(),
                     profissional_dono = updatedEstablishment.profisisonal_dono,
                 )
-
             )
+            Log.d("ParceiroUpdateEstablishmentViewModel", "ESTABELECIMENTO ENCAP: $encap")
             when (val result = updateEstablishmentUseCase.invoke(encap)) {
                 is State.Success -> {
                     Log.d(

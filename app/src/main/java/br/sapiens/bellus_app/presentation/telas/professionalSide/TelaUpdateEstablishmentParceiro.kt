@@ -19,9 +19,11 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,8 +35,10 @@ import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.abo
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTabParceiro
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.ServiceInfoSection
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.UpdateServiceListParceiro
+import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
 import br.sapiens.bellus_app.presentation.ui.theme.MarronNaoSei
 import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroUpdateEstablishmentViewModel
+import java.util.UUID
 
 @Composable
 fun TelaUpdateEstablishmentParceiro(
@@ -43,6 +47,8 @@ fun TelaUpdateEstablishmentParceiro(
 ) {
     val viewState by viewModel.uiState.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val imageUrlToDownload = remember { mutableStateOf<String?>("") }
+
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -57,10 +63,24 @@ fun TelaUpdateEstablishmentParceiro(
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
+        uri?.let { it ->
             Log.d("TelaUpdateEstablishmentParceiro", "Selected image URI: $uri")
+            val uploadLiveData = viewModel.firebaseStorageProvider.uploadImageAndGetUrl(
+                it,
+                "images/${UUID.randomUUID()}.jpg"
+            )
+            uploadLiveData.observeForever { downloadUrl ->
+                if (downloadUrl != null) {
+                    imageUrlToDownload.value = downloadUrl
+                    Log.d("TelaUpdateEstablishmentParceiro", "URL TO DOWNLOAD: $downloadUrl")
+                } else {
+                    Log.e("TelaUpdateEstablishmentParceiro", "Failed to upload image")
+                }
+            }
+            Log.d("TelaUpdateEstablishmentParceiro", "URL TO DOWNLOAD: ${imageUrlToDownload.value}")
         }
     }
+
 
     val galleryPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -71,19 +91,6 @@ fun TelaUpdateEstablishmentParceiro(
             Log.d("TelaUpdateEstablishmentParceiro", "Gallery permission denied")
         }
     }
-
-//    LaunchedEffect(viewModel) {
-////        viewModel.checkAndRequestCameraPermission(
-////            context = viewModel.myContext,
-////            permission = Manifest.permission.CAMERA,
-////            launcher = cameraPermissionLauncher
-////        )
-//        viewModel.checkAndRequestGalleryPermission(
-//            context = viewModel.myContext,
-//            permission = Manifest.permission.READ_EXTERNAL_STORAGE,
-//            launcher = galleryPermissionLauncher
-//        )
-//    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (viewState) {
@@ -103,6 +110,38 @@ fun TelaUpdateEstablishmentParceiro(
                     (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).currentEstablishment
                 val itemsServiceDetails =
                     (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).services
+
+                // Dentro do seu Composable
+                LaunchedEffect(imageUrlToDownload.value) {
+                    if (imageUrlToDownload.value?.isNotEmpty() == true) {
+                        Log.d(
+                            "TelaUpdateEstablishmentParceiro",
+                            "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
+                        )
+                        val updatedEstablishmentDetail = EstablishmentDetail(
+                            id = currentEstablishmentDetails.id,
+                            cnjp = currentEstablishmentDetails.cnjp,
+                            name = currentEstablishmentDetails.name,
+                            address = currentEstablishmentDetails.address,
+                            telefone = currentEstablishmentDetails.telefone,
+                            horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
+                            rating = currentEstablishmentDetails.rating,
+                            imageResource = listOf(imageUrlToDownload.value.toString()),
+                            portfolio = listOf(imageUrlToDownload.value.toString()),
+                            description = currentEstablishmentDetails.description,
+                            profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
+                            profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
+                            totalReviews = 0,
+                        )
+                        viewModel.triggerEvent(
+                            ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+                                updatedEstablishmentDetail
+                            )
+                        )
+                    } else {
+                        Log.d("TelaUpdateEstablishmentParceiro", "NÃO DEU BOM?")
+                    }
+                }
 
                 ParceiroImageUpdateSlider(
                     urls = currentEstablishmentDetails.imageResource,
@@ -168,15 +207,8 @@ fun TelaUpdateEstablishmentParceiro(
 
 
                         1 -> PortfolioTabParceiro(
-                            currentEstablishmentDetails.portfolio,
-                            onAddImageClick = { /*viewModel.triggerEvent(ParceiroUpdateEstablishmentViewModel.ViewEvent.AddImage)*/ },
-                            firebaseStorageProvider = viewModel.firebaseStorageProvider,
+                            establishments = currentEstablishmentDetails,
                             openGallery = {
-//                                viewModel.checkAndRequestGalleryPermission(
-//                                    context = viewModel.myContext,
-//                                    permission = Manifest.permission.READ_EXTERNAL_STORAGE,
-//                                    launcher = galleryPermissionLauncher
-//                                )
                                 viewModel.triggerEvent(
                                     ParceiroUpdateEstablishmentViewModel.ViewEvent.OpenGallery(
                                         context = viewModel.myContext,
@@ -184,7 +216,37 @@ fun TelaUpdateEstablishmentParceiro(
                                         launcher = galleryPermissionLauncher
                                     )
                                 )
-                            }
+
+                            },
+//                            toUpdate = {
+//                                if (imageUrlToDownload.value.toString().isNotEmpty()) {
+//                                    Log.d(
+//                                        "TelaUpdateEstablishmentParceiro",
+//                                        "URL TO DOWNLOAD: ${imageUrlToDownload.value}"
+//                                    )
+//                                    val updatedEstablishmentDetail = EstablishmentDetail(
+//                                        id = currentEstablishmentDetails.id,
+//                                        cnjp = currentEstablishmentDetails.cnjp,
+//                                        name = currentEstablishmentDetails.name,
+//                                        address = currentEstablishmentDetails.address,
+//                                        telefone = currentEstablishmentDetails.telefone,
+//                                        horario_funcionamento = currentEstablishmentDetails.horario_funcionamento,
+//                                        rating = currentEstablishmentDetails.rating,
+//                                        imageResource = listOf(imageUrlToDownload.value.toString()),
+//                                        portfolio = listOf(imageUrlToDownload.value.toString()),
+//                                        description = currentEstablishmentDetails.description,
+//                                        profisisonal_dono = currentEstablishmentDetails.profisisonal_dono,
+//                                        profissionais_filiados = currentEstablishmentDetails.profissionais_filiados,
+//                                        totalReviews = 0,
+//                                    )
+//                                    viewModel.triggerEvent(
+//                                        ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+//                                            updatedEstablishmentDetail
+//                                        )
+//                                    )
+//                                } else {
+//                                    Log.d("TelaUpdateEstablishmentParceiro", "NÃO DEU BOM?")
+//                                }
                         )
 
                         2 -> AboutTabParceiro(
