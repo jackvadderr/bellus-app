@@ -58,4 +58,13 @@ class AuthStore @Inject constructor(
             }
         }
     }
+
+    fun clearBearerToken() {
+        coroutineScope.launch(Dispatchers.IO) {
+            // Clear the token from the provider
+            provider.setBearerTokenPrimary("")
+            provider.setBearerTokenSecondary("")
+
+        }
+    }
 }

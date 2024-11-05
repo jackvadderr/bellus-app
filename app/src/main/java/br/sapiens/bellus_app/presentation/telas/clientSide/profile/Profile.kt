@@ -88,5 +88,14 @@ fun Profile(
             title = "Configurações",
             subtitle = "Central de configurações"
         )
+        MenuItem(
+            iconResId = R.drawable.logout,
+            title = "Logout",
+            subtitle = "Sair da conta",
+            onClick = {
+                viewModel.logout()
+                navigateToSplash()
+            }
+        )
     }
 }

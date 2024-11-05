@@ -68,4 +68,16 @@ class UserProfileStore @Inject constructor(
         val newUserProfileState = currentState.userProfileState.copy(clientInfo = newClientInfo)
         store.updateState(currentState.copy(userProfileState = newUserProfileState))
     }
+
+    suspend fun clearUserData() {
+        val newState = store.stateFlow.value.copy(
+            userProfileState = store.stateFlow.value.userProfileState.copy(
+                clientInfo = null,
+                professionalInfo = null,
+                currentProfileType = UserProfileType.CLIENT
+            )
+        )
+        store.updateState(newState)
+    }
+
 }

@@ -6,9 +6,11 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.ProfessionalDTO
+import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
 import br.sapiens.bellus_app.dominio.model.state.UserProfileType
+import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.professional.GetProfessionalByUserIdUseCase
 import br.sapiens.bellus_app.utils.State
@@ -22,6 +24,7 @@ class ProfileViewModel @Inject constructor(
     userProfileStore: UserProfileStore,
     coroutineScope: CoroutineScope,
     private val professionalByUserIdUseCase: GetProfessionalByUserIdUseCase,
+    private val authStore: AuthStore,
 //    private val userDataStore: UserDataConfigManagerImpl,
 //    context: Context
 ) : BaseViewModel<ProfileViewModel.ViewState, ProfileViewModel.ViewEvent>() {
@@ -115,6 +118,18 @@ class ProfileViewModel @Inject constructor(
                     onError() // Chama o callback de erro para navegação
                     Log.d("ProfileViewModel", "onError callback called")
                 }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                userStore.clearUserData()
+                authStore.clearBearerToken()
+                authStore.dispatch(AuthEvent.UserNotAuthenticated)
+            } catch (e: Exception) {
+                Log.e("ProfileViewModel", "Error during logout: ${e.message}")
             }
         }
     }

@@ -96,7 +96,7 @@ fun CategoriesList(
         items(categories.size) { index ->
             CategoryItem(
                 imageRes = categories[index].imageRes,
-                title = categories[index].title,
+                title = formatCategoryString(categories[index].title),
                 modifier = Modifier.fillMaxWidth(),
                 number = categories[index].number,
                 marketplaceStore = marketplaceStore,
@@ -107,10 +107,14 @@ fun CategoriesList(
 }
 
 data class Category(
-//    @DrawableRes val imageRes: Int,
     val imageRes: String,
     val title: String,
     val number: Int,
 )
 
-
+fun formatCategoryString(input: String): String {
+    return input.removePrefix("CATEGORY_")
+        .lowercase()
+        .replace("_", " ")
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+}
