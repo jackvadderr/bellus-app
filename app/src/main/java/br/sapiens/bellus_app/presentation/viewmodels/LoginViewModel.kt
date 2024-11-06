@@ -2,6 +2,7 @@ package br.sapiens.bellus_app.presentation.viewmodels
 
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
@@ -31,12 +32,15 @@ class LoginViewModel @Inject constructor(
 
     val context = context
 
-    fun loginWithCredential(authCredential: AuthCredential) {
+    fun loginWithCredential(authCredential: AuthCredential, callback: LoginCallback) {
+        Log.d("LoginViewModel", "Starting loginWithCredential")
         setState { state.copy(isLoading = true) }
         viewModelScope.launch {
+            Log.d("LoginViewModel", "Launching coroutine for login")
             when (val result: State<AuthDTO> =
                 loginUseCase.execute(LoginUseCase.Input(authCredential = authCredential))) {
                 is State.Success -> {
+                    Log.d("LoginViewModel", "Login successful: ${result.data}")
                     val authUser = AuthUser(result.data.id ?: "")
                     storeConfig.dispatch(
                         AuthEvent.UserAuthenticated(
@@ -44,16 +48,10 @@ class LoginViewModel @Inject constructor(
                             result.data.tokenBearer ?: ""
                         )
                     )
-                    if (result.data.id.isNullOrEmpty()) {
-                        val clientInfo = result.data.id?.let {
-                            ClientInfo(
-                                id = it,
-                            )
-                        }
+                    result.data.id?.let {
+                        val clientInfo = ClientInfo(id = it)
                         storeUser.dispatch(
-                            UserProfileEvent.SetClientProfile(
-                                clientInfo
-                            )
+                            UserProfileEvent.SetClientProfile(clientInfo)
                         )
                     }
                     setState {
@@ -62,9 +60,12 @@ class LoginViewModel @Inject constructor(
                             loginState = EstadoAutenticacao.AUTENTICADO
                         )
                     }
+                    Log.d("LoginViewModel", "Login state set to AUTENTICADO")
+                    callback.onSuccess()
                 }
 
                 is State.Error -> {
+                    Log.e("LoginViewModel", "Login error: ${result.exception}")
                     storeConfig.store.dispatch(AuthEvent.AuthenticationError(result.exception))
                     setState {
                         state.copy(
@@ -72,6 +73,8 @@ class LoginViewModel @Inject constructor(
                             loginState = EstadoAutenticacao.NAO_AUTENTICADO
                         )
                     }
+                    Log.d("LoginViewModel", "Login state set to NAO_AUTENTICADO")
+                    callback.onError(result.exception)
                 }
             }
         }
@@ -111,4 +114,9 @@ class LoginViewModel @Inject constructor(
         val isLoading: Boolean = false,
         val loginState: EstadoAutenticacao? = null,
     ) : IViewState
+}
+
+interface LoginCallback {
+    fun onSuccess()
+    fun onError(exception: Exception)
 }

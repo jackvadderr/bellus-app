@@ -125,8 +125,8 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             try {
-                userStore.clearUserData()
                 authStore.clearBearerToken()
+                userStore.clearUserData()
                 authStore.dispatch(AuthEvent.UserNotAuthenticated)
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Error during logout: ${e.message}")

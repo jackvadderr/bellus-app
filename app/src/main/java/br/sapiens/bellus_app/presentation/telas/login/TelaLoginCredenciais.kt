@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.presentation.ui.component.SenhaTextField
 import br.sapiens.bellus_app.presentation.ui.component.UsuarioTextField
+import br.sapiens.bellus_app.presentation.viewmodels.LoginCallback
 import br.sapiens.bellus_app.presentation.viewmodels.LoginViewModel
 import br.sapiens.bellus_app.utils.login.EstadoAutenticacao
 import com.google.firebase.auth.EmailAuthProvider
@@ -135,7 +136,21 @@ fun TelaLoginCredenciais(
                     if (email.value.isNotBlank() && password.value.isNotBlank()) {
                         val authCredential =
                             EmailAuthProvider.getCredential(email.value, password.value)
-                        viewModel.loginWithCredential(authCredential)
+                        viewModel.loginWithCredential(authCredential, object : LoginCallback {
+                            override fun onSuccess() {
+                                Toast.makeText(context, "Login bem-sucedido", Toast.LENGTH_SHORT)
+                                    .show()
+                                navigateToSplash()
+                            }
+
+                            override fun onError(exception: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "Erro ao fazer login: ${exception.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        })
                         Toast.makeText(context, "Tentando fazer login...", Toast.LENGTH_SHORT)
                             .show()
                     } else {
@@ -150,19 +165,6 @@ fun TelaLoginCredenciais(
                 // Botão de cadastro
                 CustomButton(
                     onClick = {
-                        if (email.value.isNotBlank() && password.value.isNotBlank()) {
-                            val authCredential =
-                                EmailAuthProvider.getCredential(email.value, password.value)
-                            viewModel.loginWithCredential(authCredential)
-                            Toast.makeText(context, "Tentando fazer login...", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Por favor, preencha todos os campos.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
                         navigateToRegister()
                     },
                     texto = "Criar conta nova"

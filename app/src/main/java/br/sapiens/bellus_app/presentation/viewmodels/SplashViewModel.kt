@@ -57,61 +57,59 @@ class SplashViewModel @Inject constructor(
             Log.d("SplashViewModel", "Checking user")
             delay(2000)
 
-            val userType: UserProfileType =
-                storeUser.store.stateFlow.value.userProfileState.currentProfileType
-            Log.d("SplashViewModel", "User type: $userType")
+            val userType = storeUser.store.stateFlow.value.userProfileState.currentProfileType
+            val userId = storeConfig.store.stateFlow.value.authState.getUserId()
 
-            val userId: String? = storeConfig.store.stateFlow.value.authState.getUserId()
-            Log.d("SplashViewModel", "User ID: $userId")
-            if (!userId.isNullOrEmpty()) {
-                Log.d("SplashViewModel", "User ID is not empty")
-                setState {
-                    ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
-                }
-                Log.d("SplashViewModel", "DEBUG 2")
-                if (userType == UserProfileType.CLIENT) {
-                    Log.d("SplashViewModel", "User Type: CLIENT")
-                    val clientInfo = ClientInfo(
-                        id = userId,
-                    )
-                    storeUser.dispatch(
-                        UserProfileEvent.SetClientProfile(
-                            clientInfo
-                        )
-                    )
-                    setState {
-                        ViewState.ProfileType(
-                            userType
-                        )
-                    }
-                } else if (userType == UserProfileType.PROFESSIONAL) {
-                    Log.d("SplashViewModel", "User Type: PROFESSIONAL")
-                    setState {
-                        ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
-                    }
-//                    val professionalInfo = ProfessionalInfo(
-//                        id = userId,
-//                    )
-//                    storeUser.dispatch(
-//                        UserProfileEvent.SetProfessionalProfile(
-//                            professionalInfo
-//                        )
-//                    )
-                    setState {
-                        ViewState.ProfileType(
-                            userType
-                        )
-                    }
-                }
+            if (userId.isNullOrEmpty()) {
+                handleUnauthenticatedUser()
             } else {
-                Log.d("SplashViewModel", "User ID is empty")
-                setState {
-                    ViewState.AuthState(EstadoAutenticacao.NAO_AUTENTICADO)
-                }
+                handleAuthenticatedUser(userId, userType)
             }
-
         }
     }
+
+    private suspend fun handleUnauthenticatedUser() {
+        Log.d("SplashViewModel", "User ID is empty")
+        setState {
+            ViewState.AuthState(EstadoAutenticacao.NAO_AUTENTICADO)
+        }
+    }
+
+    private suspend fun handleAuthenticatedUser(userId: String, userType: UserProfileType) {
+        Log.d("SplashViewModel", "User ID is not empty")
+        setState {
+            ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
+        }
+        Log.d("SplashViewModel", "DEBUG 2")
+
+        when (userType) {
+            UserProfileType.CLIENT -> handleClientUser(userId)
+            UserProfileType.PROFESSIONAL -> handleProfessionalUser(userId)
+        }
+    }
+
+    private suspend fun handleClientUser(userId: String) {
+        Log.d("SplashViewModel", "User Type: CLIENT")
+        val clientInfo = ClientInfo(id = userId)
+        storeUser.dispatch(UserProfileEvent.SetClientProfile(clientInfo))
+        setState {
+            ViewState.ProfileType(UserProfileType.CLIENT)
+        }
+    }
+
+    private suspend fun handleProfessionalUser(userId: String) {
+        Log.d("SplashViewModel", "User Type: PROFESSIONAL")
+        setState {
+            ViewState.AuthState(EstadoAutenticacao.AUTENTICADO)
+        }
+        // Uncomment and implement if needed
+        // val professionalInfo = ProfessionalInfo(id = userId)
+        // storeUser.dispatch(UserProfileEvent.SetProfessionalProfile(professionalInfo))
+        setState {
+            ViewState.ProfileType(UserProfileType.PROFESSIONAL)
+        }
+    }
+
 
     sealed class ViewState : IViewState {
         data object Loading : ViewState()
