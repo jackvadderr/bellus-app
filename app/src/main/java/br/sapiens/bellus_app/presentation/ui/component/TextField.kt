@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Visibility
@@ -40,7 +41,8 @@ private fun CustomTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier,
     isPassword: Boolean = false,
-    placeholder: String
+    placeholder: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     Box(
@@ -54,7 +56,6 @@ private fun CustomTextField(
             )
             .background(Color.White, RoundedCornerShape(4.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
-
     ) {
         BasicTextField(
             value = value,
@@ -62,7 +63,6 @@ private fun CustomTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-//                .align(alignment = Alignment.Center)
                 .wrapContentHeight(align = Alignment.CenterVertically),
             textStyle = TextStyle(
                 color = Color(0xFF896D3C),
@@ -70,6 +70,7 @@ private fun CustomTextField(
             ),
             singleLine = true,
             visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = keyboardOptions,
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
@@ -131,13 +132,15 @@ fun GeralTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     CustomTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        placeholder = placeholder
+        placeholder = placeholder,
+        keyboardOptions = keyboardOptions
     )
 }
 
@@ -147,13 +150,16 @@ fun CustomOutlinedTextField(
     onSpecialtySelected: (String) -> Unit,
     options: List<String>,
     placeholder: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shouldFormat: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         OutlinedTextField(
-            value = selectedSpecialty,
+            value = if (selectedSpecialty.isNotEmpty()) {
+                if (shouldFormat) translateDurationType(selectedSpecialty) else selectedSpecialty
+            } else "",
             onValueChange = {},
             modifier = Modifier.fillMaxWidth(),
             label = { Text(placeholder) },
@@ -173,7 +179,7 @@ fun CustomOutlinedTextField(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(if (shouldFormat) translateDurationType(option) else option) },
                     onClick = {
                         onSpecialtySelected(option)
                         expanded = false
@@ -181,5 +187,13 @@ fun CustomOutlinedTextField(
                 )
             }
         }
+    }
+}
+
+fun translateDurationType(durationType: String): String {
+    return when (durationType) {
+        "Hour" -> "Hora"
+        "Minute" -> "Minutos"
+        else -> durationType
     }
 }
