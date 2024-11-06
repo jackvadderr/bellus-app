@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.data.datasource.entity.EnderecoPartialModel
@@ -39,27 +39,30 @@ fun PortfolioTab(images: List<String>) {
 @Composable
 fun PortfolioTabParceiro(
     establishments: EstablishmentDetail,
-    openGallery: () -> Unit,
-//    toUpdate: () -> Unit,
+    addImage: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val images = establishments.portfolio
 
-    CreateNewImagePortfolio(
-        navigate = {
-            Log.d("PortfolioTabParceiro", "Botão de adicionar imagem clicado")
-            openGallery()
-//            toUpdate()
-        }
-    )
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(4.dp)
     ) {
-        itemsIndexed(images) { _, imageRes ->
-            PortfolioImage(imageRes)
-            Spacer(modifier = Modifier.height(16.dp))
+        CreateNewImagePortfolio(
+            navigate = {
+                Log.d("PortfolioTabParceiro", "Botão de adicionar imagem clicado")
+                addImage()
+            }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
+            itemsIndexed(images) { _, imageRes ->
+                PortfolioImage(imageRes)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
@@ -132,12 +135,15 @@ fun CreateNewImagePortfolio(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
             .clickable { navigate() }
     ) {
         CustomButton(
             onClick = navigate,
-            texto = "Adicionar nova imagem"
+            texto = "Adicionar nova imagem",
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .fillMaxHeight(0.175f)
         )
     }
 }
