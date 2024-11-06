@@ -39,9 +39,10 @@ fun PortfolioTab(images: List<String>) {
 @Composable
 fun PortfolioTabParceiro(
     establishments: EstablishmentDetail,
-    addImage: () -> Unit,
+    onAddImage: () -> Unit,
+    onDeleteImage: (String) -> Unit
 ) {
-    val images = establishments.portfolio
+    val images: List<String> = establishments.portfolio
 
     Column(
         modifier = Modifier
@@ -51,7 +52,7 @@ fun PortfolioTabParceiro(
         CreateNewImagePortfolio(
             navigate = {
                 Log.d("PortfolioTabParceiro", "Botão de adicionar imagem clicado")
-                addImage()
+                onAddImage()
             }
         )
         LazyColumn(
@@ -60,8 +61,16 @@ fun PortfolioTabParceiro(
                 .padding(top = 8.dp)
         ) {
             itemsIndexed(images) { _, imageRes ->
-                PortfolioImage(imageRes)
-                Spacer(modifier = Modifier.height(16.dp))
+                Column {
+                    PortfolioImage(imageRes)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    CustomButton(
+                        onClick = { onDeleteImage(imageRes) },
+                        texto = "Apagar imagem",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }

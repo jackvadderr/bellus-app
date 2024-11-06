@@ -136,9 +136,20 @@ fun AboutTabParceiro(
         Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("Descrição") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Nome") },
+            label = { Text("Nome do estabelecimento") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -210,17 +221,6 @@ fun AboutTabParceiro(
                 .padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = description,
-            onValueChange = { description = it },
-            label = { Text("Descrição") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Informações de contato",
@@ -239,13 +239,17 @@ fun AboutTabParceiro(
                 ) {
                     TextField(
                         value = contato,
-                        onValueChange = { newValue -> contatos[index] = newValue },
+                        onValueChange = { newValue ->
+                            contatos = contatos.toMutableList().apply { set(index, newValue) }
+                        },
                         label = { Text("Contato ${index + 1}") },
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = { contatos.removeAt(index) },
+                        onClick = {
+                            contatos = contatos.toMutableList().apply { removeAt(index) }
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
                         Text("Remover")
@@ -254,7 +258,9 @@ fun AboutTabParceiro(
                 Spacer(modifier = Modifier.height(8.dp))
             }
             Button(
-                onClick = { contatos.add("") },
+                onClick = {
+                    contatos = contatos.toMutableList().apply { add("") }
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Adicionar novo contato")
@@ -298,11 +304,22 @@ fun AboutTabParceiro(
     }
 }
 
+
 @Composable
 fun WorkingHoursSectionParceiro(
     horarioFuncionamento: HorarioFuncionamento,
     onHorarioChange: (HorarioFuncionamento) -> Unit
 ) {
+    val diasDaSemana = listOf(
+        "Segunda-feira" to horarioFuncionamento.segunda_feira,
+        "Terça-feira" to horarioFuncionamento.terca_feira,
+        "Quarta-feira" to horarioFuncionamento.quarta_feira,
+        "Quinta-feira" to horarioFuncionamento.quinta_feira,
+        "Sexta-feira" to horarioFuncionamento.sexta_feira,
+        "Sábado" to horarioFuncionamento.sabado,
+        "Domingo" to horarioFuncionamento.domingo
+    )
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Horário de Funcionamento",
@@ -311,41 +328,20 @@ fun WorkingHoursSectionParceiro(
         )
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            HorarioDiaSemanaEditavel(
-                "Segunda-feira",
-                horarioFuncionamento.segunda_feira
-            ) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(segunda_feira = newHorario))
-            }
-            HorarioDiaSemanaEditavel(
-                "Terça-feira",
-                horarioFuncionamento.terca_feira
-            ) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(terca_feira = newHorario))
-            }
-            HorarioDiaSemanaEditavel(
-                "Quarta-feira",
-                horarioFuncionamento.quarta_feira
-            ) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(quarta_feira = newHorario))
-            }
-            HorarioDiaSemanaEditavel(
-                "Quinta-feira",
-                horarioFuncionamento.quinta_feira
-            ) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(quinta_feira = newHorario))
-            }
-            HorarioDiaSemanaEditavel(
-                "Sexta-feira",
-                horarioFuncionamento.sexta_feira
-            ) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(sexta_feira = newHorario))
-            }
-            HorarioDiaSemanaEditavel("Sábado", horarioFuncionamento.sabado) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(sabado = newHorario))
-            }
-            HorarioDiaSemanaEditavel("Domingo", horarioFuncionamento.domingo) { newHorario ->
-                onHorarioChange(horarioFuncionamento.copy(domingo = newHorario))
+            diasDaSemana.forEach { (dia, horario) ->
+                HorarioDiaSemanaEditavel(dia, horario) { newHorario ->
+                    val updatedHorarioFuncionamento = when (dia) {
+                        "Segunda-feira" -> horarioFuncionamento.copy(segunda_feira = newHorario)
+                        "Terça-feira" -> horarioFuncionamento.copy(terca_feira = newHorario)
+                        "Quarta-feira" -> horarioFuncionamento.copy(quarta_feira = newHorario)
+                        "Quinta-feira" -> horarioFuncionamento.copy(quinta_feira = newHorario)
+                        "Sexta-feira" -> horarioFuncionamento.copy(sexta_feira = newHorario)
+                        "Sábado" -> horarioFuncionamento.copy(sabado = newHorario)
+                        "Domingo" -> horarioFuncionamento.copy(domingo = newHorario)
+                        else -> horarioFuncionamento
+                    }
+                    onHorarioChange(updatedHorarioFuncionamento)
+                }
             }
         }
     }

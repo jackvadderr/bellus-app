@@ -4,6 +4,7 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.presentation.ui.component.ParceiroImageUpdateSlider
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.about.AboutTabParceiro
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.portfolio.PortfolioTabParceiro
+import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.review.ParceiroReviewsTab
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.ServiceInfoSection
 import br.sapiens.bellus_app.presentation.ui.component.serviceSelection.tabs.services.UpdateServiceListParceiro
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
@@ -45,24 +47,13 @@ import java.util.UUID
 @Composable
 fun TelaUpdateEstablishmentParceiro(
     viewModel: ParceiroUpdateEstablishmentViewModel,
-    navigateToUpdateService: () -> Unit,
+    navigateToTelaUpdateEstablishment: () -> Unit
 ) {
     val viewState by viewModel.uiState.collectAsState()
+    val context = viewModel.myContext
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-//    val imageUrlToDownload = remember { mutableStateOf<String?>("") }
     val imageUrlToDownload = remember { mutableListOf<String>() }
     val isPortfolio = remember { mutableStateOf(false) }
-
-
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Log.d("TelaUpdateEstablishmentParceiro", "Camera permission granted")
-        } else {
-            Log.d("TelaUpdateEstablishmentParceiro", "Camera permission denied")
-        }
-    }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -75,17 +66,14 @@ fun TelaUpdateEstablishmentParceiro(
             )
             uploadLiveData.observeForever { downloadUrl ->
                 if (downloadUrl != null) {
-//                    imageUrlToDownload.value = downloadUrl
                     imageUrlToDownload.add(downloadUrl)
                     Log.d("TelaUpdateEstablishmentParceiro", "URL TO DOWNLOAD: $downloadUrl")
                 } else {
                     Log.e("TelaUpdateEstablishmentParceiro", "Failed to upload image")
                 }
             }
-
         }
     }
-
 
     val galleryPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -96,11 +84,6 @@ fun TelaUpdateEstablishmentParceiro(
             Log.d("TelaUpdateEstablishmentParceiro", "Gallery permission denied")
         }
     }
-
-
-    // AREA DE TESTESSSSAF
-//    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-//    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
     val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
@@ -123,20 +106,6 @@ fun TelaUpdateEstablishmentParceiro(
         }
     )
 
-//    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = { uri -> selectedImageUri = uri }
-//    )
-
-    LaunchedEffect(null) {
-//        singlePhotoPickerLauncher.launch(
-//            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-//        )
-//        multiplePhotoPickerLauncher.launch(
-//            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-//        )
-    }
-
     Box(modifier = Modifier.fillMaxSize()) {
         when (viewState) {
             is ParceiroUpdateEstablishmentViewModel.ViewState.Loading -> {
@@ -155,9 +124,8 @@ fun TelaUpdateEstablishmentParceiro(
                     (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).currentEstablishment
                 val itemsServiceDetails =
                     (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).services
-
-                // Dentro do seu Composable
-//                LaunchedEffect(imageUrlToDownload.value) {
+                val itemsReviewsDetails =
+                    (viewState as ParceiroUpdateEstablishmentViewModel.ViewState.LoadedCurrentEstablishment).reviewsDetails
                 LaunchedEffect(imageUrlToDownload.size) {
                     if (imageUrlToDownload.isNotEmpty()) {
                         for (url in imageUrlToDownload) {
@@ -188,6 +156,11 @@ fun TelaUpdateEstablishmentParceiro(
                                             updatedEstablishmentDetail
                                         )
                                     )
+                                    Toast.makeText(
+                                        context,
+                                        "Imagem adicionada com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
 
                                 true -> {
@@ -216,6 +189,11 @@ fun TelaUpdateEstablishmentParceiro(
                                             updatedEstablishmentDetail
                                         )
                                     )
+                                    Toast.makeText(
+                                        context,
+                                        "Imagem adicionada com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         }
@@ -253,7 +231,21 @@ fun TelaUpdateEstablishmentParceiro(
                                     launcher = galleryPermissionLauncher
                                 )
                             )
+                            navigateToTelaUpdateEstablishment()
                         }
+                    },
+                    onDeleteImageClick = { imageUrlForDelete ->
+                        val updatedEstablishmentDetail = currentEstablishmentDetails.copy(
+                            imageResource = currentEstablishmentDetails.imageResource.filterNot {
+                                it == imageUrlForDelete
+                            }
+                        )
+                        viewModel.triggerEvent(
+                            ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+                                updatedEstablishmentDetail
+                            )
+                        )
+                        navigateToTelaUpdateEstablishment()
                     }
                 )
 
@@ -271,7 +263,7 @@ fun TelaUpdateEstablishmentParceiro(
                         currentEstablishmentDetails.horario_funcionamento
                     )
 
-                    val tabTitles = listOf("Serviços", "Portfólio", "Sobre")
+                    val tabTitles = listOf("Serviços", "Reviews", "Portfólio", "Sobre")
                     TabRow(
                         selectedTabIndex = selectedTabIndex,
                         modifier = Modifier.fillMaxWidth(),
@@ -309,10 +301,15 @@ fun TelaUpdateEstablishmentParceiro(
                             }
                         )
 
+                        1 -> ParceiroReviewsTab(
+                            itemsReviewsDetails = itemsReviewsDetails,
+                            averagedReviewsDetails = currentEstablishmentDetails.rating,
+                            totalReviewsDetails = currentEstablishmentDetails.totalReviews,
+                        )
 
-                        1 -> PortfolioTabParceiro(
+                        2 -> PortfolioTabParceiro(
                             establishments = currentEstablishmentDetails,
-                            addImage = {
+                            onAddImage = {
                                 isPortfolio.value = true
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     Log.d(
@@ -334,14 +331,23 @@ fun TelaUpdateEstablishmentParceiro(
                                             launcher = galleryPermissionLauncher
                                         )
                                     )
+                                    navigateToTelaUpdateEstablishment()
                                 }
                             },
+                            onDeleteImage = { imageUrlForDelete ->
+                                val updatedEstablishmentDetail = currentEstablishmentDetails.copy(
+                                    portfolio = currentEstablishmentDetails.portfolio.filterNot { it == imageUrlForDelete }
+                                )
+                                viewModel.triggerEvent(
+                                    ParceiroUpdateEstablishmentViewModel.ViewEvent.UpdateEstablishment(
+                                        updatedEstablishmentDetail
+                                    )
+                                )
+                                navigateToTelaUpdateEstablishment()
+                            }
                         )
 
-                        2 -> AboutTabParceiro(
-//                            currentEstablishmentDetails.description,
-//                            currentEstablishmentDetails.telefone,
-//                            currentEstablishmentDetails.horario_funcionamento
+                        3 -> AboutTabParceiro(
                             currentEstablishmentDetails,
                             onSaveClick = {
                                 viewModel.triggerEvent(
@@ -349,6 +355,11 @@ fun TelaUpdateEstablishmentParceiro(
                                         it
                                     )
                                 )
+                                Toast.makeText(
+                                    context,
+                                    "Estabelecimento Atualizado!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         )
                     }

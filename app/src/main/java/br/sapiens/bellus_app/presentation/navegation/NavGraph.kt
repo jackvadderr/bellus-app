@@ -297,9 +297,9 @@ fun NavGraph(userProfileStore: UserProfileStore) {
             composable(RotasDestinos.ParceiroManagerEstablishment.rota) {
                 TelaUpdateEstablishmentParceiro(
                     hiltViewModel(),
-                    navigateToUpdateService = {
+                    navigateToTelaUpdateEstablishment = {
                         navController.navigate(
-                            route = RotasDestinos.ParceiroHome.rota
+                            route = RotasDestinos.ParceiroManagerEstablishment.rota
                         )
                     }
                 )

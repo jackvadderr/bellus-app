@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,9 +26,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import br.sapiens.bellus_app.R
 import br.sapiens.bellus_app.dominio.sdk.storage.CoilImageLoaderProvider
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -170,12 +175,13 @@ fun ParceiroImageUpdateSlider(
     transformations: List<Transformation> = emptyList(),
     scale: Scale = Scale.FILL,
     size: coil.size.Size = coil.size.Size.ORIGINAL,
-    onAddImageClick: () -> Unit // Callback para adicionar imagem
+    onAddImageClick: () -> Unit,
+    onDeleteImageClick: (String) -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = CoilImageLoaderProvider.getInstance(context).imageLoader
 
-    var loadedUrls by remember { mutableStateOf<List<String>?>(emptyList()) }
+    var loadedUrls by remember { mutableStateOf<List<String>>(urls) }
 
     LaunchedEffect(urls) {
         withContext(Dispatchers.IO) {
@@ -190,30 +196,61 @@ fun ParceiroImageUpdateSlider(
         }
     }
 
-    if (loadedUrls.isNullOrEmpty()) {
-        // Fazer nada
+    if (loadedUrls.isEmpty()) {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        Log.d("ParceiroImageUpdateSlider", "Adicionar imagem clicado!")
+                        onAddImageClick()
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Adicionar Imagem", color = Color.Black)
+            }
+        }
     } else {
-        val pagerState =
-            rememberPagerState(pageCount = { loadedUrls!!.size + 1 }) // +1 para o botão
+        val pagerState = rememberPagerState(pageCount = { loadedUrls.size + 1 }) // +1 para o botão
 
         Box(
             modifier = modifier,
             contentAlignment = Alignment.BottomCenter
         ) {
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-                if (page < loadedUrls!!.size) {
-                    LoadImage(
-                        url = loadedUrls!![page],
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = contentScale,
-                        contentDescription = contentDescription,
-                        crossfade = crossfade,
-                        placeholder = placeholder,
-                        error = error,
-                        transformations = transformations,
-                        scale = scale,
-                        size = size
-                    )
+                if (page < loadedUrls.size) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        LoadImage(
+                            url = loadedUrls[page],
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = contentScale,
+                            contentDescription = contentDescription,
+                            crossfade = crossfade,
+                            placeholder = placeholder,
+                            error = error,
+                            transformations = transformations,
+                            scale = scale,
+                            size = size
+                        )
+                        IconButton(
+                            onClick = {
+                                onDeleteImageClick(loadedUrls[page])
+                                loadedUrls = loadedUrls.filterNot { it == loadedUrls[page] }
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.trash),
+                                contentDescription = "Delete Image",
+                                tint = Color.Red
+                            )
+                        }
+                    }
                 } else {
                     // Exibir botão para adicionar imagem
                     Box(
@@ -225,7 +262,7 @@ fun ParceiroImageUpdateSlider(
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Adicionar Imagem", color = Color.White)
+                        Text("Adicionar Imagem", color = Color.Black)
                     }
                 }
             }
@@ -236,7 +273,7 @@ fun ParceiroImageUpdateSlider(
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                loadedUrls!!.forEachIndexed { index, _ ->
+                loadedUrls.forEachIndexed { index, _ ->
                     val isSelected = pagerState.currentPage == index
                     Box(
                         modifier = Modifier
@@ -252,7 +289,7 @@ fun ParceiroImageUpdateSlider(
                     }
                 }
                 // Indicador para o botão de adicionar imagem
-                val isSelected = pagerState.currentPage == loadedUrls!!.size
+                val isSelected = pagerState.currentPage == loadedUrls.size
                 Box(
                     modifier = Modifier
                         .padding(4.dp)

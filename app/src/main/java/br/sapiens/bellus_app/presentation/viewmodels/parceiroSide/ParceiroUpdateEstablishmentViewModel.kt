@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
+import br.sapiens.bellus_app.data.datasource.entity.ReviewsDTO
 import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.PermissionStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
@@ -25,12 +26,14 @@ import br.sapiens.bellus_app.dominio.usecase.service.GetServicesByEstablishmentU
 import br.sapiens.bellus_app.dominio.usecase.service.PostServiceUseCase
 import br.sapiens.bellus_app.dominio.usecase.service.PutServiceUseCase
 import br.sapiens.bellus_app.presentation.ui.model.EstablishmentDetail
+import br.sapiens.bellus_app.presentation.ui.model.ReviewsDetails
 import br.sapiens.bellus_app.presentation.ui.model.ServiceDetails
 import br.sapiens.bellus_app.utils.State
 import br.sapiens.bellus_app.utils.toEstablishmentDetail
 import br.sapiens.bellus_app.utils.toPostServiceSchema
 import br.sapiens.bellus_app.utils.toPutEstablishmentSchema
 import br.sapiens.bellus_app.utils.toPutServiceSchema
+import br.sapiens.bellus_app.utils.toReviewsDetails
 import br.sapiens.bellus_app.utils.toServiceDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -249,14 +252,22 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
 
     private suspend fun loadEstablishmentData(establishmentId: String) {
         if (establishmentId.isNotEmpty()) {
+            val reviewsList: State<List<ReviewsDTO>> = reviewsUseCase.execute(establishmentId)
+            val reviewsState: List<ReviewsDetails> =
+                when (reviewsList) {
+                    is State.Success -> reviewsList.data.map { it.toReviewsDetails() }
+                    is State.Error -> emptyList()
+                }
             when (val result = getEstablishmentUseCase.execute(establishmentId)) {
+
                 is State.Success -> {
                     setState {
                         ViewState.LoadedCurrentEstablishment(
                             currentEstablishment = result.data.toEstablishmentDetail(
                                 0,
                                 result.data.average_rating
-                            )
+                            ),
+                            reviewsDetails = reviewsState
                         )
                     }
                     triggerEvent(ViewEvent.LoadServices)
@@ -334,9 +345,9 @@ class ParceiroUpdateEstablishmentViewModel @Inject constructor(
         data class LoadedCurrentEstablishmentId(val id: String) : ViewState()
         data class LoadedCurrentEstablishment(
             val currentEstablishment: EstablishmentDetail,
-            val services: List<ServiceDetails> = emptyList()
-        ) :
-            ViewState()
+            val services: List<ServiceDetails> = emptyList(),
+            val reviewsDetails: List<ReviewsDetails>
+        ) : ViewState()
 
         data object EstablishmentUpdated : ViewState()
 //        data object ErrorUpdatingEstablishment : ViewState()

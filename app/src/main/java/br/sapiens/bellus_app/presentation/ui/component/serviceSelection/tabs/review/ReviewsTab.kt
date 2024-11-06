@@ -37,9 +37,6 @@ fun ReviewsTab(
     totalReviewsDetails: Int,
     onSubmitReview: (String, Float) -> Unit
 ) {
-//    val commentState = remember { mutableStateOf("") }
-//    val ratingState = remember { mutableStateOf("") }
-
     LazyColumn(
         modifier = Modifier
             .padding(16.dp)
@@ -76,6 +73,55 @@ fun ReviewsTab(
         }
         item {
             CommentDialogButton(onSubmitReview = onSubmitReview)
+        }
+        itemsIndexed(itemsReviewsDetails) { index, review ->
+            ReviewItem(review = review)
+            if (index < itemsReviewsDetails.lastIndex) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ParceiroReviewsTab(
+    itemsReviewsDetails: List<ReviewsDetails>,
+    averagedReviewsDetails: Float,
+    totalReviewsDetails: Int,
+) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            Text(
+                text = "Avaliações",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Rating",
+                    tint = Color(0xFFFFD700),
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = averagedReviewsDetails.toString(),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "(${totalReviewsDetails})",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
         itemsIndexed(itemsReviewsDetails) { index, review ->
             ReviewItem(review = review)
