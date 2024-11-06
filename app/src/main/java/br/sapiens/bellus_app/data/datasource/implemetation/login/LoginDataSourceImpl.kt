@@ -48,6 +48,21 @@ class LoginDataSourceImpl @Inject constructor(
 
             firebaseTokenJWT?.let { token ->
                 val client = provider.client
+
+                // USAR O INTERCEPTOR PARA REDIRECIONAMENTO
+                // APENAS EM EMERGÊNCIAS!!
+//                client.receivePipeline.intercept(HttpResponsePipeline.After) { response ->
+//                    if (response.status == HttpStatusCode.PermanentRedirect ||
+//                        response.status == HttpStatusCode.TemporaryRedirect) {
+//                        // Refaça a requisição manualmente para o novo URL
+//                        val redirectUrl = response.headers[HttpHeaders.Location]
+//                        if (redirectUrl != null) {
+//                            proceedWith(client.get(redirectUrl))
+//                        }
+//                    }
+//                }
+
+
                 Log.d("LoginDataSourceImpl", "Ktor client obtained")
                 val urlFinal = provider.getBaseUrl().appendPath("session/create-session")
                 Log.d("LoginDataSourceImpl", "Provider FINAL URL: $urlFinal")
