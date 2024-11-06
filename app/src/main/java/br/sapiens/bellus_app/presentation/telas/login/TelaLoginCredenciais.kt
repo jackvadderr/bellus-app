@@ -1,7 +1,6 @@
 package br.sapiens.bellus_app.presentation.telas.login
 
 import CustomButton
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -147,13 +146,9 @@ fun TelaLoginCredenciais(
                             override fun onError(exception: Exception) {
                                 Toast.makeText(
                                     context,
-                                    "Erro ao fazer login",
+                                    "Erro ao fazer login: ${exception.message}",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                Log.d(
-                                    "TelaLoginCredenciais",
-                                    "Erro ao fazer login: ${exception.message}"
-                                )
                             }
                         })
                         Toast.makeText(context, "Tentando fazer login...", Toast.LENGTH_SHORT)
