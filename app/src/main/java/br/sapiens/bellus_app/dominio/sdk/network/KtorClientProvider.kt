@@ -3,6 +3,7 @@ package br.sapiens.bellus_app.dominio.sdk.network
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -59,9 +60,14 @@ class KtorClientProvider @Inject constructor() {
                 }
             }
         }
+        install(HttpRedirect) {
+            checkHttpMethod =
+                false
+        }
         defaultRequest {
             headers {
                 append("Content-Type", "application/json")
+                append("Accept", "application/json")
             }
         }
         expectSuccess = false
