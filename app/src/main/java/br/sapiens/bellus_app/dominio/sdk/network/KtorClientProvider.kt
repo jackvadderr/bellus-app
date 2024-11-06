@@ -69,7 +69,7 @@ class KtorClientProvider @Inject constructor() {
                 append("Accept", "application/json")
             }
         }
-
+        expectSuccess = false
     }
 
     fun getBaseUrl(): String {
