@@ -8,6 +8,7 @@ import br.sapiens.bellus_app.data.datastore.base.AuthConfigManager
 import br.sapiens.bellus_app.data.datastore.model.AuthConfigSerializer
 import kotlinx.coroutines.flow.Flow
 
+//@Singleton
 object AuthConfigManagerImpl : AuthConfigManager {
 
     private val Context.userPreferencesStore: DataStore<AuthConfig> by dataStore(
@@ -27,6 +28,12 @@ object AuthConfigManagerImpl : AuthConfigManager {
                 .setUserId(userId)
                 .setTokenBearer(tokenBearer)
                 .build()
+        }
+    }
+
+    suspend fun Context.clearAuthConfig() {
+        userPreferencesStore.updateData {
+            it.toBuilder().clear().build()
         }
     }
 }

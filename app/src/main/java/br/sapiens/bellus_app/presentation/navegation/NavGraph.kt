@@ -122,11 +122,6 @@ fun NavGraph(userProfileStore: UserProfileStore) {
                             route = RotasDestinos.LoginSocial.rota,
                         ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
                     },
-//                    navigateToParceiroHome = {
-//                        navController.navigate(
-//                            route = RotasDestinos.ParceiroHome.rota,
-//                        ) { popUpTo(RotasDestinos.Splash.rota) { inclusive = true } }
-//                    },
                     navigateToParceiroProfile = {
                         navController.navigate(
                             route = RotasDestinos.ParceiroProfile.rota,

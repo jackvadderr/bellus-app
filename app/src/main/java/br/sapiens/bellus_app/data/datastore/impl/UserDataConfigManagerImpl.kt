@@ -60,4 +60,10 @@ object UserDataConfigManagerImpl : UserDataConfigManager {
             }.build()
         }
     }
+
+    suspend fun Context.clearUserData() {
+        userPreferencesStore.updateData {
+            it.toBuilder().clear().build()
+        }
+    }
 }

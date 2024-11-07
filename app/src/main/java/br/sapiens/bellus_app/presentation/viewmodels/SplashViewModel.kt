@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val storeConfig: AuthStore,
-    private val storeUser: UserProfileStore,
+    private val authStore: AuthStore,
+    private val userStore: UserProfileStore,
 ) : BaseViewModel<SplashViewModel.ViewState, SplashViewModel.ViewEvent>() {
     private var splashShowFlow = MutableStateFlow(true)
     var isSplashShow = splashShowFlow.asStateFlow()
@@ -57,10 +57,11 @@ class SplashViewModel @Inject constructor(
             Log.d("SplashViewModel", "Checking user")
             delay(2000)
 
-            val userType = storeUser.store.stateFlow.value.userProfileState.currentProfileType
-            val userId = storeConfig.store.stateFlow.value.authState.getUserId()
+            val userType = userStore.store.stateFlow.value.userProfileState.currentProfileType
+            val userId = authStore.store.stateFlow.value.authState.getUserId()
+            val token = authStore.store.stateFlow.value.authState.getTokenSession()
 
-            if (userId.isNullOrEmpty()) {
+            if (userId.isNullOrEmpty() || token.isNullOrEmpty()) {
                 handleUnauthenticatedUser()
             } else {
                 handleAuthenticatedUser(userId, userType)
@@ -68,7 +69,7 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleUnauthenticatedUser() {
+    private fun handleUnauthenticatedUser() {
         Log.d("SplashViewModel", "User ID is empty")
         setState {
             ViewState.AuthState(EstadoAutenticacao.NAO_AUTENTICADO)
@@ -91,7 +92,7 @@ class SplashViewModel @Inject constructor(
     private suspend fun handleClientUser(userId: String) {
         Log.d("SplashViewModel", "User Type: CLIENT")
         val clientInfo = ClientInfo(id = userId)
-        storeUser.dispatch(UserProfileEvent.SetClientProfile(clientInfo))
+        userStore.dispatch(UserProfileEvent.SetClientProfile(clientInfo))
         setState {
             ViewState.ProfileType(UserProfileType.CLIENT)
         }
@@ -108,6 +109,12 @@ class SplashViewModel @Inject constructor(
         setState {
             ViewState.ProfileType(UserProfileType.PROFESSIONAL)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Adicione aqui o código para liberar recursos ou cancelar operações
+        Log.d("SplashViewModel", "ViewModel is being cleared")
     }
 
 

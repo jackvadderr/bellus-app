@@ -13,6 +13,7 @@ sealed class AuthState {
 
     //    fun getEmail(): String? = (this as? Authenticated)?.user?.email
     fun getUserId(): String? = (this as? AuthenticatedAsUser)?.user?.id
+    fun getTokenSession(): String? = (this as? AuthenticatedAsUser)?.token
 
 //    fun isEmailVerified(): Boolean = (this as? Authenticated)?.user?.isEmailVerified ?: false
 

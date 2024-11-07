@@ -8,6 +8,7 @@ import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.AuthDTO
+import br.sapiens.bellus_app.data.datastore.impl.AuthConfigManagerImpl.updateUserAuthState
 import br.sapiens.bellus_app.dominio.model.AuthUser
 import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
@@ -25,8 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val storeConfig: AuthStore,
-    private val storeUser: UserProfileStore,
+    private val authStore: AuthStore,
+    private val userStore: UserProfileStore,
     context: Context
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.ViewEvent>() {
 
@@ -42,15 +43,22 @@ class LoginViewModel @Inject constructor(
                 is State.Success -> {
                     Log.d("LoginViewModel", "Login successful: ${result.data}")
                     val authUser = AuthUser(result.data.id ?: "")
-                    storeConfig.dispatch(
+                    val tokenBearer = result.data.tokenBearer ?: ""
+                    authStore.dispatch(
                         AuthEvent.UserAuthenticated(
                             authUser,
-                            result.data.tokenBearer ?: ""
+                            tokenBearer
                         )
+                    )
+                    // Save the token in a persistent storage if needed
+                    context.updateUserAuthState(
+                        isAuthenticated = true,
+                        userId = authUser.id,
+                        tokenBearer = tokenBearer
                     )
                     result.data.id?.let {
                         val clientInfo = ClientInfo(id = it)
-                        storeUser.dispatch(
+                        userStore.dispatch(
                             UserProfileEvent.SetClientProfile(clientInfo)
                         )
                     }
@@ -66,7 +74,7 @@ class LoginViewModel @Inject constructor(
 
                 is State.Error -> {
                     Log.e("LoginViewModel", "Login error: ${result.exception}")
-                    storeConfig.store.dispatch(AuthEvent.AuthenticationError(result.exception))
+                    authStore.store.dispatch(AuthEvent.AuthenticationError(result.exception))
                     setState {
                         state.copy(
                             isLoading = false,

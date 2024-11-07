@@ -189,7 +189,7 @@ fun ParceiroImageUpdateSlider(
                 val request = ImageRequest.Builder(context)
                     .data(url)
                     .build()
-                val result = (imageLoader.execute(request) as SuccessResult).drawable
+                //val result = (imageLoader.execute(request) as SuccessResult).drawable
                 url
             }
             loadedUrls = loaded

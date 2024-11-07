@@ -1,11 +1,15 @@
 package br.sapiens.bellus_app.presentation.viewmodels
 
+//import br.sapiens.bellus_app.data.datastore.impl.AuthConfigManagerImpl.clearAuthConfig
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import br.sapiens.bellus_app.base.BaseViewModel
 import br.sapiens.bellus_app.base.IViewEvent
 import br.sapiens.bellus_app.base.IViewState
 import br.sapiens.bellus_app.data.datasource.entity.ProfessionalDTO
+import br.sapiens.bellus_app.data.datastore.impl.AuthConfigManagerImpl.clearAuthConfig
+import br.sapiens.bellus_app.data.datastore.impl.UserDataConfigManagerImpl.clearUserData
 import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
@@ -26,7 +30,8 @@ class ProfileViewModel @Inject constructor(
     private val professionalByUserIdUseCase: GetProfessionalByUserIdUseCase,
     private val authStore: AuthStore,
 //    private val userDataStore: UserDataConfigManagerImpl,
-//    context: Context
+    private val context: Context,
+//    private val authConfig: AuthConfigManagerImpl,
 ) : BaseViewModel<ProfileViewModel.ViewState, ProfileViewModel.ViewEvent>() {
 
     val userStore = userProfileStore
@@ -125,6 +130,8 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             try {
+                context.clearAuthConfig()
+                context.clearUserData()
                 authStore.clearBearerToken()
                 userStore.clearUserData()
                 authStore.dispatch(AuthEvent.UserNotAuthenticated)

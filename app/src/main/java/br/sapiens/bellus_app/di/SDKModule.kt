@@ -23,4 +23,10 @@ object SDKModule {
     fun provideFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideAuthConfigManager(): AuthConfigManagerImpl {
+//        return AuthConfigManagerImpl()
+//    }
 }

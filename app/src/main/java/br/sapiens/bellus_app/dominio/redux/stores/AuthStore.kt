@@ -48,6 +48,10 @@ class AuthStore @Inject constructor(
         return store.stateFlow.value.authState.getUserId()
     }
 
+    fun getTokenAuthenticated(): String? {
+        return store.stateFlow.value.authState.getTokenSession()
+    }
+
     private fun checkUserTokenInDataStore() {
         coroutineScope.launch(Dispatchers.IO) {
             context.authConfig.collectLatest { authConfig ->
