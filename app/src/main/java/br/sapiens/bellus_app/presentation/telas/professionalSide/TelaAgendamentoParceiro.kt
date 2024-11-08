@@ -1,6 +1,5 @@
 package br.sapiens.bellus_app.presentation.telas.professionalSide
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +33,8 @@ import br.sapiens.bellus_app.utils.getDayOfMonth
 import br.sapiens.bellus_app.utils.getDayOfWeek
 import br.sapiens.bellus_app.utils.getHour
 import br.sapiens.bellus_app.utils.getMonth
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,28 +43,48 @@ fun TelaAgendamentoParceiro(
     navigateToSelectedAppointmentParceiro: () -> Unit,
 ) {
     val viewState by viewModel.uiState.collectAsState()
+    var isRefreshing by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    val refreshData = {
+        viewModel.triggerEvent(ParceiroAppointmentViewModel.ViewEvent.Loading)
+    }
+
+    LaunchedEffect(viewState) {
+        isRefreshing = viewState is ParceiroAppointmentViewModel.ViewState.Loading
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = refreshData
     ) {
-        SectionTitle("Agendamentos")
-        Spacer(modifier = Modifier.height(16.dp))
-        AppointmentsSection(
-            viewState,
-            viewModel,
-            navigateToSelectedAppointmentParceiro,
-            listOf("Pendente", "Aceito")
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        SectionTitle("Anteriores")
-        AppointmentsSection(
-            viewState,
-            viewModel,
-            navigateToSelectedAppointmentParceiro,
-            listOf("Rejeitado", "Concluído", "Cancelado")
-        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            item {
+                SectionTitle("Agendamentos")
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            item {
+                AppointmentsSection(
+                    viewState,
+                    viewModel,
+                    navigateToSelectedAppointmentParceiro,
+                    listOf("Pendente", "Aceito")
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+            item {
+                SectionTitle("Anteriores")
+                AppointmentsSection(
+                    viewState,
+                    viewModel,
+                    navigateToSelectedAppointmentParceiro,
+                    listOf("Rejeitado", "Concluído", "Cancelado")
+                )
+            }
+        }
     }
 }
 
