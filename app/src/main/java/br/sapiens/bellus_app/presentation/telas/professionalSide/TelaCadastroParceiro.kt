@@ -195,47 +195,92 @@ fun TelaCadastroParceiro(
 //                )
 //            })
             CustomButton(onClick = {
-                viewModel.triggerEvent(
-                    ParceiroCadastroViewModel.ViewEvent.Submit(
-                        bairro = bairro,
-                        rua = rua,
-                        numero = numero,
-                        complemento = complemento,
-                        cnpj = cnpj,
-                        razaoSocial = razaoSocial,
-                        nomeEstabelecimento = nomeEstabelecimento,
-                        telefone = telefone,
-                        profissional_profission = profissional_profission,
-                        cidade = cidade,
-                        estado = estado,
-                        cep = cep,
-                        cpf = cpf,
-                    )
-                )
-                viewModel.criarEstabelecimentoEProfissional()
-//                when (viewState) {
-//                    ParceiroCadastroViewModel.ViewState.Loading -> {}
-//                    ParceiroCadastroViewModel.ViewState.SubmitSucess -> {
-//                        Toast.makeText(
-//                            context,
-//                            "Estabelecimento criado com sucesso",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//
-//                        navigateToSplash()
-//                    }
-//
-//                    is ParceiroCadastroViewModel.ViewState.SubmitError -> {
-//                        Toast.makeText(
-//                            context,
-//                            (viewState as ParceiroCadastroViewModel.ViewState.SubmitError).message,
-//                            Toast.LENGTH_SHORT
-//                        )
-//                            .show()
-//                    }
-//                }
+                when {
+                    cpf.isEmpty() -> {
+                        Toast.makeText(context, "CPF não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
 
+                    !isValidCPF(cpf) -> {
+                        Toast.makeText(context, "CPF inválido", Toast.LENGTH_SHORT).show()
+                    }
 
+                    cnpj.isEmpty() -> {
+                        Toast.makeText(context, "CNPJ não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    !isValidCNPJ(cnpj) -> {
+                        Toast.makeText(context, "CNPJ inválido", Toast.LENGTH_SHORT).show()
+                    }
+
+                    razaoSocial.isEmpty() -> {
+                        Toast.makeText(
+                            context,
+                            "Razão Social não pode estar vazia",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    nomeEstabelecimento.isEmpty() -> {
+                        Toast.makeText(
+                            context,
+                            "Nome do Estabelecimento não pode estar vazio",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    telefone.isEmpty() -> {
+                        Toast.makeText(context, "Telefone não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    cep.isEmpty() -> {
+                        Toast.makeText(context, "CEP não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    rua.isEmpty() -> {
+                        Toast.makeText(context, "Rua não pode estar vazia", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    numero.isEmpty() -> {
+                        Toast.makeText(context, "Número não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    bairro.isEmpty() -> {
+                        Toast.makeText(context, "Bairro não pode estar vazio", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    cidade.isEmpty() -> {
+                        Toast.makeText(context, "Cidade não pode estar vazia", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    else -> {
+                        viewModel.triggerEvent(
+                            ParceiroCadastroViewModel.ViewEvent.Submit(
+                                bairro = bairro,
+                                rua = rua,
+                                numero = numero,
+                                complemento = complemento,
+                                cnpj = cnpj,
+                                razaoSocial = razaoSocial,
+                                nomeEstabelecimento = nomeEstabelecimento,
+                                telefone = telefone,
+                                profissional_profission = profissional_profission,
+                                cidade = cidade,
+                                estado = estado,
+                                cep = cep,
+                                cpf = cpf,
+                            )
+                        )
+                        viewModel.criarEstabelecimentoEProfissional()
+                    }
+                }
             }, texto = "Concluir")
         }
     }
@@ -383,6 +428,54 @@ fun cepVisualTransformation(): VisualTransformation {
         }
         TransformedText(AnnotatedString(formattedText), offsetMapping)
     }
+}
+
+fun isValidCPF(cpf: String): Boolean {
+    if (cpf.length != 11) return false
+
+    val numbers = cpf.map { it.toString().toInt() }
+    val dv1 = calculateDigit(numbers.subList(0, 9))
+    val dv2 = calculateDigit(numbers.subList(0, 10))
+
+    return dv1 == numbers[9] && dv2 == numbers[10]
+}
+
+private fun calculateDigit(numbers: List<Int>): Int {
+    val weights = (numbers.size + 1 downTo 2).toList()
+    val sum = numbers.zip(weights) { n, w -> n * w }.sum()
+    val remainder = sum % 11
+    return if (remainder < 2) 0 else 11 - remainder
+}
+
+fun isValidCNPJ(cnpj: String): Boolean {
+    if (cnpj.length != 14) return false
+
+    val numbers = cnpj.map { it.toString().toInt() }
+    val dv1 = calculateCNPJDigit(numbers.subList(0, 12))
+    val dv2 = calculateCNPJDigit(numbers.subList(0, 13))
+
+    return dv1 == numbers[12] && dv2 == numbers[13]
+}
+
+private fun calculateCNPJDigit(numbers: List<Int>): Int {
+    val weights = if (numbers.size == 12) listOf(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2) else listOf(
+        6,
+        5,
+        4,
+        3,
+        2,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2
+    )
+    val sum = numbers.zip(weights) { n, w -> n * w }.sum()
+    val remainder = sum % 11
+    return if (remainder < 2) 0 else 11 - remainder
 }
 
 @Composable
