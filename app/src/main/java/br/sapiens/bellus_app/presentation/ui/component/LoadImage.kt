@@ -94,6 +94,11 @@ fun ImageSlider(
     scale: Scale = Scale.FILL,
     size: coil.size.Size = coil.size.Size.ORIGINAL
 ) {
+    if (urls.isEmpty()) {
+        // Não fazer nada se a lista de URLs estiver vazia
+        return
+    }
+
     val context = LocalContext.current
     val imageLoader = CoilImageLoaderProvider.getInstance(context).imageLoader
 
@@ -110,9 +115,12 @@ fun ImageSlider(
                     url
                 }
                 loadedUrls = loaded
+            } else {
+                loadedUrls = urls
             }
         }
     }
+
     if (loadedUrls == null) {
         // Fazer nada
     } else {
