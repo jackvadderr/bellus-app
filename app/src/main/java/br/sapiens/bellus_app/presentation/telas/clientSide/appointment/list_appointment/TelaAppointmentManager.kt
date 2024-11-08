@@ -1,6 +1,5 @@
 package br.sapiens.bellus_app.presentation.telas.clientSide.appointment.list_appointment
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,23 +33,50 @@ import br.sapiens.bellus_app.utils.getDayOfMonth
 import br.sapiens.bellus_app.utils.getDayOfWeek
 import br.sapiens.bellus_app.utils.getHour
 import br.sapiens.bellus_app.utils.getMonth
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 
 @Composable
 fun TelaAppointmentManager(viewModel: ManagerAppointmentViewModel) {
     val viewState by viewModel.uiState.collectAsState()
+    var isRefreshing by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    // Função que será chamada para recarregar os dados
+    val refreshData = {
+        viewModel.triggerEvent(ManagerAppointmentViewModel.ViewEvent.Loading)
+    }
+
+    LaunchedEffect(viewState) {
+        isRefreshing = viewState is ManagerAppointmentViewModel.ViewState.Loading
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = refreshData
     ) {
-        SectionTitle("Agendamentos")
-        Spacer(modifier = Modifier.height(16.dp))
-        AppointmentsSection(viewState, viewModel, listOf("Pendente", "Aceito"))
-        Spacer(modifier = Modifier.height(32.dp))
-        SectionTitle("Anteriores")
-        AppointmentsSection(viewState, viewModel, listOf("Rejeitado", "Concluído", "Cancelado"))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            item {
+                SectionTitle("Agendamentos")
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            item {
+                AppointmentsSection(viewState, viewModel, listOf("Pendente", "Aceito"))
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+            item {
+                SectionTitle("Anteriores")
+                AppointmentsSection(
+                    viewState,
+                    viewModel,
+                    listOf("Rejeitado", "Concluído", "Cancelado")
+                )
+            }
+        }
     }
 }
 
