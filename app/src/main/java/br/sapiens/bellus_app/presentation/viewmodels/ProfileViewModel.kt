@@ -14,7 +14,9 @@ import br.sapiens.bellus_app.dominio.model.event.AuthEvent
 import br.sapiens.bellus_app.dominio.model.event.UserProfileEvent
 import br.sapiens.bellus_app.dominio.model.state.ProfessionalInfo
 import br.sapiens.bellus_app.dominio.model.state.UserProfileType
+import br.sapiens.bellus_app.dominio.redux.ApplicationState
 import br.sapiens.bellus_app.dominio.redux.stores.AuthStore
+import br.sapiens.bellus_app.dominio.redux.stores.MarketplaceStore
 import br.sapiens.bellus_app.dominio.redux.stores.UserProfileStore
 import br.sapiens.bellus_app.dominio.usecase.professional.GetProfessionalByUserIdUseCase
 import br.sapiens.bellus_app.utils.State
@@ -29,6 +31,7 @@ class ProfileViewModel @Inject constructor(
     coroutineScope: CoroutineScope,
     private val professionalByUserIdUseCase: GetProfessionalByUserIdUseCase,
     private val authStore: AuthStore,
+    private val mktStore: MarketplaceStore,
 //    private val userDataStore: UserDataConfigManagerImpl,
     private val context: Context,
 //    private val authConfig: AuthConfigManagerImpl,
@@ -135,6 +138,7 @@ class ProfileViewModel @Inject constructor(
                 authStore.clearBearerToken()
                 userStore.clearUserData()
                 authStore.dispatch(AuthEvent.UserNotAuthenticated)
+                mktStore.store.updateState(ApplicationState())
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Error during logout: ${e.message}")
             }
