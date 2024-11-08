@@ -189,6 +189,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-permissions
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-swiperefresh
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.36.0")
 }
 
 kapt {

@@ -77,45 +77,132 @@ class MarketplaceViewModel @Inject constructor(
         }
     }
 
+//    private fun loadUser() {
+//        viewModelScope.launch {
+//            Log.d("MarketplaceViewModel", "loadUser: Setting state to Loading")
+//            setState { ViewState.Loading }
+//
+//            val establishmentDetails =
+//                marketplaceStore.store.stateFlow.value.marketplaceState.establishmentSummaries
+//            Log.d(
+//                "MarketplaceViewModel",
+//                "loadUser: Establishment details size: ${establishmentDetails.size}"
+//            )
+//
+//            if (establishmentDetails.isNotEmpty()) {
+//                Log.d("MarketplaceViewModel", "loadUser: Establishment details are not empty")
+//                setState { ViewState.availableEstablishmentsLoad(establishmentDetails) }
+//            } else {
+//                Log.d(
+//                    "MarketplaceViewModel",
+//                    "loadUser: Establishment details are empty, fetching from use case"
+//                )
+//                when (val result: State<List<EstabelecimentoSummaryDTO>> =
+//                    establishmentSummariesUseCase.execute(null)) {
+//                    is State.Success -> {
+//                        Log.d(
+//                            "MarketplaceViewModel",
+//                            "loadUser: Successfully fetched establishment summaries"
+//                        )
+//                        val establishmentAvailables: List<AvailableEstablishment> =
+//                            result.data.map {
+//                                var averageReviews = 0.0F
+//                                when (val reviewsSummary = reviewsSummaryUseCase.invoke(it.id)) {
+//                                    is State.Success -> {
+//                                        averageReviews = reviewsSummary.data.average_rating
+//                                        Log.d(
+//                                            "MarketplaceViewModel",
+//                                            "loadUser: Successfully fetched reviews for establishment id ${it.id}, average rating: $averageReviews"
+//                                        )
+//                                    }
+//
+//                                    is State.Error -> {
+//                                        Log.e(
+//                                            "MarketplaceViewModel",
+//                                            "loadUser: Error fetching reviews for establishment id ${it.id}"
+//                                        )
+//                                    }
+//                                }
+//                                it.toAvailableEstablishment(averageReviews)
+//                            }
+//                        marketplaceStore.dispatch(
+//                            MarketplaceEvent.SuccessGetEstablishmentSummary(establishmentAvailables)
+//                        )
+//                        setState { ViewState.availableEstablishmentsLoad(establishmentAvailables) }
+//                    }
+//
+//                    is State.Error -> {
+//                        Log.e(
+//                            "MarketplaceViewModel",
+//                            "loadUser: Error loading user data: ${result.exception}"
+//                        )
+//                        setState { ViewState.Loading }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     private fun loadUser() {
         viewModelScope.launch {
+            Log.d("MarketplaceViewModel", "loadUser: Setting state to Loading")
             setState { ViewState.Loading }
 
-            val establishmentDetails =
-                marketplaceStore.store.stateFlow.value.marketplaceState.establishmentSummaries
-            if (establishmentDetails.isNotEmpty()) {
-                setState { ViewState.availableEstablishmentsLoad(establishmentDetails) }
-            } else {
-                when (val result: State<List<EstabelecimentoSummaryDTO>> =
-                    establishmentSummariesUseCase.execute(null)) {
-                    is State.Success -> {
-                        val establishmentAvailables: List<AvailableEstablishment> =
-                            result.data.map {
-                                var averageReviews = 0.0F
-                                when (val reviewsSummary = reviewsSummaryUseCase.invoke(it.id)) {
-                                    is State.Success -> {
-                                        averageReviews = reviewsSummary.data.average_rating
-                                    }
+            // Remover a verificação do marketplaceStore
+            // val establishmentDetails = marketplaceStore.store.stateFlow.value.marketplaceState.establishmentSummaries
 
-                                    is State.Error -> {}
-                                }
-                                it.toAvailableEstablishment(averageReviews)
+            // if (establishmentDetails.isNotEmpty()) {
+            //     Log.d("MarketplaceViewModel", "loadUser: Establishment details are not empty")
+            //     setState { ViewState.availableEstablishmentsLoad(establishmentDetails) }
+            // } else {
+            Log.d(
+                "MarketplaceViewModel",
+                "loadUser: Establishment details are empty, fetching from use case"
+            )
+            when (val result: State<List<EstabelecimentoSummaryDTO>> =
+                establishmentSummariesUseCase.execute(null)) {
+                is State.Success -> {
+                    Log.d(
+                        "MarketplaceViewModel",
+                        "loadUser: Successfully fetched establishment summaries"
+                    )
+                    val establishmentAvailables: List<AvailableEstablishment> = result.data.map {
+                        var averageReviews = 0.0F
+                        when (val reviewsSummary = reviewsSummaryUseCase.invoke(it.id)) {
+                            is State.Success -> {
+                                averageReviews = reviewsSummary.data.average_rating
+                                Log.d(
+                                    "MarketplaceViewModel",
+                                    "loadUser: Successfully fetched reviews for establishment id ${it.id}, average rating: $averageReviews"
+                                )
                             }
-                        marketplaceStore.dispatch(
-                            MarketplaceEvent.SuccessGetEstablishmentSummary(establishmentAvailables)
-                        )
-                        setState { ViewState.availableEstablishmentsLoad(establishmentAvailables) }
-                    }
 
-                    is State.Error -> {
-                        Log.e(
-                            "MarketplaceViewModel",
-                            "Error loading user data: ${result.exception}"
-                        )
-                        setState { ViewState.Loading }
+                            is State.Error -> {
+                                Log.e(
+                                    "MarketplaceViewModel",
+                                    "loadUser: Error fetching reviews for establishment id ${it.id}"
+                                )
+                            }
+                        }
+                        it.toAvailableEstablishment(averageReviews)
                     }
+                    marketplaceStore.dispatch(
+                        MarketplaceEvent.SuccessGetEstablishmentSummary(
+                            establishmentAvailables
+                        )
+                    )
+                    setState { ViewState.availableEstablishmentsLoad(establishmentAvailables) }
+                }
+
+                is State.Error -> {
+                    Log.e(
+                        "MarketplaceViewModel",
+                        "loadUser: Error loading user data: ${result.exception}"
+                    )
+                    setState { ViewState.Loading }
                 }
             }
+            // }
         }
     }
 
