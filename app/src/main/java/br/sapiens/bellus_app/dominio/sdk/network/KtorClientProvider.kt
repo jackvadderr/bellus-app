@@ -23,9 +23,9 @@ import javax.inject.Singleton
 class KtorClientProvider @Inject constructor() {
     private val logger = LoggerFactory.getLogger(KtorClientProvider::class.java)
 
-    private val baseUrl = "http://192.168.0.22:8080/api/v1"
+//    private val baseUrl = "http://192.168.0.22:8080/api/v1"
 
-    //    private val baseUrl = "http://active-lively-pika.ngrok-free.app/api/v1"
+    private val baseUrl = "http://active-lively-pika.ngrok-free.app/api/v1"
     private var bearerTokenPrimary: String? = null
     private var bearerTokenSecondary: String? = null
 
