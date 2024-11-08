@@ -32,6 +32,7 @@ import br.sapiens.bellus_app.presentation.viewmodels.parceiroSide.ParceiroAppoin
 import br.sapiens.bellus_app.utils.formatDuration
 import br.sapiens.bellus_app.utils.getDayOfMonth
 import br.sapiens.bellus_app.utils.getDayOfWeek
+import br.sapiens.bellus_app.utils.getHour
 import br.sapiens.bellus_app.utils.getMonth
 import kotlinx.coroutines.launch
 
@@ -186,6 +187,7 @@ fun AppointmentItem(
         time = formatDuration(serviceInfo.duration),
         price = serviceInfo.price,
         status = appointment.statusRequest,
+        scheduleHour = getHour(appointment.scheduled_date).toString(),
         onClick = {
             viewModel.sendAppointmentIdToStore(appointment.id)
             navigateToSelectedAppointmentParceiro()

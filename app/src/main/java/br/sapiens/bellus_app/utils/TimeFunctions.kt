@@ -126,8 +126,8 @@ fun formatDuration(duration: br.sapiens.bellus_app.presentation.ui.model.Duratio
 
     return when {
         hours > 0 && minutes > 0 -> "${hours}h ${minutes}m"
-        hours > 0 -> "${hours}h"
-        minutes > 0 -> "${minutes}m"
+        hours > 0 -> "${hours} horas"
+        minutes > 0 -> "${minutes} minutos"
         else -> "0m"
     }
 }

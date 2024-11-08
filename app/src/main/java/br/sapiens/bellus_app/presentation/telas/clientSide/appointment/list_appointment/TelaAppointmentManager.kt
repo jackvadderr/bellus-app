@@ -32,6 +32,7 @@ import br.sapiens.bellus_app.presentation.viewmodels.ManagerAppointmentViewModel
 import br.sapiens.bellus_app.utils.formatDuration
 import br.sapiens.bellus_app.utils.getDayOfMonth
 import br.sapiens.bellus_app.utils.getDayOfWeek
+import br.sapiens.bellus_app.utils.getHour
 import br.sapiens.bellus_app.utils.getMonth
 import kotlinx.coroutines.launch
 
@@ -133,6 +134,7 @@ fun AppointmentItem(appointment: AppointmentDTO, viewModel: ManagerAppointmentVi
         time = formatDuration(serviceInfo.duration),
         price = serviceInfo.price,
         status = appointment.statusRequest,
+        scheduleHour = getHour(appointment.scheduled_date).toString(),
     )
 }
 

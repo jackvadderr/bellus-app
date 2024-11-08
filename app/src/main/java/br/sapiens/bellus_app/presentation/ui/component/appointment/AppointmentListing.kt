@@ -80,6 +80,7 @@ fun AgendamentoCard(
     time: String,
     price: Float,
     status: String,
+    scheduleHour: String,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -126,6 +127,11 @@ fun AgendamentoCard(
                     fontSize = 16.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = "Horário: $scheduleHour horas",
+                    fontSize = 14.sp,
+                    color = Color.White,
                 )
                 Text(
                     text = "Duração: $time",
