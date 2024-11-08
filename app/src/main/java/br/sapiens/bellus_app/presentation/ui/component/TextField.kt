@@ -42,7 +42,8 @@ private fun CustomTextField(
     modifier: Modifier,
     isPassword: Boolean = false,
     placeholder: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     Box(
@@ -69,7 +70,7 @@ private fun CustomTextField(
                 fontSize = 16.sp,
             ),
             singleLine = true,
-            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else visualTransformation,
             keyboardOptions = keyboardOptions,
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
@@ -133,16 +134,19 @@ fun GeralTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     CustomTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
         placeholder = placeholder,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation
     )
 }
+
 
 @Composable
 fun CustomOutlinedTextField(

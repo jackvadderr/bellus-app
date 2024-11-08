@@ -27,7 +27,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import br.sapiens.bellus_app.data.datasource.entity.EstadoEnum
 import br.sapiens.bellus_app.presentation.ui.component.CustomOutlinedTextField
@@ -77,7 +81,10 @@ fun TelaCadastroParceiro(
             GeralTextField(
                 placeholder = "CPF",
                 value = cpf,
-                onValueChange = { cpf = it })
+                onValueChange = { cpf = it },
+                visualTransformation = cpfVisualTransformation()
+            )
+
         }
         item {
             CustomOutlinedTextField(
@@ -97,7 +104,7 @@ fun TelaCadastroParceiro(
                 placeholder = "CNPJ (Obrigatório)",
                 value = cnpj,
                 onValueChange = { cnpj = it },
-//                keyboardType = KeyboardType.Number
+                visualTransformation = cnpjVisualTransformation()
             )
         }
         item {
@@ -117,7 +124,8 @@ fun TelaCadastroParceiro(
                 placeholder = "Celular ou Telefone do Estabelecimento",
                 value = telefone,
                 onValueChange = { telefone = it },
-//                keyboardType = KeyboardType.Phone
+//                keyboardType = KeyboardType.Phone,
+//                visualTransformation = phoneVisualTransformation()
             )
         }
         item {
@@ -127,7 +135,9 @@ fun TelaCadastroParceiro(
             GeralTextField(
                 placeholder = "Cep",
                 value = cep,
-                onValueChange = { cep = it })
+                onValueChange = { cep = it },
+                visualTransformation = cepVisualTransformation()
+            )
         }
         item {
             GeralTextField(
@@ -249,6 +259,129 @@ fun TelaCadastroParceiro(
             )
                 .show()
         }
+    }
+}
+
+fun cpfVisualTransformation(): VisualTransformation {
+    return VisualTransformation { text ->
+        val formattedText = buildString {
+            for (i in text.indices) {
+                append(text[i])
+                if (i == 2 || i == 5) append('.')
+                if (i == 8) append('-')
+            }
+        }
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return when {
+                    offset <= 2 -> offset
+                    offset <= 5 -> offset + 1
+                    offset <= 8 -> offset + 2
+                    else -> offset + 3
+                }
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return when {
+                    offset <= 3 -> offset
+                    offset <= 7 -> offset - 1
+                    offset <= 11 -> offset - 2
+                    else -> offset - 3
+                }
+            }
+        }
+        TransformedText(AnnotatedString(formattedText), offsetMapping)
+    }
+}
+
+fun cnpjVisualTransformation(): VisualTransformation {
+    return VisualTransformation { text ->
+        val formattedText = buildString {
+            for (i in text.indices) {
+                append(text[i])
+                if (i == 1 || i == 4) append('.')
+                if (i == 7) append('/')
+                if (i == 11) append('-')
+            }
+        }
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return when {
+                    offset <= 1 -> offset
+                    offset <= 4 -> offset + 1
+                    offset <= 7 -> offset + 2
+                    offset <= 11 -> offset + 3
+                    else -> offset + 4
+                }
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return when {
+                    offset <= 2 -> offset
+                    offset <= 6 -> offset - 1
+                    offset <= 10 -> offset - 2
+                    offset <= 15 -> offset - 3
+                    else -> offset - 4
+                }
+            }
+        }
+        TransformedText(AnnotatedString(formattedText), offsetMapping)
+    }
+}
+
+fun phoneVisualTransformation(): VisualTransformation {
+    return VisualTransformation { text ->
+        val formattedText = buildString {
+            for (i in text.indices) {
+                when (i) {
+                    0 -> append('(')
+                    2 -> append(") ")
+                    7 -> append('-')
+                }
+                append(text[i])
+            }
+        }
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return when {
+                    offset == 0 -> 1
+                    offset <= 2 -> offset + 2
+                    offset <= 7 -> offset + 3
+                    else -> offset + 4
+                }
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return when {
+                    offset <= 1 -> 0
+                    offset <= 4 -> offset - 2
+                    offset <= 11 -> offset - 3
+                    else -> offset - 4
+                }
+            }
+        }
+        TransformedText(AnnotatedString(formattedText), offsetMapping)
+    }
+}
+
+fun cepVisualTransformation(): VisualTransformation {
+    return VisualTransformation { text ->
+        val formattedText = buildString {
+            for (i in text.indices) {
+                append(text[i])
+                if (i == 4) append('-')
+            }
+        }
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return if (offset <= 4) offset else offset + 1
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return if (offset <= 4) offset else offset - 1
+            }
+        }
+        TransformedText(AnnotatedString(formattedText), offsetMapping)
     }
 }
 
