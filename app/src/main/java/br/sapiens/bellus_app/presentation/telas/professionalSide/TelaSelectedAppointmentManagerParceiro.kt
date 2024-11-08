@@ -195,6 +195,11 @@ fun AppointmentDetailsSection(
             text = "Duração: ${formatDuration(serviceDetail.duration)}",
             style = MaterialTheme.typography.bodyMedium
         )
+        Text(
+            text = "Status: ${appointmentDetail.statusRequest}",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold
+        )
         Log.d(
             "TelaSelectedAppointmentManagerParceiro",
             "Service Duration: ${serviceDetail.duration}"
@@ -202,9 +207,14 @@ fun AppointmentDetailsSection(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Action Buttons Section
-        ActionButton(text = "Aceitar", onClick = onAccept)
-        ActionButton(text = "Recusar", onClick = onReject)
-//        ActionButton(text = "Cancelar", onClick = onCancel)
+        if (appointmentDetail.statusRequest != "Concluído"
+            && appointmentDetail.statusRequest != "Rejeitado"
+        ) {
+            if (appointmentDetail.statusRequest != "Aceito") {
+                ActionButton(text = "Aceitar", onClick = onAccept)
+            }
+            ActionButton(text = "Recusar", onClick = onReject)
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         // Summary Section
@@ -220,30 +230,38 @@ fun AppointmentDetailsSection(
         )
 
         // Confirmation Section
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        if (appointmentDetail.statusRequest == "Concluído") {
             Text(
-                text = "Serviço finalizado?",
-                style = MaterialTheme.typography.bodyLarge
+                text = "Serviço concluído",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
+        } else if (appointmentDetail.statusRequest != "Pendente" && appointmentDetail.statusRequest != "Rejeitado" && appointmentDetail.statusRequest != "Aceito") {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { onComplete() },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+                Text(
+                    text = "Serviço finalizado?",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("SIM")
-                }
-                Button(
-                    onClick = { /*Simplesmente não faz nada*/ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
-                ) {
-                    Text("NÃO")
+                    Button(
+                        onClick = { onComplete() },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+                    ) {
+                        Text("SIM")
+                    }
+                    Button(
+                        onClick = { /*Simplesmente não faz nada*/ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+                    ) {
+                        Text("NÃO")
+                    }
                 }
             }
         }
